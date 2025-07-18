@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: quiz-master-web
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: REDIS_URL
+        value: <YOUR_UPSTASH_REDIS_URL>
+      - key: DATABASE_URL
+        value: <YOUR_DB_URL>
+
+  - type: worker
+    name: quiz-master-celery-worker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A app.celery worker --loglevel=info"
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: REDIS_URL
+        value: <YOUR_UPSTASH_REDIS_URL>
+      - key: DATABASE_URL
+        value: <YOUR_DB_URL>
+
+  # OPTIONAL: if you're using celery beat
+  - type: worker
+    name: quiz-master-celery-beat
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A app.celery beat --loglevel=info"
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: REDIS_URL
+        value: <YOUR_UPSTASH_REDIS_URL>
+      - key: DATABASE_URL
+        value: <YOUR_DB_URL>
