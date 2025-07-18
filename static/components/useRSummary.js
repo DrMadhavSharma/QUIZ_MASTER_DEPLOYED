@@ -14,7 +14,7 @@ export default {
   methods: {
     async fetchGraph() {
       try {
-        const response = await fetch(`https://deployed-quiz-master.onrender.com/user/${this.userId}/graph`);
+        const response = await fetch(`https://babu-gnw2.onrender.com/user/${this.userId}/graph`);
         
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -28,7 +28,7 @@ export default {
     },
     async fetchTotalSubjectChart() {
       try {
-        const response = await fetch(`https://deployed-quiz-master.onrender.com/user/${this.userId}/total_subject_chart`);
+        const response = await fetch(`https://babu-gnw2.onrender.com/user/${this.userId}/total_subject_chart`);
         
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);

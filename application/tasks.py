@@ -65,7 +65,7 @@ def quiz_update(quiz_id):
     # Message Template
     text_template = (
         f"Hi {{username}}, we have crafted some new questions based on current trends in our new quiz! "
-        f"Please check the app at https://deployed-quiz-master.onrender.com/"
+        f"Please check the app at https://babu-gnw2.onrender.com/"
     )
 
     # Iterate through users and send notifications
