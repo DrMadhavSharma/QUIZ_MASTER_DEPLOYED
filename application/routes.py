@@ -20,6 +20,9 @@ from .tasks import csv_report, monthly_report
 
 
 with app.app_context():
+    @app.route("/health")
+    def health_check():
+        return "OK", 200
 
     @app.route('/', methods = ['GET'])
     def home():
