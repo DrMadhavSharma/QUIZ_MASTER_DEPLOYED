@@ -95,7 +95,7 @@ export default {
         </div>
 
         <!-- User Authentication Links -->
-        <ul class="navbar-nav align-items-center d-flex md:flex-row md:justify-content-between">
+        <ul class="navbar-nav align-items-center d-flex xs:flex-row xs:justify-content-between">
           <li class="nav-item">
             <router-link class="btn btn-outline-light me-2" to="/login" 
               style="transition: all 0.3s ease-in-out;
