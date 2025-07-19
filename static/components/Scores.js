@@ -74,7 +74,7 @@ export default {
     async fetchResults() {
       try {
         const userId = this.$route.params.userId;
-        const response = await fetch(`https://babu-gnw2.onrender.com/user/${userId}/dashboard`);
+        const response = await fetch(`/user/${userId}/dashboard`);
         const result = await response.json();
 
         if (response.status === 404) {
