@@ -1,16 +1,5 @@
 import os
-from sqlalchemy import create_engine
 
-DATABASE_URL = "postgresql://postgres:Quizdb2754@db.cxkvbniofjtutliwthal.supabase.co:5432/postgres"
-
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={
-        "sslmode": "require",
-        "application_name": "render-app"  # optional, but helpful
-    },
-    pool_pre_ping=True  # helps prevent stale connections
-)
 
 class Config():
     DEBUG=False
