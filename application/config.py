@@ -1,4 +1,10 @@
 import os
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    "postgresql://postgres:Quizdb2754@db.cxkvbniofjtutliwthal.supabase.co:5432/postgres",
+    connect_args={"sslmode": "require"}
+)
 class Config():
     DEBUG=False
     SQLALCHEMY_TRACK_MODIFICATIONS=True
