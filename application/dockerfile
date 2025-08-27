@@ -1,21 +1,25 @@
-# Dockerfile
+# Use lightweight Python
 FROM python:3.11-slim
 
-# Install system deps for pip packages (if needed)
-RUN apt-get update && apt-get install -y build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
+# Set working directory
 WORKDIR /app
 
-COPY requirements.txt .
+# Install system dependencies
+RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
+
+# Copy project files
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# ensure our start script is executable
-RUN chmod +x /app/start.sh
+# Make entrypoint script executable
+RUN chmod +x start.sh
 
-# Cloud Run expects container to listen on $PORT
-ENV PORT=8080
+# Set environment variables for Upstash Redis
+# (You can also set these directly in Cloud Run console)
+ENV CELERY_BROKER_URL=redis://default:<your-upstash-password>@<your-upstash-host>:<port>
 
-CMD ["/app/start.sh"]
+# Start Celery worker
+CMD ["./start.sh"]
+
