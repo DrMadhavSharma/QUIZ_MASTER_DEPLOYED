@@ -14,9 +14,10 @@ celery = Celery("tasks", broker=REDIS_URL, backend=REDIS_URL)
 #     celery.conf.result_backend_use_ssl = {"ssl_cert_reqs": ssl.CERT_NONE}
 # Apply SSL options
 if REDIS_URL.startswith("rediss://"):
+    ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
     celery.conf.update(
-        broker_use_ssl=ssl_options,
-        result_backend_use_ssl=ssl_options,
+        broker_use_ssl=ssl_opts,
+        result_backend_use_ssl=ssl_opts,
     )
 
 celery.conf.update(
