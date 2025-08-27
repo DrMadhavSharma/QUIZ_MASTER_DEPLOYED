@@ -43,14 +43,13 @@ from celery import Celery
 
 REDIS_URL = os.getenv("REDIS_URL")
 if not REDIS_URL:
-    raise SystemExit("REDIS_URL not set. Set it to your Upstash rediss:// URL")
+    raise SystemExit("REDIS_URL not set")
 
-celery = Celery("celery", broker="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379",
-backend="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379")
+celery = Celery("worker", broker=REDIS_URL, backend=REDIS_URL)
 
-# TLS/SSL options for Upstash (rediss://)
+# TLS for Upstash
 if REDIS_URL.startswith("rediss://"):
-    ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}   # Upstash works with this
+    ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
     celery.conf.update(
         broker_use_ssl=ssl_opts,
         result_backend_use_ssl=ssl_opts,
