@@ -9,9 +9,23 @@ if not REDIS_URL or not REDIS_URL.startswith(("redis://", "rediss://")):
 # === Celery Setup ===
 celery = Celery("tasks", broker=REDIS_URL, backend=REDIS_URL)
 
+# if REDIS_URL.startswith("rediss://"):
+#     celery.conf.broker_use_ssl = {"ssl_cert_reqs": ssl.CERT_NONE}
+#     celery.conf.result_backend_use_ssl = {"ssl_cert_reqs": ssl.CERT_NONE}
+# Apply SSL options
 if REDIS_URL.startswith("rediss://"):
-    celery.conf.broker_use_ssl = {"ssl_cert_reqs": ssl.CERT_NONE}
-    celery.conf.result_backend_use_ssl = {"ssl_cert_reqs": ssl.CERT_NONE}
+    celery.conf.update(
+        broker_use_ssl=ssl_options,
+        result_backend_use_ssl=ssl_options,
+    )
+
+celery.conf.update(
+    task_serializer="json",
+    result_serializer="json",
+    accept_content=["json"],
+    enable_utc=True,
+    timezone="UTC",
+)
 broker_url = os.getenv("REDIS_URL")
 result_backend = broker_url
 broker_connection_retry_on_startup = True
