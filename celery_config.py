@@ -45,8 +45,8 @@ REDIS_URL = os.getenv("REDIS_URL")
 if not REDIS_URL:
     raise SystemExit("REDIS_URL not set. Set it to your Upstash rediss:// URL")
 
-celery = Celery("celery", broker=rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379,
-backend=rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379)
+celery = Celery("celery", broker="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379",
+backend="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379")
 
 # TLS/SSL options for Upstash (rediss://)
 if REDIS_URL.startswith("rediss://"):
