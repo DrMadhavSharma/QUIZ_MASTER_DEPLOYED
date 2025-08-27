@@ -1,4 +1,7 @@
 import os
+
+print(">>> REDIS_URL =", os.getenv("REDIS_URL"))
+
 import ssl
 from celery import Celery
 
