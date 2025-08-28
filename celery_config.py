@@ -69,7 +69,7 @@
 import ssl
 
 # 🔥 Hardcoded Redis URL from Upstash
-REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379?ssl_cert_reqs=CERT_NONE"
 # Celery settings (dict style)
 CELERY_CONFIG = {
     "broker_url": REDIS_URL,
