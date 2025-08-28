@@ -13,8 +13,8 @@ if not REDIS_URL or not REDIS_URL.startswith(("redis://", "rediss://")):
 # Initialize Celery
 celery = Celery(
     "worker",
-    broker=REDIS_URL,
-    backend=REDIS_URL,
+    broker="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379",
+    backend="rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379",
     broker_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE} if REDIS_URL.startswith("rediss://") else None,
     result_backend_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE} if REDIS_URL.startswith("rediss://") else None,
 )
