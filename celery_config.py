@@ -85,12 +85,12 @@ CELERY_CONFIG = {
 }
 
 # SSL for Upstash
-if REDIS_URL.startswith("rediss://"):
-    ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
-    CELERY_CONFIG.update(
-        broker_use_ssl=ssl_opts,
-        result_backend_use_ssl=ssl_opts,
-    )
+# if REDIS_URL.startswith("rediss://"):
+#     ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
+#     CELERY_CONFIG.update(
+#         broker_use_ssl=ssl_opts,
+#         result_backend_use_ssl=ssl_opts,
+#     )
 
 # import ssl
 # from celery import Celery
