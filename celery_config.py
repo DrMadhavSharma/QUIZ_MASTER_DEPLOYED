@@ -66,54 +66,56 @@
 #     timezone="UTC",
 #     broker_connection_retry_on_startup=True,
 # )
-# import ssl
-
-# # 🔥 Hardcoded Redis URL from Upstash
-# REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
-# # Celery settings (dict style)
-# CELERY_CONFIG = {
-#     "broker_url": REDIS_URL,
-#     "result_backend": REDIS_URL,
-#     "task_serializer": "json",
-#     "result_serializer": "json",
-#     "accept_content": ["json"],
-#     "enable_utc": True,
-#     "timezone": "UTC",
-#     "broker_connection_retry_on_startup": True,
-# }
-
-# # SSL for Upstash
-# if REDIS_URL.startswith("rediss://"):
-#     ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
-#     CELERY_CONFIG.update(
-#         broker_use_ssl=ssl_opts,
-#         result_backend_use_ssl=ssl_opts,
-#     )
-
 import ssl
-from celery import Celery
 
-# Upstash Redis URL (use rediss:// for TLS)
+# 🔥 Hardcoded Redis URL from Upstash
 REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+# Celery settings (dict style)
+CELERY_CONFIG = {
+    "broker_url": REDIS_URL,
+    "result_backend": REDIS_URL,
+    "broker_use_ssl": {"ssl_cert_reqs": ssl.CERT_NONE},
+    "result_backend_use_ssl": {"ssl_cert_reqs": ssl.CERT_NONE},
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "accept_content": ["json"],
+    "enable_utc": True,
+    "timezone": "UTC",
+    "broker_connection_retry_on_startup": True,
+}
 
-# SSL options required for rediss://
-ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
+# SSL for Upstash
+if REDIS_URL.startswith("rediss://"):
+    ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
+    CELERY_CONFIG.update(
+        broker_use_ssl=ssl_opts,
+        result_backend_use_ssl=ssl_opts,
+    )
 
-celery = Celery(
-    "worker",
-    broker=REDIS_URL,
-    backend=REDIS_URL,
-    broker_use_ssl=ssl_opts,
-    result_backend_use_ssl=ssl_opts,
-)
+# import ssl
+# from celery import Celery
 
-# General config
-celery.conf.update(
-    task_serializer="json",
-    result_serializer="json",
-    accept_content=["json"],
-    enable_utc=True,
-    timezone="UTC",
-    broker_connection_retry_on_startup=True,
-)
+# # Upstash Redis URL (use rediss:// for TLS)
+# REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+
+# # SSL options required for rediss://
+# ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
+
+# celery = Celery(
+#     "worker",
+#     broker=REDIS_URL,
+#     backend=REDIS_URL,
+#     broker_use_ssl=ssl_opts,
+#     result_backend_use_ssl=ssl_opts,
+# )
+
+# # General config
+# celery.conf.update(
+#     task_serializer="json",
+#     result_serializer="json",
+#     accept_content=["json"],
+#     enable_utc=True,
+#     timezone="UTC",
+#     broker_connection_retry_on_startup=True,
+# )
 
