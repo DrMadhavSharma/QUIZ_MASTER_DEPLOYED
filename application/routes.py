@@ -451,7 +451,7 @@ with app.app_context():
     def csv_result(id):
         # res = AsyncResult(id)
         # return send_from_directory('static', res.result)
-        res = csv_report.AsyncResult(task_id)
+        res = csv_report.AsyncResult(id)
         if res.ready():
             if res.result:  # ensure it's not None
                 return send_from_directory('static', res.result)
