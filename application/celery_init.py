@@ -22,6 +22,8 @@ def celery_init_app(app):
                 return self.run(*args, **kwargs)
 
     celery_app = Celery(app.name, task_cls=FlaskTask)
-    celery_app.conf.update(CELERY_CONFIG)   # use update for dicts
+    print(type(CELERY_CONFIG), CELERY_CONFIG)
+    celery_app.config_from_object(CELERY_CONFIG, namespace=None)  # ✅ works with dict
+    celery_app.set_default()
     app.extensions["celery"] = celery_app
     return celery_app
