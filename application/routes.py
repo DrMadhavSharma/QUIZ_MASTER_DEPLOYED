@@ -449,9 +449,16 @@ with app.app_context():
 
     @app.route('/api/csv_result/<id>') # just create to test the status of result
     def csv_result(id):
-        res = AsyncResult(id)
-        return send_from_directory('static', res.result)
-
+        # res = AsyncResult(id)
+        # return send_from_directory('static', res.result)
+        res = csv_report.AsyncResult(task_id)
+        if res.ready():
+            if res.result:  # ensure it's not None
+                return send_from_directory('static', res.result)
+            else:
+                return {"error": "Task failed or returned no file"}, 500
+        else:
+            return {"status": "pending"}, 202
         
 
     @app.route('/api/mail')
