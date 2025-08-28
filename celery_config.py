@@ -36,33 +36,56 @@
 #     timezone="UTC",
 #     broker_connection_retry_on_startup=True,
 # )
+# import ssl
+# from celery import Celery
+
+# # 🔥 Hardcoded Redis URL from Upstash
+# REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+
+# # Initialize Celery
+# celery = Celery(
+#     "worker",
+#     broker=REDIS_URL,
+#     backend=REDIS_URL,
+# )
+
+# # Handle SSL (for Upstash rediss://)
+# if REDIS_URL.startswith("rediss://"):
+#     ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
+#     celery.conf.update(
+#         broker_use_ssl=ssl_opts,
+#         result_backend_use_ssl=ssl_opts,
+#     )
+
+# # General Celery configuration
+# celery.conf.update(
+#     task_serializer="json",
+#     result_serializer="json",
+#     accept_content=["json"],
+#     enable_utc=True,
+#     timezone="UTC",
+#     broker_connection_retry_on_startup=True,
+# )
 import ssl
-from celery import Celery
 
 # 🔥 Hardcoded Redis URL from Upstash
 REDIS_URL = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+# Celery settings (dict style)
+CELERY_CONFIG = {
+    "broker_url": REDIS_URL,
+    "result_backend": REDIS_URL,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "accept_content": ["json"],
+    "enable_utc": True,
+    "timezone": "UTC",
+    "broker_connection_retry_on_startup": True,
+}
 
-# Initialize Celery
-celery = Celery(
-    "worker",
-    broker=REDIS_URL,
-    backend=REDIS_URL,
-)
-
-# Handle SSL (for Upstash rediss://)
+# SSL for Upstash
 if REDIS_URL.startswith("rediss://"):
     ssl_opts = {"ssl_cert_reqs": ssl.CERT_NONE}
-    celery.conf.update(
+    CELERY_CONFIG.update(
         broker_use_ssl=ssl_opts,
         result_backend_use_ssl=ssl_opts,
     )
-
-# General Celery configuration
-celery.conf.update(
-    task_serializer="json",
-    result_serializer="json",
-    accept_content=["json"],
-    enable_utc=True,
-    timezone="UTC",
-    broker_connection_retry_on_startup=True,
-)
