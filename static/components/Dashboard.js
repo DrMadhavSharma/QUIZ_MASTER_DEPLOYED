@@ -12,42 +12,43 @@ export default {
   </div>
   </div>
   
-
-  // <!-- Quizzes Table Section -->
-  // <div v-if="quizzes.length">
-  //   <div class="table-responsive">
-  //     <table class="table table-hover table-striped table-bordered shadow">
-  //       <thead class="table-dark">
-  //         <tr>
-  //           <th>S no.</th>
-  //           <th>📚 Title</th>
-  //           <th>📅 Date</th>
-  //           <th>⏳ Duration (min)</th>
-  //           <th>CHAPTER</th>
-  //           <th>🚀 Action</th>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         <tr v-for="quiz in quizzes" :key="quiz.id">
-  //           <td class="fw-bold">{{ quiz.id }}</td>
-  //           <td>{{ quiz.title }}</td>
-  //           <td>{{ quiz.date }}</td>
-  //           <td>{{ quiz.duration }}</td>
-  //           <td>{{ quiz.chapter?.name || 'Unknown' }}</td>
-  //             <button class="btn btn-success btn-sm" @click="startQuiz(quiz)">
-  //               🎯 Start Quiz
-  //             </button>
-  //           </td>
-  //         </tr>
-  //       </tbody>
-  //     </table>
-  //   </div>
-  // </div>
-
-  // <!-- No Quizzes Message Section -->
-  // <div v-else class="text-center">
-  //   <p class="text-danger fw-bold">⚠️ No quizzes available at the moment. Please check back later!</p>
-  // </div>
+    <!-- 
+    <!-- Quizzes Table Section -->
+    <div v-if="quizzes.length">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered shadow">
+          <thead class="table-dark">
+            <tr>
+              <th>S no.</th>
+              <th>📚 Title</th>
+              <th>📅 Date</th>
+              <th>⏳ Duration (min)</th>
+              <th>CHAPTER</th>
+              <th>🚀 Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="quiz in quizzes" :key="quiz.id">
+              <td class="fw-bold">{{ quiz.id }}</td>
+              <td>{{ quiz.title }}</td>
+              <td>{{ quiz.date }}</td>
+              <td>{{ quiz.duration }}</td>
+              <td>{{ quiz.chapter?.name || 'Unknown' }}</td>
+                <button class="btn btn-success btn-sm" @click="startQuiz(quiz)">
+                  🎯 Start Quiz
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- No Quizzes Message Section -->
+    <div v-else class="text-center">
+      <p class="text-danger fw-bold">⚠️ No quizzes available at the moment. Please check back later!</p>
+    </div> 
+    -->
   <!-- Spinner Section -->
 <div v-if="loading" class="text-center my-5">
   <div class="spinner-border text-primary" role="status">
