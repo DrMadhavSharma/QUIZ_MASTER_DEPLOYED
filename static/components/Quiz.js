@@ -1,66 +1,73 @@
 export default {
     template: `
     <div class="container py-5">
-  <!-- Timer and Progress Section -->
-  <div v-if="questions.length">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div class="d-flex align-items-center">
-        <h4 class="me-2 text-primary fw-bold">⏳ TIME LEFT:</h4>
-        <span class="badge bg-danger fs-4 p-3 shadow">{{ formattedTime }}</span>
+
+      <!-- Spinner Section -->
+      <div v-if="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-      <div class="d-flex align-items-center">
-        <h5 class="me-2">✅ Questions Attempted:</h5>
-        <span class="badge bg-success fs-5 p-2">{{ attemptedQuestions }} / {{ questions.length }}</span>
+
+      <!-- Quiz Content -->
+      <div v-else>
+        <!-- Timer and Progress Section -->
+        <div v-if="questions.length">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+              <h4 class="me-2 text-primary fw-bold">⏳ TIME LEFT:</h4>
+              <span class="badge bg-danger fs-4 p-3 shadow">{{ formattedTime }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <h5 class="me-2">✅ Questions Attempted:</h5>
+              <span class="badge bg-success fs-5 p-2">{{ attemptedQuestions }} / {{ questions.length }}</span>
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="card shadow-lg border-0 p-4 mb-4">
+            <h5 class="fw-bold text-dark mb-4">{{ currentIndex + 1 }}. {{ currentQuestion.text }}</h5>
+
+            <div class="list-group">
+              <label
+                class="list-group-item list-group-item-action py-3"
+                v-for="(option, optIndex) in currentQuestion.options"
+                :key="optIndex"
+              >
+                <input
+                  type="radio"
+                  :name="'question-' + currentQuestion.id"
+                  :value="optIndex"
+                  v-model="userAnswers[currentQuestion.id]"
+                  @change="{ setUserAnswer(optIndex), updateAttemptedCount() }"
+                  class="form-check-input me-2"
+                />
+                {{ option.text }}
+              </label>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <button class="btn btn-outline-secondary" @click="prevQuestion" :disabled="currentIndex === 0">
+                ⬅️ Previous
+              </button>
+              <button class="btn btn-primary" @click="nextQuestion" v-if="currentIndex < questions.length - 1">
+                Next ➡️
+              </button>
+              <button class="btn btn-success" @click="submitAnswers" v-if="currentIndex === questions.length - 1">
+                ✅ Submit Answers
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Questions Section -->
+        <div v-else class="text-center">
+          <p class="text-danger fw-bold">⚠️ No questions available for this quiz.</p>
+          <router-link to="/dashboard" class="btn btn-outline-primary">🔙 Back to Quizzes</router-link>
+        </div>
       </div>
     </div>
-
-    <!-- Question Card -->
-    <div class="card shadow-lg border-0 p-4 mb-4">
-      <h5 class="fw-bold text-dark mb-4">{{ currentIndex + 1 }}. {{ currentQuestion.text }}</h5>
-
-      <!-- Options Section with Highlight on Hover -->
-      <div class="list-group">
-        <label
-          class="list-group-item list-group-item-action py-3"
-          v-for="(option, optIndex) in currentQuestion.options"
-          :key="optIndex"
-        >
-          <input
-            type="radio"
-            :name="'question-' + currentQuestion.id  "
-            :value="optIndex"
-            v-model="userAnswers[currentQuestion.id]"
-            @change="{setUserAnswer(optIndex),updateAttemptedCount()}"
-            class="form-check-input me-2"
-          />
-          {{ option.text  }}
-        </label>
-      </div>
-
-      <!-- Navigation Buttons -->
-      <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-outline-secondary" @click="prevQuestion" :disabled="currentIndex === 0">
-          ⬅️ Previous
-        </button>
-        <button class="btn btn-primary" @click="nextQuestion" v-if="currentIndex < questions.length - 1">
-          Next ➡️
-        </button>
-        <button class="btn btn-success" @click="submitAnswers" v-if="currentIndex === questions.length - 1">
-          ✅ Submit Answers
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- No Questions Section -->
-  <div v-else class="text-center">
-    <p class="text-danger fw-bold">⚠️ No questions available for this quiz.</p>
-    <router-link to="/dashboard" class="btn btn-outline-primary">🔙 Back to Quizzes</router-link>
-  </div>
-</div>
-
-
-    `,
+  `,
   
     data() {
       return {
@@ -72,6 +79,7 @@ export default {
         currentIndex: 0,
         timerInterval: null,
         timeLeft: 0,
+        loading: true // spinner initially shown
       };
     }
     ,computed: {
@@ -170,6 +178,7 @@ export default {
   },
       fetchQuizData() {
         const quizId = this.$route.params.quiz_id;
+        this.loading = true; // start spinner
         fetch(`/api/getquiz?quiz_id=${quizId}`)
         .then(response => {
           if (!response.ok) {
@@ -219,8 +228,14 @@ export default {
               }
               return response.json();
             })
-            .then((data) => (this.questions = data))
-            .catch((error) => console.error("Error fetching questions:", error));
+            .then((data) => {
+          this.questions = data;
+          this.loading = false; // stop spinner once questions are fetched
+        })
+        .catch((error) => {
+          console.error("Error fetching questions:", err);
+          this.loading = false; // stop spinner even if error
+        });
       },
   
       
