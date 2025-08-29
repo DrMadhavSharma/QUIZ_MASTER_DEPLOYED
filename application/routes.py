@@ -201,42 +201,72 @@ with app.app_context():
             "roles": roles_list(user.roles)
         })
 
+    # @app.route('/api/login', methods=['POST'])
+    # def user_login():
+    #     body = request.get_json() #converts json string to json
+    #     email = body['email']
+    #     password = body['password']
+
+    #     if not email:
+    #         return jsonify({
+    #             "message": "Email is required!"
+    #         }), 400
+        
+    #     user = app.security.datastore.find_user(email = email) #finding user with given email with flask authentication
+
+    #     if user:
+    #         if check_password_hash(user.password, password):
+                
+    #             # if current_user.is_authenticated:
+    #             #     return jsonify({
+    #             #     "message": "Already logged in!"
+    #             # }), 400
+    #             login_user(user) #used to load current user information
+    #             return jsonify({
+    #                 "id": user.id,
+    #                 "username": user.username,
+    #                 "auth-token": user.get_auth_token(),
+    #                 # "roles": roles_list(user.roles) 
+    #                 "roles": roles_list(current_user.roles) 
+    #             })
+    #         else:
+    #             return jsonify({
+    #                 "message": "Incorrect Password"
+    #             }), 400
+    #     else:
+    #         return jsonify({
+    #                 "message": "User Not Found!"
+    #             }), 404 
     @app.route('/api/login', methods=['POST'])
     def user_login():
-        body = request.get_json() #converts json string to json
-        email = body['email']
-        password = body['password']
+        body = request.get_json()
+        email = body.get('email')
+        password = body.get('password')
+    
+        if not email or not password:
+            return jsonify({"message": "Email and password are required!"}), 400
+    
+        try:
+            user = app.security.datastore.find_user(email=email)
+        except SQLAlchemyError:
+            db.session.rollback()
+            return jsonify({"message": "Database error"}), 500
+    
+        if not user:
+            return jsonify({"message": "User Not Found!"}), 404
+    
+        if not check_password_hash(user.password, password):
+            return jsonify({"message": "Incorrect Password"}), 400
+    
+        login_user(user)
+    
+        return jsonify({
+            "id": user.id,
+            "username": user.username,
+            "auth-token": user.get_auth_token(),
+            "roles": roles_list(user.roles)
+        })
 
-        if not email:
-            return jsonify({
-                "message": "Email is required!"
-            }), 400
-        
-        user = app.security.datastore.find_user(email = email) #finding user with given email with flask authentication
-
-        if user:
-            if check_password_hash(user.password, password):
-                
-                # if current_user.is_authenticated:
-                #     return jsonify({
-                #     "message": "Already logged in!"
-                # }), 400
-                login_user(user) #used to load current user information
-                return jsonify({
-                    "id": user.id,
-                    "username": user.username,
-                    "auth-token": user.get_auth_token(),
-                    # "roles": roles_list(user.roles) 
-                    "roles": roles_list(current_user.roles) 
-                })
-            else:
-                return jsonify({
-                    "message": "Incorrect Password"
-                }), 400
-        else:
-            return jsonify({
-                    "message": "User Not Found!"
-                }), 404 
     @app.route('/api/adminDASHBOARD')
     @auth_required('token') # Authentication required (देखेगा कि user है )                          
     @roles_required('admin') # RBAC/Authorization (देखेगा कि कौन सा  user है -admin,normal user)
