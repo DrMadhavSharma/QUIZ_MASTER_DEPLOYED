@@ -119,8 +119,8 @@ class Option(db.Model):
 
 class QuizAttempt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id', ondelete='CASCADE'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     date_attempted = db.Column(db.DateTime, default=datetime.now)
     def serialize(self):
