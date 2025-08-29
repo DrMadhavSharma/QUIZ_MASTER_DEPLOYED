@@ -72,6 +72,7 @@ export default {
     data() {
       return {
         quizzes: [],
+        loading: true,// start as true to show spinner
         userId: null,
       };
     },
