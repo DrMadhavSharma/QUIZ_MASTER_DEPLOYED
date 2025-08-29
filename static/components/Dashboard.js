@@ -91,10 +91,14 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.quizzes = Array.isArray(data) ? data : [];
-          this.loading = false; // hide spinner after data arrives
+          setTimeout(() => this.loading = false, 300); // minimum 300ms spinner // hide spinner after data arrives
         })
-        .catch((error) => console.error("Error fetching quizzes:", error));
-          this.loading = false; // hide spinner even on error
+        .catch((error) => {
+         console.error("Error fetching quizzes:", error);
+         this.quizzes = [];
+         this.loading = false; // hide spinner on error
+         });
+          
       },
       startQuiz(quiz) {
         if (!quiz || !quiz.id || !quiz.duration) {
