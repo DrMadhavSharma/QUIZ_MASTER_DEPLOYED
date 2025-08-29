@@ -85,18 +85,18 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
     @auth_required('token')
     @roles_required('admin')
     def delete(self, quiz_id):
-    quiz = Quiz.query.get(quiz_id)
-
-    if not quiz:
-        return {'message': 'Quiz not found'}, 404
-
-    try:
-        db.session.delete(quiz)
-        db.session.commit()
-        return {'message': 'Quiz deleted successfully'}, 200
-    except Exception as e:
-        db.session.rollback()  # rollback the session to avoid PendingRollbackError
-        return {'message': f'Failed to delete quiz: {str(e)}'}, 400
+        quiz = Quiz.query.get(quiz_id)
+    
+        if not quiz:
+            return {'message': 'Quiz not found'}, 404
+    
+        try:
+            db.session.delete(quiz)
+            db.session.commit()
+            return {'message': 'Quiz deleted successfully'}, 200
+        except Exception as e:
+            db.session.rollback()  # rollback the session to avoid PendingRollbackError
+            return {'message': f'Failed to delete quiz: {str(e)}'}, 400
 
 api.add_resource(QuizResource, '/api/getquiz','/api/createquiz','/api/updatequiz/<int:quiz_id>','/api/deletequiz/<int:quiz_id>') #adding the route name here
 
