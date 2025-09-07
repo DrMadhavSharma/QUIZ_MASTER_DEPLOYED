@@ -53,7 +53,49 @@ export default {
         <button class="btn" type="submit" 
           style="border: 2px solid #000000; background-color: #ffffff; color: #000000; padding: 0.5rem 1rem; cursor: pointer;">Search</button>
       </form>
+      <!-- No Results Modal -->
+        <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">No Results Found</h5>
+                <button type="button" class="btn-close" @click="searchPerformed = false;" 
+                  style="background-color: transparent; border: none;">&times;</button>
+              </div>
+              <div class="modal-body">
+                <p>No results match your search query. Please try again.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="searchPerformed = false;" 
+                  style="border-radius: 5px;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Results Modal -->
+        <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Search Results</h5>
+                <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
+                  style="background-color: transparent; border: none;">&times;</button>
+              </div>
+              <div class="modal-body">
+                <ul>
+                  <li v-for="result in results" :key="result.id">
+                    {{ result.name || result.title || result.username || result.text || result.email }}
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="results = []; searchPerformed = false;" 
+                  style="border-radius: 5px;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
       <!-- User Authentication Links -->
       <div style="margin-top: 10px;">
