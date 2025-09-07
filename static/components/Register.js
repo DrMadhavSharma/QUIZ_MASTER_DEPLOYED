@@ -1,9 +1,9 @@
 export default {
     template: `
-    <div class="row justify-content-center align-items-center" style="height: 100vh; background-color: #f8f9fa;">
+    <div class="row justify-content-center align-items-center" style="height: 100vh; background-color: #ffffff;">
   <div class="col-md-4">
-    <div class="card shadow-lg p-4 rounded-4">
-      <h2 class="text-center text-primary mb-4">Create an Account</h2>
+    <div class="card shadow-lg p-4 rounded-4 border-2 border-dark" style="background-color: #ffffff;">
+      <h2 class="text-center mb-4" style="color: #000000;">Create an Account</h2>
       
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
@@ -21,7 +21,7 @@ export default {
       </div>
       
       <div class="text-center">
-        <button class="btn btn-primary btn-lg w-100" @click="addUser">Register</button>
+        <button class="btn btn-lg w-100" @click="addUser" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">Register</button>
       </div>
     </div>
   </div>

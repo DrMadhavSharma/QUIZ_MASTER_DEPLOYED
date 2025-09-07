@@ -1,10 +1,10 @@
 export default {
     template: `
-    <div class="row justify-content-center align-items-center" style="height: 100vh; background-color: #f8f9fa;">
+    <div class="row justify-content-center align-items-center" style="height: 100vh; background-color: #ffffff;">
   <div class="col-12 col-md-8 col-lg-4">
-    <div class="card shadow-lg border-0 rounded-4">
+    <div class="card shadow-lg border-2 border-dark rounded-4" style="background-color: #ffffff;">
       <div class="card-body p-5">
-        <h2 class="text-center text-primary mb-4">Welcome Back!</h2>
+        <h2 class="text-center mb-4" style="color: #000000;">Welcome Back!</h2>
         
         <p v-if="message" class="text-center text-danger">{{ message }}</p>
         <form @submit.prevent="loginUser">
@@ -20,10 +20,10 @@ export default {
           </div>
 
           <div class="d-grid">
-            <button class="btn btn-primary btn-lg" @click="loginUser">Login</button>
+            <button class="btn btn-lg" @click="loginUser" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">Login</button>
           </div>
         </form>
-        <p class="text-center mt-3 text-muted">Don't have an account? <router-link class="btn btn-warning me-2" to="/register">Register</router-link></p>
+        <p class="text-center mt-3" style="color: #333333;">Don't have an account? <router-link class="btn me-2" to="/register" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Register</router-link></p>
       </div> 
     </div>
   </div>

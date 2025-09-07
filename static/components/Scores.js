@@ -3,8 +3,8 @@ export default {
     <div v-if="user" class="container mt-5">
   <!-- Header Section -->
   <div class="text-center">
-    <h1 class="display-3 fw-bold mb-3">🎉 Quiz Results for <span class="text-primary">{{ user }}</span></h1>
-    <p class="lead">Total Attempts: <span class="badge bg-info fs-6">{{ totalAttempts }}</span></p>
+    <h1 class="display-3 fw-bold mb-3" style="color: #000000;">🎉 Quiz Results for <span style="color: #000000;">{{ user }}</span></h1>
+    <p class="lead" style="color: #333333;">Total Attempts: <span class="badge fs-6" style="background-color: #333333; color: #ffffff;">{{ totalAttempts }}</span></p>
   </div>
 
   <!-- Accordion Section for Quiz Results -->
@@ -16,8 +16,8 @@ export default {
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                     :data-bs-target="'#collapse' + index" aria-expanded="false" :aria-controls="'collapse' + index">
               <span class="fw-bold">{{ attempt.quiz_title || 'Quiz Not Found' }}</span> 
-              - Score: <span class="text-success">{{ attempt.score }}</span> / 
-              <span class="text-warning">{{ attempt.max_score || 'N/A' }}</span> 
+              - Score: <span style="color: #000000;">{{ attempt.score }}</span> / 
+              <span style="color: #333333;">{{ attempt.max_score || 'N/A' }}</span> 
               ({{ attempt.percentage || 'N/A' }}%)
             </button>
           </h2>
@@ -35,28 +35,28 @@ export default {
 
   <!-- Back to Quizzes Button -->
   <div class="text-center mt-5">
-    <router-link to="/dashboard" class="btn btn-lg btn-outline-primary shadow-sm">🔙 Back to Quizzes</router-link>
+    <router-link to="/dashboard" class="btn btn-lg shadow-sm" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">🔙 Back to Quizzes</router-link>
   </div>
 </div>
 
 <!-- No Results Section -->
 <div v-else-if="message" class="text-center mt-5">
-  <h1 class="display-4 text-secondary">😔 {{ message }}</h1>
-  <router-link to="/dashboard" class="btn btn-lg btn-outline-secondary mt-3">Go to Quizzes</router-link>
+  <h1 class="display-4" style="color: #333333;">😔 {{ message }}</h1>
+  <router-link to="/dashboard" class="btn btn-lg mt-3" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Go to Quizzes</router-link>
 </div>
 
 <!-- Error Section -->
 <div v-else-if="error" class="text-center mt-5">
-  <h1 class="display-4 text-danger">🚨 {{ error }}</h1>
-  <router-link to="/dashboard" class="btn btn-lg btn-outline-secondary mt-3">Go to Quizzes</router-link>
+  <h1 class="display-4" style="color: #000000;">🚨 {{ error }}</h1>
+  <router-link to="/dashboard" class="btn btn-lg mt-3" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Go to Quizzes</router-link>
 </div>
 
 <!-- Loading Spinner -->
 <div v-else class="text-center mt-5">
-  <div class="spinner-border text-primary" role="status">
+  <div class="spinner-border" role="status" style="color: #000000;">
     <span class="visually-hidden">Loading...</span>
   </div>
-  <p class="mt-2 text-muted">Loading your dashboard...</p>
+  <p class="mt-2" style="color: #333333;">Loading your scores...</p>
 </div>
 
   `,

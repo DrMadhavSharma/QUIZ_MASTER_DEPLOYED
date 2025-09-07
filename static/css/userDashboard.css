@@ -1,7 +1,7 @@
-/* User Dashboard Custom Styles */
+/* User Dashboard Custom Styles - Black and White Theme */
 
 .bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
 }
 
 .card {
@@ -10,7 +10,7 @@
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
 }
 
 .progress {
@@ -36,7 +36,7 @@
 }
 
 .table-hover tbody tr:hover {
-    background-color: rgba(0,123,255,0.1);
+    background-color: rgba(0,0,0,0.1);
 }
 
 /* Animation for stats cards */
@@ -77,15 +77,107 @@
 }
 
 .table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f8f8f8;
     border-radius: 3px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #333;
     border-radius: 3px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #000;
+}
+
+/* Black and White Theme Overrides */
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.bg-primary {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.bg-secondary {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+.bg-light {
+    background-color: #f8f8f8 !important;
+    color: #000000 !important;
+}
+
+.bg-dark {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.text-primary {
+    color: #000000 !important;
+}
+
+.text-secondary {
+    color: #333333 !important;
+}
+
+.btn-primary {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #333333;
+    border-color: #333333;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #333333;
+    border-color: #333333;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.btn-outline-primary {
+    color: #000000;
+    border-color: #000000;
+}
+
+.btn-outline-primary:hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    color: #000000;
+}
+
+.navbar {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.navbar-brand {
+    color: #000000 !important;
+}
+
+.nav-link {
+    color: #000000 !important;
+}
+
+.nav-link:hover {
+    color: #333333 !important;
 }

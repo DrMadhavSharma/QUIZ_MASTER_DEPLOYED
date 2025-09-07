@@ -3,23 +3,23 @@ export default {
     <div class="container my-5">
       <!-- Loading Spinner -->
         <div v-if="isLoading" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border" role="status" style="color: #000000;">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2 text-muted">Loading your dashboard...</p>
+            <p class="mt-2" style="color: #333333;">Loading your dashboard...</p>
         </div>
         <!-- Welcome Header -->
         <div v-else>
-          <h1 class="text-primary mb-4">Admin Summary</h1>
-          <div class="row border">
+          <h1 class="mb-4" style="color: #000000;">Admin Summary</h1>
+          <div class="row border-2 border-dark">
             <div class="text-end my-2">
-                <button @click="csvExport" class="btn btn-secondary">Download CSV</button>
+                <button @click="csvExport" class="btn" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Download CSV</button>
             </div>
           </div>
         
           <!-- Summary Details Section -->
-          <div v-if="summaryData" class="card mb-4">
-            <div class="card-header bg-info text-white">
+          <div v-if="summaryData" class="card mb-4 border-2 border-dark">
+            <div class="card-header" style="background-color: #000000; color: #ffffff;">
               <h2 class="mb-0">Summary Details</h2>
             </div>
             <div class="card-body">
@@ -33,7 +33,7 @@ export default {
           </div>
         
           <!-- Top Scorer Section -->
-          <div v-if="topScorer" class="alert alert-success d-flex align-items-center" role="alert">
+          <div v-if="topScorer" class="alert d-flex align-items-center" role="alert" style="background-color: #f8f8f8; border: 2px solid #000000; color: #000000;">
             <i class="bi bi-trophy me-2"></i>
             <div>
               <h2 class="mb-1">🏆 Top Scorer</h2>
@@ -42,8 +42,8 @@ export default {
           </div>
         
           <!-- Chart Section -->
-          <div v-if="chartSrc" class="card mb-4">
-            <div class="card-header bg-warning">
+          <div v-if="chartSrc" class="card mb-4 border-2 border-dark">
+            <div class="card-header" style="background-color: #333333; color: #ffffff;">
               <h2 class="mb-0">📊 Graph</h2>
             </div>
             <div class="card-body text-center">
@@ -52,7 +52,7 @@ export default {
           </div>
         
           <!-- Error Section -->
-          <div v-if="error" class="alert alert-danger" role="alert">
+          <div v-if="error" class="alert" role="alert" style="background-color: #f8f8f8; border: 2px solid #000000; color: #000000;">
             ⚠️ {{ error }}
           </div>
         </div>

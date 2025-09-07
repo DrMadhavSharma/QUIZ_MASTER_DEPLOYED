@@ -3,36 +3,36 @@ export default {
     <div class="container-fluid py-4">
         <!-- Loading Spinner -->
         <div v-if="isLoading" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border" role="status" style="color: #000000;">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2 text-muted">Loading your dashboard...</p>
+            <p class="mt-2" style="color: #333333;">Loading your dashboard...</p>
         </div>
         <!-- Welcome Header -->
         <div v-else>
                 <div class="row mb-4">
                     <div class="col-12">
-                        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+                        <div class="card border-2 border-dark shadow-sm bg-gradient-primary text-white">
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
-                                        <h1 class="card-title mb-2">
+                                        <h1 class="card-title mb-2" style="color: #ffffff;">
                                             <i class="fas fa-user-circle me-2"></i>
                                              Welcome back, {{ displayName }}! 👋
                                         </h1>
-                                        <p class="card-text mb-0">
+                                        <p class="card-text mb-0" style="color: #ffffff;">
                                             Ready to test your knowledge? Let's see how you're doing today!
                                         </p>
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <div class="d-flex justify-content-end">
                                             <div class="text-center me-4">
-                                                <h3 class="mb-0">{{ userStats.totalQuizzes }}</h3>
-                                                <small>Quizzes Taken</small>
+                                                <h3 class="mb-0" style="color: #ffffff;">{{ userStats.totalQuizzes }}</h3>
+                                                <small style="color: #ffffff;">Quizzes Taken</small>
                                             </div>
                                             <div class="text-center">
-                                                <h3 class="mb-0">{{ userStats.averageScore }}%</h3>
-                                                <small>Average Score</small>
+                                                <h3 class="mb-0" style="color: #ffffff;">{{ userStats.averageScore }}%</h3>
+                                                <small style="color: #ffffff;">Average Score</small>
                                             </div>
                                         </div>
                                     </div>

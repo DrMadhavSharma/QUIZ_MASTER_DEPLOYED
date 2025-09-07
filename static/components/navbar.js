@@ -1,29 +1,29 @@
 export default {
   template: `
 <div>
-  <nav style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); padding: 10px;">
+  <nav style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); padding: 10px; border-bottom: 2px solid #000000;">
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
       
       <!-- Brand with Hover Animation -->
       <a href="#" 
-         style="font-size: 24px; font-weight: bold; color: #242424; text-decoration: none; transition: color 0.3s;" 
-         @mouseover="changeColor('#333')" 
-         @mouseleave="changeColor('#242424')">
+         style="font-size: 24px; font-weight: bold; color: #000000; text-decoration: none; transition: color 0.3s;" 
+         @mouseover="changeColor('#333333')" 
+         @mouseleave="changeColor('#000000')">
          QUIZ MASTER
       </a>
 
       <!-- SCORES and Summary Buttons -->
       <div style="margin-top: 10px; text-align: center;">
         <router-link to="/user-dashboard" 
-          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; text-decoration: none; transition: background 0.3s;"
+          style="margin: 5px; padding: 8px 12px; border: 2px solid #000000; background-color: white; color: #000000; text-decoration: none; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Dashboard</router-link>
         <button @click="MOVETOSCORES()" 
-          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; cursor: pointer; transition: background 0.3s;"
+          style="margin: 5px; padding: 8px 12px; border: 2px solid #000000; background-color: white; color: #000000; cursor: pointer; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">SCORES</button>
         <button @click="MOVETOSUMMARY()" 
-          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; cursor: pointer; transition: background 0.3s;"
+          style="margin: 5px; padding: 8px 12px; border: 2px solid #000000; background-color: white; color: #000000; cursor: pointer; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Summary</button>
       </div>
@@ -31,9 +31,9 @@ export default {
       <!-- Search Section -->
       <form @submit.prevent="performSearch" style="display: flex; align-items: center; margin-top: 10px;">
         <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-          style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; margin-right: 5px;">
+          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
         <select v-model="searchCategory" 
-          style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; margin-right: 5px;">
+          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
           <option value="users">Users</option>
           <option value="subjects">Subjects</option>
           <option value="quizzes">Quizzes</option>
@@ -41,7 +41,7 @@ export default {
           <option value="options">Options</option>
         </select>
         <button type="submit" 
-          style="border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; cursor: pointer;">
+          style="border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
           Search
         </button>
       </form>
@@ -49,11 +49,11 @@ export default {
       <!-- User Authentication Links -->
       <div style="margin-top: 10px;">
         <router-link to="/login" 
-          style="margin-right: 5px; border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; text-decoration: none; transition: background 0.3s;"
+          style="margin-right: 5px; border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; text-decoration: none; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Login</router-link>
         <button @click="logout" 
-          style="border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; cursor: pointer; transition: background 0.3s;"
+          style="border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; cursor: pointer; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Logout</button>
       </div>
@@ -193,11 +193,15 @@ export default {
               this.navbarColor = color; // Update the navbar color on mouseover and mouseleave
             },
             hoverButton(event) {
-              event.target.style.transform = 'scale(1.1)';
-              event.target.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.2)';
+              event.target.style.transform = 'scale(1.05)';
+              event.target.style.backgroundColor = '#000000';
+              event.target.style.color = '#ffffff';
+              event.target.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
             },
             resetButton(event) {
               event.target.style.transform = 'scale(1)';
+              event.target.style.backgroundColor = '#ffffff';
+              event.target.style.color = '#000000';
               event.target.style.boxShadow = 'none';
             }
   

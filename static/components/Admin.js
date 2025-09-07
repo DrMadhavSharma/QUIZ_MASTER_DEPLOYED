@@ -11,7 +11,7 @@ export default {
 <div class="col-12 text-end">
   <button 
     @click="showAddSubjectForm = !showAddSubjectForm"
-    style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
     {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
   </button>
 </div>
@@ -21,11 +21,11 @@ export default {
     v-model="newSubject.name" 
     type="text" 
     placeholder="Enter Subject Name" 
-    style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:15px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:8px; width:100%;" 
+    style="background-color:#ffffff; border:2px solid #000000; padding:8px; font-size:15px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.3); margin-bottom:8px; width:100%; color:#000000;" 
   />
   <button 
     @click="addSubject"
-    style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
     Add
   </button>
 </div>
@@ -34,56 +34,56 @@ export default {
    <!-- Subjects and Chapters Section -->
 <div class="row container-fluid p-4" style="background-color:white;">
   <div class="col-md-6 mb-4" v-for="subject in subjects" :key="subject.id">
-    <div class="card" style="border:1px solid #ddd; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-radius:8px;">
+    <div class="card" style="border:2px solid #000000; box-shadow:0 2px 5px rgba(0,0,0,0.3); border-radius:8px;">
       <div class="card-header d-flex justify-content-between align-items-center" 
-           style="background-color:#333; color:white; padding:10px; border-radius:8px 8px 0 0;">
+           style="background-color:#000000; color:#ffffff; padding:10px; border-radius:8px 8px 0 0;">
         <h5 class="mb-0" style="font-size:16px;">{{ subject.name }}</h5>
         <div>
           <button @click="editSubject(subject)" 
-                  style="background-color:#666; color:white; border:none; padding:4px 10px; font-size:13px; border-radius:4px; margin-right:5px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+                  style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 10px; font-size:13px; border-radius:4px; margin-right:5px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
             Edit
           </button>
           <button @click="deleteSubject(subject.id)" 
-                  style="background-color:#b33; color:white; border:none; padding:4px 10px; font-size:13px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+                  style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 10px; font-size:13px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
             Delete
           </button>
         </div>
       </div>
 
       <div class="card-body" style="padding:12px;">
-        <h6 style="color:#242424; font-size:15px;">Chapters:</h6>
+        <h6 style="color:#000000; font-size:15px;">Chapters:</h6>
         <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" 
-               style="background-color:whitesmoke; border:1px solid #ccc; padding:6px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; box-shadow:0 1px 2px rgba(0,0,0,0.1);" />
+               style="background-color:#ffffff; border:2px solid #000000; padding:6px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; box-shadow:0 1px 2px rgba(0,0,0,0.3); color:#000000;" />
         <button @click="addChapter(subject.id)" 
-                style="background-color:#333; color:white; border:none; padding:6px 12px; font-size:13px; border-radius:4px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:6px 12px; font-size:13px; border-radius:4px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
           Add Chapter
         </button>
 
         <table v-if="filteredChapters(subject.id).length" 
                style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;">
-          <thead style="background-color:#333; color:white;">
+          <thead style="background-color:#000000; color:#ffffff;">
             <tr>
-              <th style="padding:6px; border:1px solid #ddd;">Serial No.</th>
-              <th style="padding:6px; border:1px solid #ddd;">Chapter Name</th>
-              <th style="padding:6px; border:1px solid #ddd;">Actions</th>
+              <th style="padding:6px; border:2px solid #000000;">Serial No.</th>
+              <th style="padding:6px; border:2px solid #000000;">Chapter Name</th>
+              <th style="padding:6px; border:2px solid #000000;">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id" 
-                style="background-color:white; border:1px solid #ddd;">
-              <td style="padding:6px; border:1px solid #ddd;">{{ index + 1 }}</td>
-              <td style="padding:6px; border:1px solid #ddd;">{{ chapter.name }}</td>
-              <td style="padding:6px; border:1px solid #ddd;">
+                style="background-color:#ffffff; border:2px solid #000000;">
+              <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ index + 1 }}</td>
+              <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ chapter.name }}</td>
+              <td style="padding:6px; border:2px solid #000000;">
                 <button @click="editChapter(chapter)" 
-                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Edit
                 </button>
                 <button @click="deleteChapter(chapter.id, subject.id)" 
-                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Delete
                 </button>
                 <button @click="openQuizModal(chapter)" 
-                        style="background-color:#666; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Manage Quizzes
                 </button>
               </td>
@@ -101,51 +101,51 @@ export default {
     <div class="modal-content" style="border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:none;">
       
       <!-- Modal Header -->
-      <div class="modal-header" style="background-color:#333; color:white; border-radius:8px 8px 0 0; padding:10px 15px;">
+      <div class="modal-header" style="background-color:#000000; color:#ffffff; border-radius:8px 8px 0 0; padding:10px 15px;">
         <h5 class="modal-title" style="font-size:16px;">Manage Quizzes for {{ currentChapter ? currentChapter.name : '' }}</h5>
         <button type="button" @click="showQuizModal = false" 
-                style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">&times;</button>
+                style="background:none; border:none; font-size:20px; color:#ffffff; cursor:pointer;">&times;</button>
       </div>
 
       <!-- Modal Body -->
       <div class="modal-body" style="padding:15px; background-color:white; border-radius:0 0 8px 8px;">
         <input v-model="newQuiz.title" type="text" placeholder="Quiz Title" 
-               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+               style="background-color:#ffffff; border:2px solid #000000; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; color:#000000;" />
         <input v-model="newQuiz.date" type="date" 
-               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+               style="background-color:#ffffff; border:2px solid #000000; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; color:#000000;" />
         <input v-model="newQuiz.duration" type="number" placeholder="Duration (minutes)" 
-               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+               style="background-color:#ffffff; border:2px solid #000000; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; color:#000000;" />
         <button @click="addQuiz" 
-                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
           Add Quiz
         </button>
 
         <!-- Quizzes Table -->
         <table v-if="quizzes.length" style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;">
-          <thead style="background-color:#333; color:white;">
+          <thead style="background-color:#000000; color:#ffffff;">
             <tr>
-              <th style="padding:6px; border:1px solid #ddd;">Title</th>
-              <th style="padding:6px; border:1px solid #ddd;">Date</th>
-              <th style="padding:6px; border:1px solid #ddd;">Duration (min)</th>
-              <th style="padding:6px; border:1px solid #ddd;">Actions</th>
+              <th style="padding:6px; border:2px solid #000000;">Title</th>
+              <th style="padding:6px; border:2px solid #000000;">Date</th>
+              <th style="padding:6px; border:2px solid #000000;">Duration (min)</th>
+              <th style="padding:6px; border:2px solid #000000;">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="quiz in quizzes" :key="quiz.id" style="background-color:white; border:1px solid #ddd;">
-              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.title }}</td>
-              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.date }}</td>
-              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.duration }}</td>
-              <td style="padding:6px; border:1px solid #ddd;">
+            <tr v-for="quiz in quizzes" :key="quiz.id" style="background-color:#ffffff; border:2px solid #000000;">
+              <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ quiz.title }}</td>
+              <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ quiz.date }}</td>
+              <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ quiz.duration }}</td>
+              <td style="padding:6px; border:2px solid #000000;">
                 <button @click="editQuiz(quiz)" 
-                        style="background-color:#666; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Edit
                 </button>
                 <button @click="deleteQuiz(quiz.id)" 
-                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Delete
                 </button>
                 <button @click="openQuestionModal(quiz)" 
-                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
                   Manage Questions
                 </button>
               </td>

@@ -1,8 +1,8 @@
 export default {
     template: `
       <div class="container py-5">
-        <h1 class="text-center mb-4 text-primary">Welcome to the Quiz Payment Portal</h1>
-        <form @submit.prevent="submitPayment" class="card p-4 shadow">
+        <h1 class="text-center mb-4" style="color: #000000;">Welcome to the Quiz Payment Portal</h1>
+        <form @submit.prevent="submitPayment" class="card p-4 shadow border-2 border-dark">
           <div class="mb-3">
             <label for="card_number" class="form-label">Card Number:</label>
             <input type="text" v-model="card_number" class="form-control" required maxlength="16" placeholder="1234 5678 9101 1121" />
@@ -23,10 +23,10 @@ export default {
             <input type="number" step="0.01" v-model="amount" class="form-control" required placeholder="Amount" />
           </div>
   
-          <button type="submit" class="btn btn-success w-100">Pay Now</button>
+          <button type="submit" class="btn w-100" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">Pay Now</button>
         </form>
   
-        <div v-if="message" class="alert mt-4" :class="{'alert-success': message.includes('success'), 'alert-danger': message.includes('failure')}">{{ message }}</div>
+        <div v-if="message" class="alert mt-4" :class="{'alert-success': message.includes('success'), 'alert-danger': message.includes('failure')}" style="border: 2px solid #000000;">{{ message }}</div>
       </div>
     `,
     data: function() {

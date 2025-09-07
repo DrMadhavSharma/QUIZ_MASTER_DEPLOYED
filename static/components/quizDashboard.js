@@ -3,11 +3,11 @@ export default {
     <div class="container py-5">
   <!-- Header Section -->
   <div class="text-center mb-4">
-    <h1 class="fw-bold text-primary">🧑‍🏫 QUIZ_DASHBOARD </h1>
-    <h2 class="text-secondary">All Available Quizzes</h2>
+    <h1 class="fw-bold" style="color: #000000;">🧑‍🏫 QUIZ_DASHBOARD </h1>
+    <h2 style="color: #333333;">All Available Quizzes</h2>
     <div>
-      <router-link  class="btn btn-outline-dark mx-2 btn-lg" to="/payment" 
-        style="transition: all 0.3s ease-in-out;" 
+      <router-link  class="btn mx-2 btn-lg" to="/payment" 
+        style="transition: all 0.3s ease-in-out; background-color: #000000; color: #ffffff; border: 2px solid #000000;" 
         >PAYMENT</router-link>
   </div>
   </div>
@@ -15,17 +15,17 @@ export default {
     
   <!-- Spinner Section -->
 <div v-if="loading" class="text-center my-5">
-  <div class="spinner-border text-primary" role="status">
+  <div class="spinner-border" role="status" style="color: #000000;">
     <span class="visually-hidden">Loading...</span>
   </div>
-  <p class="mt-2 text-muted">Loading quizzes...</p>
+  <p class="mt-2" style="color: #333333;">Loading quizzes...</p>
 </div>
 
 <!-- Quizzes Table Section -->
 <div v-else-if="quizzes.length">
   <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered shadow">
-      <thead class="table-dark">
+      <thead style="background-color: #000000; color: #ffffff;">
         <tr>
           <th>S no.</th>
           <th>📚 Title</th>
@@ -43,7 +43,7 @@ export default {
           <td>{{ quiz.duration }}</td>
           <td>{{ quiz.chapter?.name || 'Unknown' }}</td>
           <td>
-            <button class="btn btn-success btn-sm" @click="startQuiz(quiz)">
+            <button class="btn btn-sm" @click="startQuiz(quiz)" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">
               🎯 Start Quiz
             </button>
           </td>

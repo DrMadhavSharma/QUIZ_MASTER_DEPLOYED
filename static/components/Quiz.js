@@ -4,7 +4,7 @@ export default {
 
       <!-- Spinner Section -->
       <div v-if="loading" class="text-center my-5">
-        <div class="spinner-border text-primary" role="status">
+        <div class="spinner-border" role="status" style="color: #000000;">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -15,18 +15,18 @@ export default {
         <div v-if="questions.length">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
-              <h4 class="me-2 text-primary fw-bold">⏳ TIME LEFT:</h4>
-              <span class="badge bg-danger fs-4 p-3 shadow">{{ formattedTime }}</span>
+              <h4 class="me-2 fw-bold" style="color: #000000;">⏳ TIME LEFT:</h4>
+              <span class="badge fs-4 p-3 shadow" style="background-color: #000000; color: #ffffff;">{{ formattedTime }}</span>
             </div>
             <div class="d-flex align-items-center">
-              <h5 class="me-2">✅ Questions Attempted:</h5>
-              <span class="badge bg-success fs-5 p-2">{{ attemptedQuestions }} / {{ questions.length }}</span>
+              <h5 class="me-2" style="color: #000000;">✅ Questions Attempted:</h5>
+              <span class="badge fs-5 p-2" style="background-color: #333333; color: #ffffff;">{{ attemptedQuestions }} / {{ questions.length }}</span>
             </div>
           </div>
 
           <!-- Question Card -->
-          <div class="card shadow-lg border-0 p-4 mb-4">
-            <h5 class="fw-bold text-dark mb-4">{{ currentIndex + 1 }}. {{ currentQuestion.text }}</h5>
+          <div class="card shadow-lg border-2 border-dark p-4 mb-4">
+            <h5 class="fw-bold mb-4" style="color: #000000;">{{ currentIndex + 1 }}. {{ currentQuestion.text }}</h5>
 
             <div class="list-group">
               <label
