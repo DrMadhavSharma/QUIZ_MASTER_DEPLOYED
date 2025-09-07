@@ -60,8 +60,7 @@ export default {
     </div>
   </nav>
 </div>
-`
-}
+ `,
     data: function(){
         return {loggedIn: localStorage.getItem('auth_token'),
                 searchQuery: '',
