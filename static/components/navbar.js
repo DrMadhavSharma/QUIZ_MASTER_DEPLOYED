@@ -27,24 +27,73 @@ export default {
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Summary</button>
       </div>
-
-      <!-- Search Section -->
-      <form @submit.prevent="performSearch" style="display: flex; align-items: center; margin-top: 10px;">
-        <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
-        <select v-model="searchCategory" 
-          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
-          <option value="users">Users</option>
-          <option value="subjects">Subjects</option>
-          <option value="quizzes">Quizzes</option>
-          <option value="chapters">Chapters</option>
-          <option value="options">Options</option>
-        </select>
-        <button type="submit" 
-          style="border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
-          Search
-        </button>
-      </form>
+            <!-- Navigation Links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <router-link id="routerl" class="btn me-2" to="/adminSummary" 
+          style="border: 2px solid #000000; color: #000000; background-color: #ffffff; transition: all 0.3s ease-in-out;" 
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">SUMMARY</router-link>
+      
+        <!-- Admin-only Search Bar -->
+        <form id="search" class="me-auto" @submit.prevent="performSearch" style="display: flex; align-items: center;">
+          <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
+            style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
+          <select v-model="searchCategory" class="form-select me-2" 
+            style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
+            <option value="users">Users</option>
+            <option value="subjects">Subjects</option>
+            <option value="quizzes">Quizzes</option>
+            <option value="chapters">Chapters</option>
+            <option value="options">Options</option>
+          </select>
+          <button class="btn" type="submit" 
+            style="border: 2px solid #000000; background-color: #ffffff; color: #000000; padding: 0.5rem 1rem; cursor: pointer;">Search</button>
+        </form>
+      
+        <!-- No Results Modal -->
+        <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="border: 2px solid #000000;">
+              <div class="modal-header" style="background-color: #ffffff; color: #000000;">
+                <h5 class="modal-title">No Results Found</h5>
+                <button type="button" class="btn-close" @click="searchPerformed = false;" 
+                  style="background-color: transparent; border: none;"></button>
+              </div>
+              <div class="modal-body" style="background-color: #ffffff; color: #000000;">
+                <p>No results match your search query. Please try again.</p>
+              </div>
+              <div class="modal-footer" style="background-color: #ffffff;">
+                <button type="button" class="btn" @click="searchPerformed = false;" 
+                  style="border: 2px solid #000000; background-color: #ffffff; color: #000000; border-radius: 5px;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Results Modal -->
+        <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content" style="border: 2px solid #000000;">
+              <div class="modal-header" style="background-color: #ffffff; color: #000000;">
+                <h5 class="modal-title">Search Results</h5>
+                <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
+                  style="background-color: transparent; border: none;"></button>
+              </div>
+              <div class="modal-body" style="background-color: #ffffff; color: #000000;">
+                <ul>
+                  <li v-for="result in results" :key="result.id">
+                    {{ result.name || result.title || result.username || result.text || result.email }}
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer" style="background-color: #ffffff;">
+                <button type="button" class="btn" @click="results = []; searchPerformed = false;" 
+                  style="border: 2px solid #000000; background-color: #ffffff; color: #000000; border-radius: 5px;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- User Authentication Links -->
       <div style="margin-top: 10px;">
