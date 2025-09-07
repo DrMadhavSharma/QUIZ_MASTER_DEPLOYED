@@ -37,24 +37,23 @@ export default {
       </div>
 
       <!-- Search Section (Admin Only) -->
-      <div id="search" style="display: none; align-items: center; margin-top: 10px;">
-        <form @submit.prevent="performSearch" style="display: flex; align-items: center;">
-          <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;">
-          <select v-model="searchCategory" 
-            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;">
-            <option value="users">Users</option>
-            <option value="subjects">Subjects</option>
-            <option value="quizzes">Quizzes</option>
-            <option value="chapters">Chapters</option>
-            <option value="options">Options</option>
-          </select>
-          <button type="submit" 
-            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
-            Search
-          </button>
-        </form>
-      </div>
+            <!-- Admin-only Search Bar -->
+      <form id="search" class="me-auto" @submit.prevent="performSearch" 
+            v-show="isAdminPage" style="display: flex; align-items: center;">
+            <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
+          style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
+        <select v-model="searchCategory" class="form-select me-2" 
+          style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
+          <option value="users">Users</option>
+          <option value="subjects">Subjects</option>
+          <option value="quizzes">Quizzes</option>
+          <option value="chapters">Chapters</option>
+          <option value="options">Options</option>
+        </select>
+        <button class="btn" type="submit" 
+          style="border: 2px solid #000000; background-color: #ffffff; color: #000000; padding: 0.5rem 1rem; cursor: pointer;">Search</button>
+      </form>
+
 
       <!-- User Authentication Links -->
       <div style="margin-top: 10px;">
@@ -90,7 +89,7 @@ export default {
         this.CHECKSCORESVISIBILITY();
       },
       watch: {
-        $route() {
+        $route(to) {
           this.checkSearchVisibility();
           this.CHECKSCORESVISIBILITY();
         },
@@ -124,6 +123,7 @@ export default {
           });
         },
         checkSearchVisibility() {
+            this.isAdminPage = this.$route.path.includes('admin');
             const currentPath = this.$route.path;
             const search = document.getElementById('search');
             const adminSummary = document.getElementById('adminSummary');
