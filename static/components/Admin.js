@@ -1,61 +1,106 @@
 export default {
   template: `
-<div>
+<div class="admin-dashboard">
+  <!-- Magical Header -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="magical-header text-center mb-5">
+          <h1 class="display-4 text-primary mb-3">
+            <i class="fas fa-magic me-3"></i>Quiz Master Admin
+            <i class="fas fa-star text-warning ms-2"></i>
+          </h1>
+          <p class="lead text-muted">✨ Create magical learning experiences ✨</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Existing Content -->
 <div>
-  <div class="container mt-5">
-    <h2>Subjects</h2>
+  <div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-primary">
+        <i class="fas fa-book me-2"></i>Subjects
+      </h2>
     
     <!-- Add Subject Section -->
-    <div class="col-12 text-end  ">
-      <button class="btn btn-primary" @click="showAddSubjectForm = !showAddSubjectForm">
-        {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
+    <div class="col-12 text-end">
+      <button class="btn btn-primary btn-lg shadow-lg hover-lift" @click="showAddSubjectForm = !showAddSubjectForm">
+        <i class="fas fa-plus me-2"></i>{{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
       </button>
     </div>
     
-    <div v-if="showAddSubjectForm" class="col-12">
-      <input v-model="newSubject.name" type="text" placeholder="Enter Subject Name" class="form-control mb-2" />
-      <button @click="addSubject" class="btn btn-success">Add</button>
+    <div v-if="showAddSubjectForm" class="col-12 animate-fade-in">
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <input v-model="newSubject.name" type="text" placeholder="✨ Enter Subject Name" class="form-control form-control-lg mb-3 border-0 shadow-sm" />
+          <button @click="addSubject" class="btn btn-success btn-lg w-100 shadow-lg">
+            <i class="fas fa-magic me-2"></i>Create Subject
+          </button>
+        </div>
+      </div>
     </div>
     
     <!-- Subjects and Chapters Section -->
-    <div class="row container-fluid bg-gradient bg-info p-4">
+    <div class="row container-fluid bg-gradient bg-info p-4 rounded-4">
   <div class="col-md-6 mb-4" v-for="subject in subjects" :key="subject.id">
-    <div class="card shadow-lg border-0">
-      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{ subject.name }}</h5>
+    <div class="card shadow-lg border-0 hover-lift transition-all">
+      <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="fas fa-book-open me-2"></i>{{ subject.name }}
+        </h5>
         <div>
-          <button class="btn btn-warning btn-sm me-2" @click="editSubject(subject)">Edit</button>
-          <button class="btn btn-danger btn-sm" @click="deleteSubject(subject.id)">Delete</button>
+          <button class="btn btn-warning btn-sm me-2 hover-scale" @click="editSubject(subject)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-danger btn-sm hover-scale" @click="deleteSubject(subject.id)">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
 
       <div class="card-body">
-        <h6 class="text-success">Chapters:</h6>
-        <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" class="form-control mb-2" />
-        <button @click="addChapter(subject.id)" class="btn btn-primary btn-sm mb-3">Add Chapter</button>
+        <h6 class="text-success mb-3">
+          <i class="fas fa-list me-2"></i>Chapters:
+        </h6>
+        <div class="input-group mb-3">
+          <input v-model="newChapter.name" type="text" placeholder="✨ Enter Chapter Name" class="form-control border-0 shadow-sm" />
+          <button @click="addChapter(subject.id)" class="btn btn-primary hover-scale">
+            <i class="fas fa-plus me-1"></i>Add
+          </button>
+        </div>
 
-        <table class="table table-hover table-striped table-bordered" v-if="filteredChapters(subject.id).length">
-          <thead class="table-dark">
-            <tr>
-              <th>Serial No.</th>
-              <th>Chapter Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ chapter.name }}</td>
-              <td>
-                <button @click="editChapter(chapter)" class="btn btn-sm btn-primary me-1">Edit</button>
-                <button @click="deleteChapter(chapter.id, subject.id)" class="btn btn-sm btn-danger me-1">Delete</button>
-                <button @click="openQuizModal(chapter)" class="btn btn-sm btn-info">Manage Quizzes</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive" v-if="filteredChapters(subject.id).length">
+          <table class="table table-hover table-striped table-bordered shadow-sm">
+            <thead class="table-dark">
+              <tr>
+                <th><i class="fas fa-hashtag me-1"></i>#</th>
+                <th><i class="fas fa-file-alt me-1"></i>Chapter Name</th>
+                <th><i class="fas fa-cogs me-1"></i>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id" class="hover-highlight">
+                <td class="fw-bold">{{ index + 1 }}</td>
+                <td>{{ chapter.name }}</td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <button @click="editChapter(chapter)" class="btn btn-sm btn-primary hover-scale">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button @click="deleteChapter(chapter.id, subject.id)" class="btn btn-sm btn-danger hover-scale">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                    <button @click="openQuizModal(chapter)" class="btn btn-sm btn-info hover-scale">
+                      <i class="fas fa-question-circle me-1"></i>Quizzes
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -715,3 +760,74 @@ deleteQuestion(index) {
     },
   },
 };
+
+// Add magical CSS styles
+const style = document.createElement('style');
+style.textContent = `
+  .admin-dashboard {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+  }
+  
+  .magical-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  }
+  
+  .hover-scale {
+    transition: all 0.2s ease;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.1);
+  }
+  
+  .hover-highlight:hover {
+    background-color: rgba(0, 123, 255, 0.1) !important;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+  
+  .bg-gradient-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3) !important;
+  }
+  
+  .btn-group .btn {
+    border-radius: 0.375rem !important;
+    margin: 0 2px;
+  }
+  
+  .card {
+    border-radius: 15px !important;
+    overflow: hidden;
+  }
+  
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+`;
+document.head.appendChild(style);
