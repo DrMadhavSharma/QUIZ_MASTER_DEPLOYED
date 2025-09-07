@@ -86,29 +86,15 @@ export default {
         }
     },
     mounted() {
-        // Use nextTick to ensure DOM is fully rendered
-        this.$nextTick(() => {
-          this.checkSearchVisibility();
-          this.CHECKSCORESVISIBILITY();
-        });
-        
-        // Make refreshVisibility available globally for debugging
-        window.refreshNavbarVisibility = () => {
-          this.refreshVisibility();
-        };
+        this.checkSearchVisibility();
+        this.CHECKSCORESVISIBILITY();
       },
       watch: {
-        $route(to) {
-          console.log('URL changed:', to.fullPath);
+        $route() {
           this.checkSearchVisibility();
           this.CHECKSCORESVISIBILITY();
         },
-        authToken(newToken, oldToken) {
-          this.checkSearchVisibility();
-          this.CHECKSCORESVISIBILITY();
-        },
-        isAdmin(newValue, oldValue) {
-          console.log('isAdmin prop changed:', oldValue, '->', newValue);
+        isAdmin() {
           this.checkSearchVisibility();
           this.CHECKSCORESVISIBILITY();
         }
@@ -141,59 +127,17 @@ export default {
             const currentPath = this.$route.path;
             const search = document.getElementById('search');
             const adminSummary = document.getElementById('adminSummary');
-            const token = localStorage.getItem('auth_token');
             const userRole = localStorage.getItem('userRole');
             
-            // Debug logging
-            console.log('=== Admin Visibility Check ===');
-            console.log('Current path:', currentPath);
-            console.log('Token exists:', !!token);
-            console.log('User role:', userRole);
-            console.log('isAdmin prop:', this.isAdmin);
-            console.log('Search element found:', !!search);
-            console.log('Admin Summary element found:', !!adminSummary);
+            // Simple check: show admin features if user is admin OR on admin page
+            const isAdmin = userRole === 'admin' || currentPath.includes('admin');
             
-            // Check if user is on admin page OR has admin role
-            const isAdminPage = currentPath.includes('admin');
-            const isAdminUser = userRole === 'admin';
-            
-            console.log('Is admin page:', isAdminPage);
-            console.log('Is admin user:', isAdminUser);
-            
-            if (isAdminPage || isAdminUser) {
-              if (search) {
-                search.style.display = 'flex';
-                console.log("✅ Admin detected - showing search");
-              } else {
-                console.log("❌ Search element not found!");
-              }
-              if (adminSummary) {
-                adminSummary.style.display = 'flex';
-                console.log("✅ Admin detected - showing admin summary");
-              } else {
-                console.log("❌ Admin Summary element not found!");
-              }
-            } else {
-              if (search) {
-                search.style.display = 'none';
-                console.log("❌ Not an admin - hiding search");
-              } else {
-                console.log("❌ Search element not found!");
-              }
-              if (adminSummary) {
-                adminSummary.style.display = 'none';
-                console.log("❌ Not an admin - hiding admin summary");
-              } else {
-                console.log("❌ Admin Summary element not found!");
-              }
+            if (search) {
+                search.style.display = isAdmin ? 'flex' : 'none';
             }
-            console.log('=== End Admin Visibility Check ===');
-          },
-          refreshVisibility() {
-            // Method to manually refresh visibility - useful for debugging
-            console.log('Manually refreshing visibility...');
-            this.checkSearchVisibility();
-            this.CHECKSCORESVISIBILITY();
+            if (adminSummary) {
+                adminSummary.style.display = isAdmin ? 'flex' : 'none';
+            }
           },
           async performSearch() {
             if (!this.searchQuery) {
