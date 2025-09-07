@@ -62,7 +62,7 @@ export default {
 
   <!-- Back to Dashboard Button -->
   <div class="text-center mt-4">
-    <router-link to="/dashboard" class="btn btn-outline-secondary">
+    <router-link to="/user-dashboard" class="btn btn-outline-secondary">
       🔙 Back to Dashboard
     </router-link>
   </div>
