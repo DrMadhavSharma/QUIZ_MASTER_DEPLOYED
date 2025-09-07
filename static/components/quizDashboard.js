@@ -3,7 +3,7 @@ export default {
     <div class="container py-5">
   <!-- Header Section -->
   <div class="text-center mb-4">
-    <h1 class="fw-bold text-primary">👤 USER_HOME 😊</h1>
+    <h1 class="fw-bold text-primary">🧑‍🏫 QUIZ_DASHBOARD </h1>
     <h2 class="text-secondary">All Available Quizzes</h2>
     <div>
       <router-link  class="btn btn-outline-dark mx-2 btn-lg" to="/payment" 
@@ -18,6 +18,7 @@ export default {
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
+  <p class="mt-2 text-muted">Loading quizzes...</p>
 </div>
 
 <!-- Quizzes Table Section -->
