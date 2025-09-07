@@ -4,7 +4,7 @@
     import Navbar from './components/navbar.js'
     import Footer from './components/Footer.js'
     import Admin from './components/Admin.js'
-    import Dashboard from './components/Dashboard.js'
+    import Dashboard from './components/quizDashboard.js'
     import Quiz from './components/Quiz.js'
     import Scores from './components/Scores.js'
     import useRSummary from './components/useRSummary.js'
