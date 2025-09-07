@@ -17,6 +17,10 @@ export default {
 
       <!-- SCORES and Summary Buttons -->
       <div id="SCORES" class="text-center mt-4">
+        <router-link to="/user-dashboard" class="btn btn-outline-light mx-2 btn-lg" 
+          style="transition: all 0.3s ease-in-out;" 
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Dashboard</router-link>
         <button @click="MOVETOSCORES()" class="btn btn-outline-light mx-2 btn-lg" 
           style="transition: all 0.3s ease-in-out;" 
           @mouseover="hoverButton($event)" 
@@ -226,10 +230,10 @@ export default {
         
       }
             ,MOVETOSCORES(){
-                  const userId = localStorage.getItem('id'); // Assuming user_id is stored in localStorage
+                  const userId = localStorage.getItem('userId'); // Updated to use 'userId' key
                   this.$router.push({ path: `/scores/${userId}` });
                 },MOVETOSUMMARY(){
-                  const userId = localStorage.getItem('id'); // Assuming user_id is stored in localStorage
+                  const userId = localStorage.getItem('userId'); // Updated to use 'userId' key
                   this.$router.push({ path: `/summary/${userId}` });}
                   ,CHECKSCORESVISIBILITY(){
                       const limk = this.$route.path;
