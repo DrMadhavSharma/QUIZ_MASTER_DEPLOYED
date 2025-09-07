@@ -29,12 +29,11 @@ export default {
       </div>
 
       <!-- Admin Summary Button (Admin Only) -->
-      <div id="adminSummary" style="display: none; margin-top: 10px; text-align: center;">
-        <router-link to="/adminSummary" 
+      
+        <router-link to="/adminSummary" v-show="isAdminPage"
           style="margin: 5px; padding: 8px 12px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Admin Summary</router-link>
-      </div>
 
       <!-- Search Section (Admin Only) -->
             <!-- Admin-only Search Bar -->
