@@ -28,12 +28,12 @@ export default {
           @mouseleave="resetButton($event)">Summary</button>
       </div>
 
-      <!-- Search Section (Admin Only) -->
-      <form id="search" @submit.prevent="performSearch" style="display: none; align-items: center; margin-top: 10px;">
+      <!-- Search Section -->
+      <form @submit.prevent="performSearch" style="display: flex; align-items: center; margin-top: 10px;">
         <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
+          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
         <select v-model="searchCategory" 
-          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
+          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
           <option value="users">Users</option>
           <option value="subjects">Subjects</option>
           <option value="quizzes">Quizzes</option>
@@ -41,7 +41,7 @@ export default {
           <option value="options">Options</option>
         </select>
         <button type="submit" 
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
+          style="border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
           Search
         </button>
       </form>
