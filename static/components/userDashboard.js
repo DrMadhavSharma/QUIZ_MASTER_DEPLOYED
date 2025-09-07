@@ -325,9 +325,12 @@ export default {
                 
                 if (userResponse.ok) {
                     const userData = await userResponse.json();
-                    this.userInfo = userData;
+                    this.userInfo = {
+                        name: userData.name,
+                        email: userData.email,
+                        joinDate: userData.joinDate
+                    };
                 }
-                
                 // Fetch user statistics
                 await this.fetchUserStats();
                 
