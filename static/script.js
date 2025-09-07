@@ -10,12 +10,14 @@
     import useRSummary from './components/useRSummary.js'
     import adminSummary from './components/adminSummary.js'
     import payment from './components/payment.js'
+    import userDashboard from './components/userDashboard.js'
     const routes = [
         {path: '/', component: Home},
         {path: '/login', component: Login},
         {path: '/register', component: Register},
         {path: '/dashboard', component: Dashboard},
         {path: '/quiz/:quiz_id', component: Quiz},
+        {path: '/user-dashboard', component: userDashboard}, // New user dashboard route
         {path: '/scores/:userId', component: Scores},
         {path: '/summary/:userId', component: useRSummary},  //summary page for user to view all users' scores.
         {path: '/adminSummary', component: adminSummary},  //summary page for admin to view all users' scores.
