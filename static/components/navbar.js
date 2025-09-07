@@ -62,7 +62,6 @@ export default {
 </div>
 `
 }
-,
     data: function(){
         return {loggedIn: localStorage.getItem('auth_token'),
                 searchQuery: '',
