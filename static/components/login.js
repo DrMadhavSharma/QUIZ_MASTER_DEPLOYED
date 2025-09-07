@@ -51,12 +51,14 @@ export default {
                 console.log(data)
                 if(Object.keys(data).includes("auth-token")){
                     localStorage.setItem("auth_token", data["auth-token"])
-                    localStorage.setItem("id", data.id)
+                    localStorage.setItem("userId", data.id) // Changed from "id" to "userId" for consistency
                     localStorage.setItem("username", data.username)
+                    localStorage.setItem("userRole", data.roles.includes('admin') ? 'admin' : 'user')
+
                     if(data.roles.includes('admin')){
                         this.$router.push('/admin')
                     }else{
-                        this.$router.push('/dashboard') // redirect('/dashboard') in flask
+                        this.$router.push('/user-dashboard') // redirect to user dashboard instead of quiz list
                     }   
                 }
                 else{
