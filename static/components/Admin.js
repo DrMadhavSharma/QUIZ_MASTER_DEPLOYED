@@ -7,51 +7,85 @@ export default {
   <div class="container mt-5">
     <h2>Subjects</h2>
     
-    <!-- Add Subject Section -->
-    <div class="col-12 text-end  ">
-      <button class="btn btn-primary" @click="showAddSubjectForm = !showAddSubjectForm">
-        {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
-      </button>
-    </div>
+   <!-- Add Subject Section -->
+<div class="col-12 text-end">
+  <button 
+    @click="showAddSubjectForm = !showAddSubjectForm"
+    style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+    {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
+  </button>
+</div>
+
+<div v-if="showAddSubjectForm" class="col-12 mt-3">
+  <input 
+    v-model="newSubject.name" 
+    type="text" 
+    placeholder="Enter Subject Name" 
+    style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:15px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:8px; width:100%;" 
+  />
+  <button 
+    @click="addSubject"
+    style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+    Add
+  </button>
+</div>
+
     
-    <div v-if="showAddSubjectForm" class="col-12">
-      <input v-model="newSubject.name" type="text" placeholder="Enter Subject Name" class="form-control mb-2" />
-      <button @click="addSubject" class="btn btn-success">Add</button>
-    </div>
-    
-    <!-- Subjects and Chapters Section -->
-    <div class="row container-fluid bg-gradient bg-info p-4">
+   <!-- Subjects and Chapters Section -->
+<div class="row container-fluid p-4" style="background-color:white;">
   <div class="col-md-6 mb-4" v-for="subject in subjects" :key="subject.id">
-    <div class="card shadow-lg border-0">
-      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{ subject.name }}</h5>
+    <div class="card" style="border:1px solid #ddd; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-radius:8px;">
+      <div class="card-header d-flex justify-content-between align-items-center" 
+           style="background-color:#333; color:white; padding:10px; border-radius:8px 8px 0 0;">
+        <h5 class="mb-0" style="font-size:16px;">{{ subject.name }}</h5>
         <div>
-          <button class="btn btn-warning btn-sm me-2" @click="editSubject(subject)">Edit</button>
-          <button class="btn btn-danger btn-sm" @click="deleteSubject(subject.id)">Delete</button>
+          <button @click="editSubject(subject)" 
+                  style="background-color:#666; color:white; border:none; padding:4px 10px; font-size:13px; border-radius:4px; margin-right:5px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            Edit
+          </button>
+          <button @click="deleteSubject(subject.id)" 
+                  style="background-color:#b33; color:white; border:none; padding:4px 10px; font-size:13px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            Delete
+          </button>
         </div>
       </div>
 
-      <div class="card-body">
-        <h6 class="text-success">Chapters:</h6>
-        <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" class="form-control mb-2" />
-        <button @click="addChapter(subject.id)" class="btn btn-primary btn-sm mb-3">Add Chapter</button>
+      <div class="card-body" style="padding:12px;">
+        <h6 style="color:#242424; font-size:15px;">Chapters:</h6>
+        <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" 
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:6px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; box-shadow:0 1px 2px rgba(0,0,0,0.1);" />
+        <button @click="addChapter(subject.id)" 
+                style="background-color:#333; color:white; border:none; padding:6px 12px; font-size:13px; border-radius:4px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+          Add Chapter
+        </button>
 
-        <table class="table table-hover table-striped table-bordered" v-if="filteredChapters(subject.id).length">
-          <thead class="table-dark">
+        <table v-if="filteredChapters(subject.id).length" 
+               style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;">
+          <thead style="background-color:#333; color:white;">
             <tr>
-              <th>Serial No.</th>
-              <th>Chapter Name</th>
-              <th>Actions</th>
+              <th style="padding:6px; border:1px solid #ddd;">Serial No.</th>
+              <th style="padding:6px; border:1px solid #ddd;">Chapter Name</th>
+              <th style="padding:6px; border:1px solid #ddd;">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ chapter.name }}</td>
-              <td>
-                <button @click="editChapter(chapter)" class="btn btn-sm btn-primary me-1">Edit</button>
-                <button @click="deleteChapter(chapter.id, subject.id)" class="btn btn-sm btn-danger me-1">Delete</button>
-                <button @click="openQuizModal(chapter)" class="btn btn-sm btn-info">Manage Quizzes</button>
+            <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id" 
+                style="background-color:white; border:1px solid #ddd;">
+              <td style="padding:6px; border:1px solid #ddd;">{{ index + 1 }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">{{ chapter.name }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">
+                <button @click="editChapter(chapter)" 
+                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Edit
+                </button>
+                <button @click="deleteChapter(chapter.id, subject.id)" 
+                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Delete
+                </button>
+                <button @click="openQuizModal(chapter)" 
+                        style="background-color:#666; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Manage Quizzes
+                </button>
               </td>
             </tr>
           </tbody>
@@ -62,105 +96,122 @@ export default {
 </div>
 
         <!-- Quiz Management Modal -->
-<div v-if="showQuizModal" class="modal show d-block fade" tabindex="-1" role="dialog">
+<div v-if="showQuizModal" class="modal show d-block fade" tabindex="-1" role="dialog" style="background-color:rgba(0,0,0,0.4);">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content shadow-lg border-0">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title">Manage Quizzes for {{ currentChapter ? currentChapter.name : '' }}</h5>
-        <button type="button" class="btn-close" @click="showQuizModal = false"></button>
+    <div class="modal-content" style="border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:none;">
+      
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color:#333; color:white; border-radius:8px 8px 0 0; padding:10px 15px;">
+        <h5 class="modal-title" style="font-size:16px;">Manage Quizzes for {{ currentChapter ? currentChapter.name : '' }}</h5>
+        <button type="button" @click="showQuizModal = false" 
+                style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">&times;</button>
       </div>
 
-      <div class="modal-body">
-        <input v-model="newQuiz.title" type="text" placeholder="Quiz Title" class="form-control mb-2" />
-        <input v-model="newQuiz.date" type="date" class="form-control mb-2" />
-        <input v-model="newQuiz.duration" type="number" placeholder="Duration (minutes)" class="form-control mb-2" />
-        <button @click="addQuiz" class="btn btn-success w-100">Add Quiz</button>
+      <!-- Modal Body -->
+      <div class="modal-body" style="padding:15px; background-color:white; border-radius:0 0 8px 8px;">
+        <input v-model="newQuiz.title" type="text" placeholder="Quiz Title" 
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+        <input v-model="newQuiz.date" type="date" 
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+        <input v-model="newQuiz.duration" type="number" placeholder="Duration (minutes)" 
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
+        <button @click="addQuiz" 
+                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+          Add Quiz
+        </button>
 
         <!-- Quizzes Table -->
-        <table class="table table-hover table-striped mt-3" v-if="quizzes.length">
-          <thead class="table-primary">
+        <table v-if="quizzes.length" style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;">
+          <thead style="background-color:#333; color:white;">
             <tr>
-              <th>Title</th>
-              <th>Date</th>
-              <th>Duration (min)</th>
-              <th>Actions</th>
+              <th style="padding:6px; border:1px solid #ddd;">Title</th>
+              <th style="padding:6px; border:1px solid #ddd;">Date</th>
+              <th style="padding:6px; border:1px solid #ddd;">Duration (min)</th>
+              <th style="padding:6px; border:1px solid #ddd;">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="quiz in quizzes" :key="quiz.id">
-              <td>{{ quiz.title }}</td>
-              <td>{{ quiz.date }}</td>
-              <td>{{ quiz.duration }}</td>
-              <td>
-                <button @click="editQuiz(quiz)" class="btn btn-sm btn-warning me-1">Edit</button>
-                <button @click="deleteQuiz(quiz.id)" class="btn btn-sm btn-danger me-1">Delete</button>
-                <button @click="openQuestionModal(quiz)" class="btn btn-sm btn-info">Manage Questions</button>
+            <tr v-for="quiz in quizzes" :key="quiz.id" style="background-color:white; border:1px solid #ddd;">
+              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.title }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.date }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">{{ quiz.duration }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">
+                <button @click="editQuiz(quiz)" 
+                        style="background-color:#666; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Edit
+                </button>
+                <button @click="deleteQuiz(quiz.id)" 
+                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Delete
+                </button>
+                <button @click="openQuestionModal(quiz)" 
+                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Manage Questions
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <p v-else class="text-muted text-center mt-3">No quizzes available. Add a new quiz to get started.</p>
+        <p v-else style="text-align:center; color:#666; margin-top:10px;">No quizzes available. Add a new quiz to get started.</p>
       </div>
     </div>
   </div>
 </div>
 
-        <!-- Question Management Modal -->
-<div v-if="showQuestionModal" class="modal show d-block fade" tabindex="-1" role="dialog">
+
+       <!-- Question Management Modal -->
+<div v-if="showQuestionModal" class="modal show d-block fade" tabindex="-1" role="dialog" style="background-color:rgba(0,0,0,0.4);">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content shadow-lg border-0">
+    <div class="modal-content" style="border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:none;">
+
       <!-- Header Section -->
-      <div class="modal-header bg-warning text-dark">
-        <h5 class="modal-title">Manage Questions for {{ currentQuiz ? currentQuiz.title : '' }}</h5>
-        <button type="button" class="btn-close" @click="showQuestionModal_refresh"></button>
+      <div class="modal-header" style="background-color:#333; color:white; border-radius:8px 8px 0 0; padding:10px 15px;">
+        <h5 class="modal-title" style="font-size:16px;">Manage Questions for {{ currentQuiz ? currentQuiz.title : '' }}</h5>
+        <button type="button" @click="showQuestionModal_refresh" style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">&times;</button>
       </div>
 
       <!-- Body Section -->
-      <div class="modal-body">
+      <div class="modal-body" style="padding:15px; background-color:white; border-radius:0 0 8px 8px;">
         <!-- Add Question Section -->
-        <input v-model="newQuestion.text" type="text" placeholder="Enter Question" class="form-control mb-3" />
-        
+        <input v-model="newQuestion.text" type="text" placeholder="Enter Question" 
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px;" />
+
         <div v-for="(option, index) in newQuestion.options" :key="index">
-          <input
-            v-model="newQuestion.options[index]"
-            type="text"
-            :placeholder="'Option ' + (index + 1)"
-            class="form-control mb-2"
-          />
+          <input v-model="newQuestion.options[index]" type="text" :placeholder="'Option ' + (index + 1)" 
+                 style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px;" />
         </div>
 
-        <input
-          v-model="newQuestion.correctOption"
-          type="number"
-          placeholder="Correct Option (1-4)"
-          class="form-control mb-3" min="1" max="4"
-        />
+        <input v-model="newQuestion.correctOption" type="number" placeholder="Correct Option (1-4)" min="1" max="4"
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:12px;" />
         
-        <button @click="addQuestion" class="btn btn-success w-100">Add Question</button>
+        <button @click="addQuestion" 
+                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+          Add Question
+        </button>
 
         <!-- Questions Table -->
-        <table class="table table-hover table-striped mt-4" v-if="questions.length">
-          <thead class="table-success">
+        <table v-if="questions.length" style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;">
+          <thead style="background-color:#333; color:white;">
             <tr>
-              <th>Question</th>
-              <th>Options</th>
-              <th>Correct Option</th>
-              <th>Actions</th>
+              <th style="padding:6px; border:1px solid #ddd;">Question</th>
+              <th style="padding:6px; border:1px solid #ddd;">Options</th>
+              <th style="padding:6px; border:1px solid #ddd;">Correct Option</th>
+              <th style="padding:6px; border:1px solid #ddd;">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(question, index) in questions" :key="question.id">
-              <td>{{ question.text }}</td>
-              <td>{{ question.options ? question.options.map(opt => opt.text).join(', ') : 'No Options' }}</td>
-              <td>{{ question.correct_option }}</td>
-              <td>
-                <button @click="toggleEdit(index)" class="btn btn-primary btn-sm me-1">Edit</button>
-                <button
-                  v-if="currentQuiz && currentQuiz.id"
-                  @click="deleteQuestion(index)"
-                  class="btn btn-danger btn-sm"
-                >
+            <tr v-for="(question, index) in questions" :key="question.id" style="background-color:white; border:1px solid #ddd;">
+              <td style="padding:6px; border:1px solid #ddd;">{{ question.text }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">{{ question.options ? question.options.map(opt => opt.text).join(', ') : 'No Options' }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">{{ question.correct_option }}</td>
+              <td style="padding:6px; border:1px solid #ddd;">
+                <button @click="toggleEdit(index)" 
+                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                  Edit
+                </button>
+                <button v-if="currentQuiz && currentQuiz.id" @click="deleteQuestion(index)" 
+                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
                   Delete
                 </button>
               </td>
@@ -168,45 +219,39 @@ export default {
           </tbody>
         </table>
 
-        <p v-else class="text-center text-muted mt-4">No questions available. Add one to get started!</p>
+        <p v-else style="text-align:center; color:#666; margin-top:10px;">No questions available. Add one to get started!</p>
       </div>
     </div>
   </div>
 </div>
+
 <!-- Edit Form (Visible Only if Editing) -->
-<div v-if="editingIndex !== null" class="modal show d-block fade" tabindex="-1" role="dialog">
+<div v-if="editingIndex !== null" class="modal show d-block fade" tabindex="-1" role="dialog" style="background-color:rgba(0,0,0,0.4);">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content shadow-lg border-0">
+    <div class="modal-content" style="border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:none;">
+
       <!-- Modal Header -->
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Edit Question</h5>
-        <button type="button" class="btn-close" @click="editingIndex = null"></button>
+      <div class="modal-header" style="background-color:#333; color:white; border-radius:8px 8px 0 0; padding:10px 15px;">
+        <h5 class="modal-title" style="font-size:16px;">Edit Question</h5>
+        <button type="button" @click="editingIndex = null" style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">&times;</button>
       </div>
 
       <!-- Modal Body -->
-      <div class="modal-body">
+      <div class="modal-body" style="padding:15px; background-color:white; border-radius:0 0 8px 8px;">
         <!-- Edit Question Input -->
-        <input 
-          v-model="questions[editingIndex].text" 
-          placeholder="Edit question text" 
-          class="form-control mb-3"
-        />
+        <input v-model="questions[editingIndex].text" placeholder="Edit question text"
+               style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px;" />
 
         <!-- Edit Options Section -->
-        <h6 class="mb-3">Edit Options</h6>
-        <div v-for="(option, i) in questions[editingIndex].options" :key="i" class="mb-2">
-          <input 
-            v-model="option.text" 
-            placeholder="Edit option"  
-            class="form-control"
-          />
+        <h6 style="font-size:14px; margin-bottom:8px;">Edit Options</h6>
+        <div v-for="(option, i) in questions[editingIndex].options" :key="i" style="margin-bottom:8px;">
+          <input v-model="option.text" placeholder="Edit option"
+                 style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%;" />
         </div>
 
         <!-- Save Changes Button -->
-        <button 
-          class="btn btn-success w-100"
-          @click="editQuestion(questions[editingIndex])"
-        >
+        <button @click="editQuestion(questions[editingIndex])"
+                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-top:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
           Save Changes
         </button>
       </div>
@@ -214,7 +259,6 @@ export default {
   </div>
 </div>
 
-</div>
   `,
   data() {
     return {
