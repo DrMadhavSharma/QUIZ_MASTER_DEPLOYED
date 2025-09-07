@@ -1,277 +1,278 @@
 export default {
     template: `
     <div class="container-fluid py-4">
-        <!-- Welcome Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm bg-gradient-primary text-white">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h1 class="card-title mb-2">
-                                    <i class="fas fa-user-circle me-2"></i>
-                                    Welcome back, {{ userInfo.name || localStorage.getItem('username') || 'User' }}! 👋
-                                </h1>
-                                <p class="card-text mb-0">
-                                    Ready to test your knowledge? Let's see how you're doing today!
-                                </p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="d-flex justify-content-end">
-                                    <div class="text-center me-4">
-                                        <h3 class="mb-0">{{ userStats.totalQuizzes }}</h3>
-                                        <small>Quizzes Taken</small>
-                                    </div>
-                                    <div class="text-center">
-                                        <h3 class="mb-0">{{ userStats.averageScore }}%</h3>
-                                        <small>Average Score</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stats Cards Row -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="text-primary mb-2">
-                            <i class="fas fa-trophy fa-2x"></i>
-                        </div>
-                        <h4 class="card-title text-primary">{{ userStats.highestScore }}%</h4>
-                        <p class="card-text text-muted">Highest Score</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="text-success mb-2">
-                            <i class="fas fa-chart-line fa-2x"></i>
-                        </div>
-                        <h4 class="card-title text-success">{{ userStats.totalPoints }}</h4>
-                        <p class="card-text text-muted">Total Points</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="text-warning mb-2">
-                            <i class="fas fa-medal fa-2x"></i>
-                        </div>
-                        <h4 class="card-title text-warning">{{ userStats.rank }}</h4>
-                        <p class="card-text text-muted">Current Rank</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="text-info mb-2">
-                            <i class="fas fa-calendar-check fa-2x"></i>
-                        </div>
-                        <h4 class="card-title text-info">{{ userStats.streak }}</h4>
-                        <p class="card-text text-muted">Day Streak</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content Row -->
-        <div class="row">
-            <!-- Left Column - Recent Activity & Quick Actions -->
-            <div class="col-lg-8">
-                <!-- Recent Quiz History -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-history me-2 text-primary"></i>
-                            Recent Quiz History
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="recentQuizzes.length" class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Quiz</th>
-                                        <th>Score</th>
-                                        <th>Date</th>
-                                        <th>Duration</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="quiz in recentQuizzes" :key="quiz.id">
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-question-circle text-primary me-2"></i>
-                                                <span class="fw-bold">{{ quiz.title }}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge" :class="getScoreBadgeClass(quiz.score)">
-                                                {{ quiz.score }}%
-                                            </span>
-                                        </td>
-                                        <td>{{ formatDate(quiz.completedAt) }}</td>
-                                        <td>{{ quiz.duration }}m</td>
-                                        <td>
-                                            <span class="badge" :class="quiz.status === 'completed' ? 'bg-success' : 'bg-warning'">
-                                                {{ quiz.status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div v-else class="text-center py-4">
-                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No quiz history yet. Start your first quiz!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Available Quizzes -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-play-circle me-2 text-success"></i>
-                            Available Quizzes
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="availableQuizzes.length" class="row">
-                            <div v-for="quiz in availableQuizzes.slice(0, 3)" :key="quiz.id" class="col-md-4 mb-3">
-                                <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title">{{ quiz.title }}</h6>
-                                        <p class="card-text text-muted small">{{ quiz.duration }} minutes</p>
-                                        <button class="btn btn-primary btn-sm" @click="startQuiz(quiz)">
-                                            <i class="fas fa-play me-1"></i>Start
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-else class="text-center py-4">
-                            <i class="fas fa-clock fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No quizzes available at the moment.</p>
-                        </div>
-                        <div class="text-center mt-3">
-                            <router-link to="/dashboard" class="btn btn-outline-primary">
-                                <i class="fas fa-list me-1"></i>View All Quizzes
-                            </router-link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column - Quick Actions & Performance -->
-            <div class="col-lg-4">
-                <!-- Quick Actions -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-bolt me-2 text-warning"></i>
-                            Quick Actions
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <router-link to="/dashboard" class="btn btn-primary">
-                                <i class="fas fa-play me-2"></i>Take a Quiz
-                            </router-link>
-                            <router-link :to="'/scores/' + userId" class="btn btn-outline-success">
-                                <i class="fas fa-chart-bar me-2"></i>View Scores
-                            </router-link>
-                            <router-link :to="'/summary/' + userId" class="btn btn-outline-info">
-                                <i class="fas fa-analytics me-2"></i>Performance Summary
-                            </router-link>
-                            <router-link to="/payment" class="btn btn-outline-warning">
-                                <i class="fas fa-credit-card me-2"></i>Payment
-                            </router-link>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance Chart -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-chart-pie me-2 text-info"></i>
-                            Performance Overview
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            <div class="mb-3">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar bg-success" role="progressbar" 
-                                         :style="{width: userStats.averageScore + '%'}" 
-                                         :aria-valuenow="userStats.averageScore" 
-                                         aria-valuemin="0" aria-valuemax="100">
-                                        {{ userStats.averageScore }}%
-                                    </div>
-                                </div>
-                                <small class="text-muted">Average Performance</small>
-                            </div>
-                            
-                            <div class="row text-center">
-                                <div class="col-6">
-                                    <h6 class="text-success">{{ userStats.correctAnswers }}</h6>
-                                    <small class="text-muted">Correct</small>
-                                </div>
-                                <div class="col-6">
-                                    <h6 class="text-danger">{{ userStats.incorrectAnswers }}</h6>
-                                    <small class="text-muted">Incorrect</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Achievements -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-trophy me-2 text-warning"></i>
-                            Recent Achievements
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="achievements.length">
-                            <div v-for="achievement in achievements.slice(0, 3)" :key="achievement.id" 
-                                 class="d-flex align-items-center mb-3">
-                                <div class="me-3">
-                                    <i :class="achievement.icon" :style="{color: achievement.color}"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">{{ achievement.title }}</h6>
-                                    <small class="text-muted">{{ achievement.description }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-else class="text-center py-3">
-                            <i class="fas fa-star fa-2x text-muted mb-2"></i>
-                            <p class="text-muted small">Complete quizzes to earn achievements!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Loading Spinner -->
         <div v-if="isLoading" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
             <p class="mt-2 text-muted">Loading your dashboard...</p>
+        </div>
+        <!-- Welcome Header -->
+        <div v-else>
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h1 class="card-title mb-2">
+                                            <i class="fas fa-user-circle me-2"></i>
+                                            Welcome back, {{ userInfo.name || localStorage.getItem('username') || 'User' }}! 👋
+                                        </h1>
+                                        <p class="card-text mb-0">
+                                            Ready to test your knowledge? Let's see how you're doing today!
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <div class="d-flex justify-content-end">
+                                            <div class="text-center me-4">
+                                                <h3 class="mb-0">{{ userStats.totalQuizzes }}</h3>
+                                                <small>Quizzes Taken</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h3 class="mb-0">{{ userStats.averageScore }}%</h3>
+                                                <small>Average Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Stats Cards Row -->
+                <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="text-primary mb-2">
+                                    <i class="fas fa-trophy fa-2x"></i>
+                                </div>
+                                <h4 class="card-title text-primary">{{ userStats.highestScore }}%</h4>
+                                <p class="card-text text-muted">Highest Score</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="text-success mb-2">
+                                    <i class="fas fa-chart-line fa-2x"></i>
+                                </div>
+                                <h4 class="card-title text-success">{{ userStats.totalPoints }}</h4>
+                                <p class="card-text text-muted">Total Points</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="text-warning mb-2">
+                                    <i class="fas fa-medal fa-2x"></i>
+                                </div>
+                                <h4 class="card-title text-warning">{{ userStats.rank }}</h4>
+                                <p class="card-text text-muted">Current Rank</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="text-info mb-2">
+                                    <i class="fas fa-calendar-check fa-2x"></i>
+                                </div>
+                                <h4 class="card-title text-info">{{ userStats.streak }}</h4>
+                                <p class="card-text text-muted">Day Streak</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Main Content Row -->
+                <div class="row">
+                    <!-- Left Column - Recent Activity & Quick Actions -->
+                    <div class="col-lg-8">
+                        <!-- Recent Quiz History -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-history me-2 text-primary"></i>
+                                    Recent Quiz History
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div v-if="recentQuizzes.length" class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Quiz</th>
+                                                <th>Score</th>
+                                                <th>Date</th>
+                                                <th>Duration</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="quiz in recentQuizzes" :key="quiz.id">
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-question-circle text-primary me-2"></i>
+                                                        <span class="fw-bold">{{ quiz.title }}</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge" :class="getScoreBadgeClass(quiz.score)">
+                                                        {{ quiz.score }}%
+                                                    </span>
+                                                </td>
+                                                <td>{{ formatDate(quiz.completedAt) }}</td>
+                                                <td>{{ quiz.duration }}m</td>
+                                                <td>
+                                                    <span class="badge" :class="quiz.status === 'completed' ? 'bg-success' : 'bg-warning'">
+                                                        {{ quiz.status }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div v-else class="text-center py-4">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No quiz history yet. Start your first quiz!</p>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Available Quizzes -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-play-circle me-2 text-success"></i>
+                                    Available Quizzes
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div v-if="availableQuizzes.length" class="row">
+                                    <div v-for="quiz in availableQuizzes.slice(0, 3)" :key="quiz.id" class="col-md-4 mb-3">
+                                        <div class="card border-0 shadow-sm h-100">
+                                            <div class="card-body text-center">
+                                                <h6 class="card-title">{{ quiz.title }}</h6>
+                                                <p class="card-text text-muted small">{{ quiz.duration }} minutes</p>
+                                                <button class="btn btn-primary btn-sm" @click="startQuiz(quiz)">
+                                                    <i class="fas fa-play me-1"></i>Start
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else class="text-center py-4">
+                                    <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No quizzes available at the moment.</p>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <router-link to="/dashboard" class="btn btn-outline-primary">
+                                        <i class="fas fa-list me-1"></i>View All Quizzes
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Right Column - Quick Actions & Performance -->
+                    <div class="col-lg-4">
+                        <!-- Quick Actions -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-bolt me-2 text-warning"></i>
+                                    Quick Actions
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <router-link to="/dashboard" class="btn btn-primary">
+                                        <i class="fas fa-play me-2"></i>Take a Quiz
+                                    </router-link>
+                                    <router-link :to="'/scores/' + userId" class="btn btn-outline-success">
+                                        <i class="fas fa-chart-bar me-2"></i>View Scores
+                                    </router-link>
+                                    <router-link :to="'/summary/' + userId" class="btn btn-outline-info">
+                                        <i class="fas fa-analytics me-2"></i>Performance Summary
+                                    </router-link>
+                                    <router-link to="/payment" class="btn btn-outline-warning">
+                                        <i class="fas fa-credit-card me-2"></i>Payment
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Performance Chart -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-chart-pie me-2 text-info"></i>
+                                    Performance Overview
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <div class="mb-3">
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 :style="{width: userStats.averageScore + '%'}" 
+                                                 :aria-valuenow="userStats.averageScore" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                {{ userStats.averageScore }}%
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Average Performance</small>
+                                    </div>
+                                    
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <h6 class="text-success">{{ userStats.correctAnswers }}</h6>
+                                            <small class="text-muted">Correct</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <h6 class="text-danger">{{ userStats.incorrectAnswers }}</h6>
+                                            <small class="text-muted">Incorrect</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Achievements -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-trophy me-2 text-warning"></i>
+                                    Recent Achievements
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div v-if="achievements.length">
+                                    <div v-for="achievement in achievements.slice(0, 3)" :key="achievement.id" 
+                                         class="d-flex align-items-center mb-3">
+                                        <div class="me-3">
+                                            <i :class="achievement.icon" :style="{color: achievement.color}"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">{{ achievement.title }}</h6>
+                                            <small class="text-muted">{{ achievement.description }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else class="text-center py-3">
+                                    <i class="fas fa-star fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted small">Complete quizzes to earn achievements!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
     `,
