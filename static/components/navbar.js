@@ -1,124 +1,68 @@
 export default {
-    template: `
+  template: `
 <div>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg" style="background-color: #003366; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
-    <div class="container-fluid">
+  <nav style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); padding: 10px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+      
       <!-- Brand with Hover Animation -->
-      <a class="navbar-brand fs-2 text-warning fw-bold" href="#"
-         :style="{ color: navbarColor }" 
-         @mouseover="changeColor('#ff6600')" 
-         @mouseleave="changeColor('#ffcc00')">QUIZ MASTER</a>
-
-      <!-- Mobile Menu Toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" 
-        style="border: none; background-color: transparent;">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <a href="#" 
+         style="font-size: 24px; font-weight: bold; color: #242424; text-decoration: none; transition: color 0.3s;" 
+         @mouseover="changeColor('#333')" 
+         @mouseleave="changeColor('#242424')">
+         QUIZ MASTER
+      </a>
 
       <!-- SCORES and Summary Buttons -->
-      <div id="SCORES" class="text-center mt-4">
-        <router-link to="/user-dashboard" class="btn btn-outline-light mx-2 btn-lg" 
-          style="transition: all 0.3s ease-in-out;" 
+      <div style="margin-top: 10px; text-align: center;">
+        <router-link to="/user-dashboard" 
+          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; text-decoration: none; transition: background 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Dashboard</router-link>
-        <button @click="MOVETOSCORES()" class="btn btn-outline-light mx-2 btn-lg" 
-          style="transition: all 0.3s ease-in-out;" 
+        <button @click="MOVETOSCORES()" 
+          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; cursor: pointer; transition: background 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">SCORES</button>
-        <button @click="MOVETOSUMMARY()" class="btn btn-outline-light mx-2 btn-lg" 
-          style="transition: all 0.3s ease-in-out;" 
+        <button @click="MOVETOSUMMARY()" 
+          style="margin: 5px; padding: 8px 12px; border: 1px solid #333; background-color: white; color: #242424; cursor: pointer; transition: background 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Summary</button>
-        
       </div>
 
-      <!-- Navigation Links -->
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <router-link id="routerl" class="btn btn-outline-light me-2" to="/adminSummary" 
-          style="transition: all 0.3s ease-in-out;" 
+      <!-- Search Section -->
+      <form @submit.prevent="performSearch" style="display: flex; align-items: center; margin-top: 10px;">
+        <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
+          style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; margin-right: 5px;">
+        <select v-model="searchCategory" 
+          style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; margin-right: 5px;">
+          <option value="users">Users</option>
+          <option value="subjects">Subjects</option>
+          <option value="quizzes">Quizzes</option>
+          <option value="chapters">Chapters</option>
+          <option value="options">Options</option>
+        </select>
+        <button type="submit" 
+          style="border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; cursor: pointer;">
+          Search
+        </button>
+      </form>
+
+      <!-- User Authentication Links -->
+      <div style="margin-top: 10px;">
+        <router-link to="/login" 
+          style="margin-right: 5px; border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; text-decoration: none; transition: background 0.3s;"
           @mouseover="hoverButton($event)" 
-          @mouseleave="resetButton($event)">SUMMARY</router-link>
-
-        <!-- Admin-only Search Bar -->
-        <form id="search" class=" me-auto" @submit.prevent="performSearch">
-          <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
-            style="border-radius: 5px; padding: 0.5rem;">
-          <select v-model="searchCategory" class="form-select me-2" style="border-radius: 5px; padding: 0.5rem;">
-            <option value="users">Users</option>
-            <option value="subjects">Subjects</option>
-            <option value="quizzes">Quizzes</option>
-            <option value="chapters">Chapters</option>
-            <option value="options">Options</option>
-          </select>
-          <button class="btn btn-outline-success" type="submit" 
-            style="border-radius: 5px; padding: 0.5rem;">Search</button>
-        </form>
-
-        <!-- No Results Modal -->
-        <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">No Results Found</h5>
-                <button type="button" class="btn-close" @click="searchPerformed = false;" 
-                  style="background-color: transparent; border: none;">&times;</button>
-              </div>
-              <div class="modal-body">
-                <p>No results match your search query. Please try again.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="searchPerformed = false;" 
-                  style="border-radius: 5px;">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Results Modal -->
-        <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Search Results</h5>
-                <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
-                  style="background-color: transparent; border: none;">&times;</button>
-              </div>
-              <div class="modal-body">
-                <ul>
-                  <li v-for="result in results" :key="result.id">
-                    {{ result.name || result.title || result.username || result.text || result.email }}
-                  </li>
-                </ul>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="results = []; searchPerformed = false;" 
-                  style="border-radius: 5px;">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Authentication Links -->
-        <ul class="navbar-nav align-items-center d-flex flex-row flex-md-column justify-content-between">
-          <li class="nav-item">
-            <router-link class="btn btn-outline-light me-2" to="/login" 
-              style="transition: all 0.3s ease-in-out;
-              " 
-              @mouseover="hoverButton($event)" 
-              @mouseleave="resetButton($event)">Login</router-link>
-          </li>
-          <li class="nav-item">
-            <button class="btn btn-danger" @click="logout" 
-              style="transition: all 0.3s ease-in-out;" 
-              @mouseover="hoverButton($event)" 
-              @mouseleave="resetButton($event)">Logout</button>
-          </li>
-        </ul>
+          @mouseleave="resetButton($event)">Login</router-link>
+        <button @click="logout" 
+          style="border: 1px solid #333; background-color: white; color: #242424; padding: 5px 10px; cursor: pointer; transition: background 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Logout</button>
       </div>
     </div>
   </nav>
 </div>
- `,
+`
+}
+,
     data: function(){
         return {loggedIn: localStorage.getItem('auth_token'),
                 searchQuery: '',
