@@ -13,7 +13,7 @@ export default {
       </a>
 
       <!-- User Navigation Buttons -->
-      <div id="userNav" style="display: flex; align-items: center; gap: 10px;">
+      <div v-if="showUserNav" style="display: flex; align-items: center; gap: 10px;">
         <router-link to="/user-dashboard" 
           style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
@@ -29,7 +29,7 @@ export default {
       </div>
 
       <!-- Admin Navigation Buttons -->
-      <div id="adminNav" style="display: none; align-items: center; gap: 10px;">
+      <div v-if="showAdminNav" style="display: flex; align-items: center; gap: 10px;">
         <router-link to="/adminSummary" 
           style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
@@ -37,7 +37,7 @@ export default {
       </div>
 
       <!-- Search Section (Admin Only) -->
-      <div id="searchSection" style="display: none; align-items: center; gap: 10px;">
+      <div v-if="showSearchSection" style="display: flex; align-items: center; gap: 10px;">
         <form @submit.prevent="performSearch" style="display: flex; align-items: center; gap: 8px;">
           <input type="search" v-model="searchQuery" placeholder="Search..." 
             style="border: 2px solid #2c2c2c; border-radius: 4px; padding: 8px; color: #2c2c2c; background-color: white; width: 200px;">
@@ -58,11 +58,11 @@ export default {
 
       <!-- Authentication Buttons -->
       <div style="display: flex; align-items: center; gap: 10px;">
-        <router-link to="/login" 
+        <router-link v-if="!isLoggedIn" to="/login" 
           style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Login</router-link>
-        <button @click="logout" 
+        <button v-if="isLoggedIn" @click="logout" 
           style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; cursor: pointer; border-radius: 4px; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Logout</button>
@@ -86,46 +86,34 @@ export default {
     isAdmin: Boolean
   },
   
-  mounted() {
-    this.updateVisibility();
-  },
-  
-  watch: {
-    $route() {
-      this.updateVisibility();
+  computed: {
+    isLoggedIn() {
+      const token = localStorage.getItem('auth_token');
+      return token && token !== 'null' && token !== 'undefined';
     },
-    isAdmin() {
-      this.updateVisibility();
+    
+    userRole() {
+      return localStorage.getItem('userRole');
+    },
+    
+    currentPath() {
+      return this.$route.path;
+    },
+    
+    showUserNav() {
+      return this.isLoggedIn;
+    },
+    
+    showAdminNav() {
+      return this.isAdmin || this.userRole === 'admin' || this.currentPath.includes('admin');
+    },
+    
+    showSearchSection() {
+      return this.isAdmin || this.userRole === 'admin' || this.currentPath.includes('admin');
     }
   },
   
   methods: {
-    updateVisibility() {
-      const userRole = localStorage.getItem('userRole');
-      const token = localStorage.getItem('auth_token');
-      const currentPath = this.$route.path;
-      
-      const isAdmin = userRole === 'admin' || currentPath.includes('admin');
-      const isLoggedIn = token && token !== 'null' && token !== 'undefined';
-      
-      // Show/hide user navigation
-      const userNav = document.getElementById('userNav');
-      if (userNav) {
-        userNav.style.display = isLoggedIn ? 'flex' : 'none';
-      }
-      
-      // Show/hide admin navigation
-      const adminNav = document.getElementById('adminNav');
-      if (adminNav) {
-        adminNav.style.display = isAdmin ? 'flex' : 'none';
-      }
-      
-      // Show/hide search section
-      const searchSection = document.getElementById('searchSection');
-      if (searchSection) {
-        searchSection.style.display = isAdmin ? 'flex' : 'none';
-      }
-    },
     
     async performSearch() {
       if (!this.searchQuery.trim()) {
