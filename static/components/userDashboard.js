@@ -10,7 +10,7 @@ export default {
                             <div class="col-md-8">
                                 <h1 class="card-title mb-2">
                                     <i class="fas fa-user-circle me-2"></i>
-                                    Welcome back, {{ userInfo.name || 'User' }}! 👋
+                                    Welcome back, {{ userInfo.name || localStorage.getItem('username') || 'User' }}! 👋
                                 </h1>
                                 <p class="card-text mb-0">
                                     Ready to test your knowledge? Let's see how you're doing today!
@@ -281,7 +281,7 @@ export default {
             isLoading: true,
             userId: null,
             userInfo: {
-                name: '',
+                name: localStorage.getItem('username') || '',
                 email: '',
                 joinDate: ''
             },
