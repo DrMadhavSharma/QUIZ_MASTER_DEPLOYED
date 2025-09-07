@@ -56,6 +56,7 @@ export default {
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
+  <p class="mt-2 text-muted">Loading your dashboard...</p>
 </div>
 
   `,
