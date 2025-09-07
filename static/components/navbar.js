@@ -28,23 +28,36 @@ export default {
           @mouseleave="resetButton($event)">Summary</button>
       </div>
 
+      <!-- Admin Summary Button (Admin Only) -->
+      <div id="adminSummary" style="display: none; margin-top: 10px; text-align: center;">
+        <router-link to="/adminSummary" 
+          style="margin: 5px; padding: 8px 12px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Admin Summary</router-link>
+      </div>
+
       <!-- Search Section (Admin Only) -->
-      <form id="search" @submit.prevent="performSearch" style="display: none; align-items: center; margin-top: 10px;">
-        <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
-        <select v-model="searchCategory" 
-          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
-          <option value="users">Users</option>
-          <option value="subjects">Subjects</option>
-          <option value="quizzes">Quizzes</option>
-          <option value="chapters">Chapters</option>
-          <option value="options">Options</option>
-        </select>
-        <button type="submit" 
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
-          Search
-        </button>
-      </form>
+      <div id="search" style="display: none; align-items: center; margin-top: 10px;" @click.stop>
+        <form @submit.prevent="performSearch" style="display: flex; align-items: center;" @click.stop>
+          <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
+            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;"
+            @click.stop @focus="keepSearchVisible" @blur="keepSearchVisible">
+          <select v-model="searchCategory" 
+            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;"
+            @click.stop @focus="keepSearchVisible" @blur="keepSearchVisible">
+            <option value="users">Users</option>
+            <option value="subjects">Subjects</option>
+            <option value="quizzes">Quizzes</option>
+            <option value="chapters">Chapters</option>
+            <option value="options">Options</option>
+          </select>
+          <button type="submit" 
+            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;"
+            @click.stop>
+            Search
+          </button>
+        </form>
+      </div>
 
       <!-- User Authentication Links -->
       <div style="margin-top: 10px;">
@@ -130,16 +143,18 @@ export default {
         checkSearchVisibility() {
             const currentPath = this.$route.path;
             const search = document.getElementById('search');
+            const adminSummary = document.getElementById('adminSummary');
             const token = localStorage.getItem('auth_token');
             const userRole = localStorage.getItem('userRole');
             
             // Debug logging
-            console.log('=== Search Visibility Check ===');
+            console.log('=== Admin Visibility Check ===');
             console.log('Current path:', currentPath);
             console.log('Token exists:', !!token);
             console.log('User role:', userRole);
             console.log('isAdmin prop:', this.isAdmin);
             console.log('Search element found:', !!search);
+            console.log('Admin Summary element found:', !!adminSummary);
             
             // Check if user is on admin page OR has admin role
             const isAdminPage = currentPath.includes('admin');
@@ -155,6 +170,12 @@ export default {
               } else {
                 console.log("❌ Search element not found!");
               }
+              if (adminSummary) {
+                adminSummary.style.display = 'flex';
+                console.log("✅ Admin detected - showing admin summary");
+              } else {
+                console.log("❌ Admin Summary element not found!");
+              }
             } else {
               if (search) {
                 search.style.display = 'none';
@@ -162,14 +183,35 @@ export default {
               } else {
                 console.log("❌ Search element not found!");
               }
+              if (adminSummary) {
+                adminSummary.style.display = 'none';
+                console.log("❌ Not an admin - hiding admin summary");
+              } else {
+                console.log("❌ Admin Summary element not found!");
+              }
             }
-            console.log('=== End Search Visibility Check ===');
+            console.log('=== End Admin Visibility Check ===');
           },
           refreshVisibility() {
             // Method to manually refresh visibility - useful for debugging
             console.log('Manually refreshing visibility...');
             this.checkSearchVisibility();
             this.CHECKSCORESVISIBILITY();
+          },
+          keepSearchVisible() {
+            // Method to ensure search form stays visible when interacting with it
+            const userRole = localStorage.getItem('userRole');
+            const isAdminUser = userRole === 'admin';
+            const currentPath = this.$route.path;
+            const isAdminPage = currentPath.includes('admin');
+            
+            if (isAdminUser || isAdminPage) {
+              const search = document.getElementById('search');
+              if (search) {
+                search.style.display = 'flex';
+                console.log('Keeping search visible for admin user');
+              }
+            }
           },
           async performSearch() {
             if (!this.searchQuery) {
