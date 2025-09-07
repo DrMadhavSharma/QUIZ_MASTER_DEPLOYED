@@ -63,7 +63,7 @@ export default {
         <!-- No Questions Section -->
         <div v-else class="text-center">
           <p class="text-danger fw-bold">⚠️ No questions available for this quiz.</p>
-          <router-link to="/user-dashboard" class="btn btn-outline-primary">🔙 Back to Quizzes</router-link>
+          <router-link to="/dashboard" class="btn btn-outline-primary">🔙 Back to Quizzes</router-link>
         </div>
       </div>
     </div>
