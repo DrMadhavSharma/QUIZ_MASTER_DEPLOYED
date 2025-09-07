@@ -1,260 +1,212 @@
 export default {
   template: `
 <div>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg" style="background-color: #003366; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
-  <div class="container-fluid">
-    <!-- Brand with Hover Animation -->
-    <a class="navbar-brand fs-2 text-warning fw-bold" href="#"
-       :style="{ color: navbarColor }" 
-       @mouseover="changeColor('#ff6600')" 
-       @mouseleave="changeColor('#ffcc00')">QUIZ MASTER</a>
-
-    <!-- Mobile Menu Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" 
-      style="border: none; background-color: transparent;">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- SCORES and Summary Buttons -->
-    <div id="SCORES" class="text-center mt-4">
-      <router-link to="/user-dashboard" class="btn btn-outline-light mx-2 btn-lg" 
-        style="transition: all 0.3s ease-in-out;" 
-        @mouseover="hoverButton($event)" 
-        @mouseleave="resetButton($event)">Dashboard</router-link>
-      <button @click="MOVETOSCORES()" class="btn btn-outline-light mx-2 btn-lg" 
-        style="transition: all 0.3s ease-in-out;" 
-        @mouseover="hoverButton($event)" 
-        @mouseleave="resetButton($event)">SCORES</button>
-      <button @click="MOVETOSUMMARY()" class="btn btn-outline-light mx-2 btn-lg" 
-        style="transition: all 0.3s ease-in-out;" 
-        @mouseover="hoverButton($event)" 
-        @mouseleave="resetButton($event)">Summary</button>
+  <nav style="background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px 0; border-bottom: 2px solid #2c2c2c; width: 100vw; margin-left: calc(-50vw + 50%);">
+    <div class="container-fluid" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
       
-    </div>
+      <!-- Brand -->
+      <a href="#" 
+         style="font-size: 28px; font-weight: bold; color: #2c2c2c; text-decoration: none; transition: color 0.3s;" 
+         @mouseover="$event.target.style.color = '#4a4a4a'" 
+         @mouseleave="$event.target.style.color = '#2c2c2c'">
+         QUIZ MASTER
+      </a>
 
-    <!-- Navigation Links -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <router-link id="routerl" class="btn btn-outline-light me-2" to="/adminSummary" 
-        style="transition: all 0.3s ease-in-out;" 
-        @mouseover="hoverButton($event)" 
-        @mouseleave="resetButton($event)">SUMMARY</router-link>
-
-      <!-- Admin-only Search Bar -->
-      <form id="search" class=" me-auto" @submit.prevent="performSearch">
-        <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
-          style="border-radius: 5px; padding: 0.5rem;">
-        <select v-model="searchCategory" class="form-select me-2" style="border-radius: 5px; padding: 0.5rem;">
-          <option value="users">Users</option>
-          <option value="subjects">Subjects</option>
-          <option value="quizzes">Quizzes</option>
-          <option value="chapters">Chapters</option>
-          <option value="options">Options</option>
-        </select>
-        <button class="btn btn-outline-success" type="submit" 
-          style="border-radius: 5px; padding: 0.5rem;">Search</button>
-      </form>
-
-      <!-- No Results Modal -->
-      <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">No Results Found</h5>
-              <button type="button" class="btn-close" @click="searchPerformed = false;" 
-                style="background-color: transparent; border: none;">&times;</button>
-            </div>
-            <div class="modal-body">
-              <p>No results match your search query. Please try again.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" @click="searchPerformed = false;" 
-                style="border-radius: 5px;">Close</button>
-            </div>
-          </div>
-        </div>
+      <!-- User Navigation Buttons -->
+      <div id="userNav" style="display: flex; align-items: center; gap: 10px;">
+        <router-link to="/user-dashboard" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Dashboard</router-link>
+        <button @click="MOVETOSCORES()" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; cursor: pointer; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">SCORES</button>
+        <button @click="MOVETOSUMMARY()" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; cursor: pointer; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Summary</button>
       </div>
 
-      <!-- Results Modal -->
-      <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Search Results</h5>
-              <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
-                style="background-color: transparent; border: none;">&times;</button>
-            </div>
-            <div class="modal-body">
-              <ul>
-                <li v-for="result in results" :key="result.id">
-                  {{ result.name || result.title || result.username || result.text || result.email }}
-                </li>
-              </ul>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" @click="results = []; searchPerformed = false;" 
-                style="border-radius: 5px;">Close</button>
-            </div>
-          </div>
-        </div>
+      <!-- Admin Navigation Buttons -->
+      <div id="adminNav" style="display: none; align-items: center; gap: 10px;">
+        <router-link to="/adminSummary" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Admin Summary</router-link>
       </div>
 
-      <!-- User Authentication Links -->
-      <ul class="navbar-nav align-items-center">
-        <li class="nav-item">
-          <router-link class="btn btn-outline-light me-2" to="/login" 
-            style="transition: all 0.3s ease-in-out;
-            " 
+      <!-- Search Section (Admin Only) -->
+      <div id="searchSection" style="display: none; align-items: center; gap: 10px;">
+        <form @submit.prevent="performSearch" style="display: flex; align-items: center; gap: 8px;">
+          <input type="search" v-model="searchQuery" placeholder="Search..." 
+            style="border: 2px solid #2c2c2c; border-radius: 4px; padding: 8px; color: #2c2c2c; background-color: white; width: 200px;">
+          <select v-model="searchCategory" 
+            style="border: 2px solid #2c2c2c; border-radius: 4px; padding: 8px; color: #2c2c2c; background-color: white;">
+            <option value="users">Users</option>
+            <option value="subjects">Subjects</option>
+            <option value="quizzes">Quizzes</option>
+            <option value="chapters">Chapters</option>
+            <option value="options">Options</option>
+          </select>
+          <button type="submit" 
+            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 8px 16px; cursor: pointer; border-radius: 4px; transition: all 0.3s;"
             @mouseover="hoverButton($event)" 
-            @mouseleave="resetButton($event)">Login</router-link>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-danger" @click="logout" 
-            style="transition: all 0.3s ease-in-out;" 
-            @mouseover="hoverButton($event)" 
-            @mouseleave="resetButton($event)">Logout</button>
-        </li>
-      </ul>
+            @mouseleave="resetButton($event)">Search</button>
+        </form>
+      </div>
+
+      <!-- Authentication Buttons -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <router-link to="/login" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Login</router-link>
+        <button @click="logout" 
+          style="padding: 8px 16px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; cursor: pointer; border-radius: 4px; transition: all 0.3s;"
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">Logout</button>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 </div>
-`,
-  data: function(){
-      return {loggedIn: localStorage.getItem('auth_token'),
-              searchQuery: '',
-              searchCategory: 'users',
-              results: [],
-              error: '',
-              searchPerformed: false,
-              userId:null,
-              authToken: localStorage.getItem('authToken'),
-              navbarColor: '#ffcc00', // Default color for navbar
-            
-          
-      }
-  },
-  mounted() {
-      this.checkSearchVisibility();
-      this.CHECKSCORESVISIBILITY();
-    },
-    watch: {
-      $route(to) {
-        console.log('URL changed:', to.fullPath);
-        this.checkSearchVisibility();
-        this.CHECKSCORESVISIBILITY();
-      },authToken(newToken, oldToken) {
-        this.checkSearchVisibility();
-        this.CHECKSCORESVISIBILITY();
-        
-      }
-    
-      
-    },
-  props: {
-      isAdmin: Boolean, // Receive isAdmin prop from parent
-    },
-    methods: {
-      logout() {
-        // Call the backend to clear the session
-        fetch('/logout', {
-          method: 'GET',
-          credentials: 'include' // Ensure cookies are included
-        })
-        .then(response => {
-          if (response.ok) {
-            localStorage.removeItem('userRole');
-            localStorage.removeItem("auth_token")
-            alert('Logged out successfully!');
-            this.$router.push('/login');
-          } else {
-            alert('Logout failed. Please try again.');
-          }
-        })
-        .catch(error => {
-          console.error('Logout error:', error);
-        });
-      },
-      checkSearchVisibility() {
-          const limk = this.$route.path;
-          const search = document.getElementById('search');
-          const routerl = document.getElementById('routerl');
-
-        
-          if (limk.includes('admin')) {
-            search.style.display = 'flex';
-            routerl.style.display = 'flex';
-            console.log("Admin detected via router");
-          } else {
-            search.style.display = 'none';
-            routerl.style.display = 'none';
-            console.log("Not an admin via router");
-          }
-        },
-        async performSearch() {
-          if (!this.searchQuery) {
-            this.error = 'Please enter a search query';
-            return;
-          }
-          this.error = '';
-          this.searchPerformed = true;
-        
-          const token = localStorage.getItem("auth_token"); // Assuming token is stored in localStorage
-          console.log('Token:', token);
+  `,
   
-        
-          if (!token) {
-            this.error = 'Authentication token not found';
-            return;
-          }
-        
-          try {
-            const response = await fetch(`/search/${this.searchCategory}?q=${encodeURIComponent(this.searchQuery)}`, {
-              method: 'GET',
-              headers: {
-                'Authentication-Token': token,
-                'Accept': 'application/json'
-              }
-            });
-        
-            if (!response.ok) {
-              const errorData = await response.json().catch(() => null);
-              throw new Error(errorData?.error || `HTTP Error ${response.status}`);
-            }
-        
-            this.results = await response.json();
-          } catch (error) {
-            this.error = error.message;
-            console.error('Error:', error);
-            this.results = [];
-          }
-      
+  data() {
+    return {
+      searchQuery: '',
+      searchCategory: 'users',
+      results: [],
+      error: '',
+      searchPerformed: false
     }
-          ,MOVETOSCORES(){
-                const userId = localStorage.getItem('userId'); // Updated to use 'userId' key
-                this.$router.push({ path: `/scores/${userId}` });
-              },MOVETOSUMMARY(){
-                const userId = localStorage.getItem('userId'); // Updated to use 'userId' key
-                this.$router.push({ path: `/summary/${userId}` });}
-                ,CHECKSCORESVISIBILITY(){
-                    const limk = this.$route.path;
-                    const search = document.getElementById('SCORES');
-                    const token = localStorage.getItem("auth_token")
-                    if (!limk.includes('admin') & token != undefined ) {
-                      search.style.display = 'flex';
-                      console.log("registered user detected via router");
-                    } else {
-                      search.style.display = 'none';
-                      console.log("Not a user via router");
-                    }
-
-          },changeColor(color) {
-            this.navbarColor = color; // Update the navbar color on mouseover and mouseleave
-          },
-          hoverButton(event) {
-            event.target.style.transform = 'scale(1.1)';
-            event.target.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.2)';
-          },
-          resetButton(event) {
-            event.target.style.transform = 'scale(1)';
-            event.target.style.boxShadow = 'none';
+  },
+  
+  props: {
+    isAdmin: Boolean
+  },
+  
+  mounted() {
+    this.updateVisibility();
+  },
+  
+  watch: {
+    $route() {
+      this.updateVisibility();
+    },
+    isAdmin() {
+      this.updateVisibility();
+    }
+  },
+  
+  methods: {
+    updateVisibility() {
+      const userRole = localStorage.getItem('userRole');
+      const token = localStorage.getItem('auth_token');
+      const currentPath = this.$route.path;
+      
+      const isAdmin = userRole === 'admin' || currentPath.includes('admin');
+      const isLoggedIn = token && token !== 'null' && token !== 'undefined';
+      
+      // Show/hide user navigation
+      const userNav = document.getElementById('userNav');
+      if (userNav) {
+        userNav.style.display = isLoggedIn ? 'flex' : 'none';
+      }
+      
+      // Show/hide admin navigation
+      const adminNav = document.getElementById('adminNav');
+      if (adminNav) {
+        adminNav.style.display = isAdmin ? 'flex' : 'none';
+      }
+      
+      // Show/hide search section
+      const searchSection = document.getElementById('searchSection');
+      if (searchSection) {
+        searchSection.style.display = isAdmin ? 'flex' : 'none';
+      }
+    },
+    
+    async performSearch() {
+      if (!this.searchQuery.trim()) {
+        this.error = 'Please enter a search query';
+        return;
+      }
+      
+      this.error = '';
+      this.searchPerformed = true;
+      
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        this.error = 'Authentication token not found';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/search/${this.searchCategory}?q=${encodeURIComponent(this.searchQuery)}`, {
+          method: 'GET',
+          headers: {
+            'Authentication-Token': token,
+            'Accept': 'application/json'
           }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP Error ${response.status}`);
+        }
+        
+        this.results = await response.json();
+      } catch (error) {
+        this.error = error.message;
+        this.results = [];
+      }
+    },
+    
+    MOVETOSCORES() {
+      const userId = localStorage.getItem('userId');
+      if (userId) {
+        this.$router.push({ path: `/scores/${userId}` });
+      }
+    },
+    
+    MOVETOSUMMARY() {
+      const userId = localStorage.getItem('userId');
+      if (userId) {
+        this.$router.push({ path: `/summary/${userId}` });
+      }
+    },
+    
+    logout() {
+      fetch('/logout', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      .then(response => {
+        if (response.ok) {
+          localStorage.removeItem('userRole');
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('userId');
+          alert('Logged out successfully!');
+          this.$router.push('/login');
+        } else {
+          alert('Logout failed. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Logout error:', error);
+      });
+    },
+    
+    hoverButton(event) {
+      event.target.style.backgroundColor = '#2c2c2c';
+      event.target.style.color = '#ffffff';
+      event.target.style.transform = 'scale(1.05)';
+    },
+    
+    resetButton(event) {
+      event.target.style.backgroundColor = '#ffffff';
+      event.target.style.color = '#2c2c2c';
+      event.target.style.transform = 'scale(1)';
+    }
+  }
+};
