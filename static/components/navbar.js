@@ -37,14 +37,12 @@ export default {
       </div>
 
       <!-- Search Section (Admin Only) -->
-      <div id="search" style="display: none; align-items: center; margin-top: 10px;" @click.stop>
-        <form @submit.prevent="performSearch" style="display: flex; align-items: center;" @click.stop>
+      <div id="search" style="display: none; align-items: center; margin-top: 10px;">
+        <form @submit.prevent="performSearch" style="display: flex; align-items: center;">
           <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;"
-            @click.stop @focus="keepSearchVisible" @blur="keepSearchVisible">
+            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;">
           <select v-model="searchCategory" 
-            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;"
-            @click.stop @focus="keepSearchVisible" @blur="keepSearchVisible">
+            style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c; background-color: white;">
             <option value="users">Users</option>
             <option value="subjects">Subjects</option>
             <option value="quizzes">Quizzes</option>
@@ -52,8 +50,7 @@ export default {
             <option value="options">Options</option>
           </select>
           <button type="submit" 
-            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;"
-            @click.stop>
+            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
             Search
           </button>
         </form>
@@ -197,21 +194,6 @@ export default {
             console.log('Manually refreshing visibility...');
             this.checkSearchVisibility();
             this.CHECKSCORESVISIBILITY();
-          },
-          keepSearchVisible() {
-            // Method to ensure search form stays visible when interacting with it
-            const userRole = localStorage.getItem('userRole');
-            const isAdminUser = userRole === 'admin';
-            const currentPath = this.$route.path;
-            const isAdminPage = currentPath.includes('admin');
-            
-            if (isAdminUser || isAdminPage) {
-              const search = document.getElementById('search');
-              if (search) {
-                search.style.display = 'flex';
-                console.log('Keeping search visible for admin user');
-              }
-            }
           },
           async performSearch() {
             if (!this.searchQuery) {
