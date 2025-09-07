@@ -1,61 +1,81 @@
 export default {
   template: `
-<div>
+<div class="modern-admin">
+  <!-- Modern Header -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="admin-header text-center mb-5">
+          <h1 class="admin-title">Quiz Master Admin</h1>
+          <p class="admin-subtitle">Manage your learning content with precision</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Existing Content -->
 <div>
-  <div class="container mt-5">
-    <h2>Subjects</h2>
+  <div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="section-title">Subjects</h2>
     
     <!-- Add Subject Section -->
-    <div class="col-12 text-end  ">
-      <button class="btn btn-primary" @click="showAddSubjectForm = !showAddSubjectForm">
+    <div class="col-12 text-end">
+      <button class="btn btn-modern" @click="showAddSubjectForm = !showAddSubjectForm">
         {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
       </button>
     </div>
     
-    <div v-if="showAddSubjectForm" class="col-12">
-      <input v-model="newSubject.name" type="text" placeholder="Enter Subject Name" class="form-control mb-2" />
-      <button @click="addSubject" class="btn btn-success">Add</button>
+    <div v-if="showAddSubjectForm" class="col-12 mt-3">
+      <div class="form-card">
+        <input v-model="newSubject.name" type="text" placeholder="Enter Subject Name" class="form-control modern-input mb-3" />
+        <button @click="addSubject" class="btn btn-modern-success">Add Subject</button>
+      </div>
     </div>
     
     <!-- Subjects and Chapters Section -->
-    <div class="row container-fluid bg-gradient bg-info p-4">
+    <div class="row container-fluid p-4">
   <div class="col-md-6 mb-4" v-for="subject in subjects" :key="subject.id">
-    <div class="card shadow-lg border-0">
-      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{ subject.name }}</h5>
+    <div class="modern-card">
+      <div class="card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="card-title-modern">{{ subject.name }}</h5>
         <div>
-          <button class="btn btn-warning btn-sm me-2" @click="editSubject(subject)">Edit</button>
-          <button class="btn btn-danger btn-sm" @click="deleteSubject(subject.id)">Delete</button>
+          <button class="btn btn-modern-edit me-2" @click="editSubject(subject)">Edit</button>
+          <button class="btn btn-modern-delete" @click="deleteSubject(subject.id)">Delete</button>
         </div>
       </div>
 
-      <div class="card-body">
-        <h6 class="text-success">Chapters:</h6>
-        <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" class="form-control mb-2" />
-        <button @click="addChapter(subject.id)" class="btn btn-primary btn-sm mb-3">Add Chapter</button>
+      <div class="card-body-modern">
+        <h6 class="subsection-title">Chapters</h6>
+        <div class="input-group-modern mb-3">
+          <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" class="form-control modern-input" />
+          <button @click="addChapter(subject.id)" class="btn btn-modern">Add Chapter</button>
+        </div>
 
-        <table class="table table-hover table-striped table-bordered" v-if="filteredChapters(subject.id).length">
-          <thead class="table-dark">
-            <tr>
-              <th>Serial No.</th>
-              <th>Chapter Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ chapter.name }}</td>
-              <td>
-                <button @click="editChapter(chapter)" class="btn btn-sm btn-primary me-1">Edit</button>
-                <button @click="deleteChapter(chapter.id, subject.id)" class="btn btn-sm btn-danger me-1">Delete</button>
-                <button @click="openQuizModal(chapter)" class="btn btn-sm btn-info">Manage Quizzes</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-container" v-if="filteredChapters(subject.id).length">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Chapter Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(chapter, index) in filteredChapters(subject.id)" :key="chapter.id">
+                <td class="serial-number">{{ index + 1 }}</td>
+                <td class="chapter-name">{{ chapter.name }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button @click="editChapter(chapter)" class="btn btn-modern-edit me-1">Edit</button>
+                    <button @click="deleteChapter(chapter.id, subject.id)" class="btn btn-modern-delete me-1">Delete</button>
+                    <button @click="openQuizModal(chapter)" class="btn btn-modern">Quizzes</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -715,3 +735,255 @@ deleteQuestion(index) {
     },
   },
 };
+
+// Modern Black & White CSS Styles
+const style = document.createElement('style');
+style.textContent = `
+  .modern-admin {
+    background-color: #FFFFFF;
+    color: #242424;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .admin-header {
+    background-color: #F5F5F5;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+  
+  .admin-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #242424;
+    margin-bottom: 0.5rem;
+  }
+  
+  .admin-subtitle {
+    font-size: 1.125rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #242424;
+    margin: 0;
+  }
+  
+  .subsection-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #242424;
+    margin-bottom: 1rem;
+  }
+  
+  .btn-modern {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-modern:hover {
+    background-color: #444444;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .btn-modern-success {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-modern-success:hover {
+    background-color: #444444;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .btn-modern-edit {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-modern-edit:hover {
+    background-color: #444444;
+    transform: translateY(-1px);
+  }
+  
+  .btn-modern-delete {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-modern-delete:hover {
+    background-color: #444444;
+    transform: translateY(-1px);
+  }
+  
+  .modern-card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #E0E0E0;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-header-modern {
+    background-color: #F5F5F5;
+    padding: 1.25rem;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  
+  .card-title-modern {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #242424;
+    margin: 0;
+  }
+  
+  .card-body-modern {
+    padding: 1.5rem;
+  }
+  
+  .form-card {
+    background-color: #F5F5F5;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .modern-input {
+    background-color: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #242424;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .modern-input:focus {
+    outline: none;
+    border-color: #333333;
+    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+  }
+  
+  .input-group-modern {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .input-group-modern .modern-input {
+    flex: 1;
+  }
+  
+  .table-container {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+  }
+  
+  .modern-table thead {
+    background-color: #F5F5F5;
+  }
+  
+  .modern-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #242424;
+    border-bottom: 1px solid #E0E0E0;
+    font-size: 1rem;
+  }
+  
+  .modern-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #F0F0F0;
+    color: #242424;
+    font-size: 1rem;
+  }
+  
+  .modern-table tbody tr:hover {
+    background-color: #F5F5F5;
+  }
+  
+  .serial-number {
+    font-weight: 600;
+    color: #666;
+  }
+  
+  .chapter-name {
+    font-weight: 500;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .container {
+    max-width: 1200px;
+  }
+  
+  .row {
+    margin: 0 -0.75rem;
+  }
+  
+  .col-12, .col-md-6 {
+    padding: 0 0.75rem;
+  }
+  
+  .mb-3 { margin-bottom: 1rem !important; }
+  .mb-4 { margin-bottom: 1.5rem !important; }
+  .mb-5 { margin-bottom: 3rem !important; }
+  .mt-3 { margin-top: 1rem !important; }
+  .mt-4 { margin-top: 1.5rem !important; }
+  .me-1 { margin-right: 0.25rem !important; }
+  .me-2 { margin-right: 0.5rem !important; }
+  .text-end { text-align: right !important; }
+  .text-center { text-align: center !important; }
+  .d-flex { display: flex !important; }
+  .justify-content-between { justify-content: space-between !important; }
+  .align-items-center { align-items: center !important; }
+`;
+document.head.appendChild(style);
