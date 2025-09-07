@@ -47,44 +47,44 @@ export default {
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="text-primary mb-2">
+                                <div class="mb-2" style="color: #2c2c2c;">
                                     <i class="fas fa-trophy fa-2x"></i>
                                 </div>
-                                <h4 class="card-title text-primary">{{ userStats.highestScore }}%</h4>
-                                <p class="card-text text-muted">Highest Score</p>
+                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.highestScore }}%</h4>
+                                <p class="card-text" style="color: #4a4a4a;">Highest Score</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="text-success mb-2">
+                                <div class="mb-2" style="color: #2c2c2c;">
                                     <i class="fas fa-chart-line fa-2x"></i>
                                 </div>
-                                <h4 class="card-title text-success">{{ userStats.totalPoints }}</h4>
-                                <p class="card-text text-muted">Total Points</p>
+                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.totalPoints }}</h4>
+                                <p class="card-text" style="color: #4a4a4a;">Total Points</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="text-warning mb-2">
+                                <div class="mb-2" style="color: #2c2c2c;">
                                     <i class="fas fa-medal fa-2x"></i>
                                 </div>
-                                <h4 class="card-title text-warning">{{ userStats.rank }}</h4>
-                                <p class="card-text text-muted">Current Rank</p>
+                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.rank }}</h4>
+                                <p class="card-text" style="color: #4a4a4a;">Current Rank</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="text-info mb-2">
+                                <div class="mb-2" style="color: #2c2c2c;">
                                     <i class="fas fa-calendar-check fa-2x"></i>
                                 </div>
-                                <h4 class="card-title text-info">{{ userStats.streak }}</h4>
-                                <p class="card-text text-muted">Day Streak</p>
+                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.streak }}</h4>
+                                <p class="card-text" style="color: #4a4a4a;">Day Streak</p>
                             </div>
                         </div>
                     </div>
@@ -314,29 +314,38 @@ export default {
                 const userId = localStorage.getItem('userId');
                 
                 if (!token || !userId) {
+                    console.log('No token or userId found, redirecting to login');
                     this.$router.push('/login');
                     return;
                 }
                 
                 this.userId = userId;
+                console.log('Fetching data for user:', userId);
                 
                 // Fetch user profile
-                const userResponse = await fetch(`/api/user/${userId}`, {
-                    headers: {
-                        'Authentication-Token': token,
-                        'Content-Type': 'application/json'
+                try {
+                    const userResponse = await fetch(`/api/user/${userId}`, {
+                        headers: {
+                            'Authentication-Token': token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        console.log("User profile data:", userData);
+                        this.userInfo = {
+                            name: userData.name,
+                            email: userData.email,
+                            joinDate: userData.joinDate
+                        };
+                    } else {
+                        console.log('Failed to fetch user profile:', userResponse.status);
                     }
-                });
-                
-                if (userResponse.ok) {
-                    const userData = await userResponse.json();
-                    console.log("Backend Response:", userData);
-                    this.userInfo = {
-                        name: userData.name,
-                        email: userData.email,
-                        joinDate: userData.joinDate
-                    };
+                } catch (error) {
+                    console.error('Error fetching user profile:', error);
                 }
+                
                 // Fetch user statistics
                 await this.fetchUserStats();
                 
@@ -367,10 +376,35 @@ export default {
                 
                 if (response.ok) {
                     const stats = await response.json();
+                    console.log("User stats received:", stats);
                     this.userStats = { ...this.userStats, ...stats };
+                } else {
+                    console.log('Failed to fetch user stats:', response.status, response.statusText);
+                    // Set default values if API fails
+                    this.userStats = {
+                        totalQuizzes: 0,
+                        averageScore: 0,
+                        highestScore: 0,
+                        totalPoints: 0,
+                        rank: 0,
+                        streak: 0,
+                        correctAnswers: 0,
+                        incorrectAnswers: 0
+                    };
                 }
             } catch (error) {
                 console.error('Error fetching user stats:', error);
+                // Set default values on error
+                this.userStats = {
+                    totalQuizzes: 0,
+                    averageScore: 0,
+                    highestScore: 0,
+                    totalPoints: 0,
+                    rank: 0,
+                    streak: 0,
+                    correctAnswers: 0,
+                    incorrectAnswers: 0
+                };
             }
         },
         
@@ -384,10 +418,16 @@ export default {
                 });
                 
                 if (response.ok) {
-                    this.recentQuizzes = await response.json();
+                    const quizzes = await response.json();
+                    console.log("Recent quizzes received:", quizzes);
+                    this.recentQuizzes = quizzes;
+                } else {
+                    console.log('Failed to fetch recent quizzes:', response.status);
+                    this.recentQuizzes = [];
                 }
             } catch (error) {
                 console.error('Error fetching recent quizzes:', error);
+                this.recentQuizzes = [];
             }
         },
         
@@ -402,10 +442,15 @@ export default {
                 
                 if (response.ok) {
                     const quizzes = await response.json();
+                    console.log("Available quizzes received:", quizzes);
                     this.availableQuizzes = Array.isArray(quizzes) ? quizzes : [];
+                } else {
+                    console.log('Failed to fetch available quizzes:', response.status);
+                    this.availableQuizzes = [];
                 }
             } catch (error) {
                 console.error('Error fetching available quizzes:', error);
+                this.availableQuizzes = [];
             }
         },
         
@@ -419,8 +464,11 @@ export default {
                 });
                 
                 if (response.ok) {
-                    this.achievements = await response.json();
+                    const achievements = await response.json();
+                    console.log("Achievements received:", achievements);
+                    this.achievements = achievements;
                 } else {
+                    console.log('Failed to fetch achievements:', response.status);
                     // Mock achievements if API doesn't exist
                     this.achievements = [
                         {
@@ -441,6 +489,23 @@ export default {
                 }
             } catch (error) {
                 console.error('Error fetching achievements:', error);
+                // Set default achievements on error
+                this.achievements = [
+                    {
+                        id: 1,
+                        title: "First Quiz",
+                        description: "Completed your first quiz",
+                        icon: "fas fa-star",
+                        color: "#ffc107"
+                    },
+                    {
+                        id: 2,
+                        title: "High Scorer",
+                        description: "Scored above 80%",
+                        icon: "fas fa-trophy",
+                        color: "#28a745"
+                    }
+                ];
             }
         },
         
