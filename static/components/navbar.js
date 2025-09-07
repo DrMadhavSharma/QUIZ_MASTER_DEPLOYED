@@ -1,8 +1,8 @@
 export default {
   template: `
 <div>
-  <nav style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); padding: 10px; border-bottom: 2px solid #000000;">
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+  <nav style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); padding: 10px; border-bottom: 2px solid #000000; width: 100vw; margin-left: calc(-50vw + 50%);">
+    <div class="container-fluid" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
       
       <!-- Brand with Hover Animation -->
       <a href="#" 

@@ -181,3 +181,19 @@ body {
 .nav-link:hover {
     color: #333333 !important;
 }
+
+/* Full-width navbar and footer */
+.navbar-full-width {
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+}
+
+.footer-full-width {
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+}
+
+/* Ensure body doesn't have horizontal scroll */
+body {
+    overflow-x: hidden;
+}

@@ -33,16 +33,18 @@
         el: "#app",
         router, // router: router
         template: `                    
-        <div class="container">
+        <div>
         <nav-bar :isAdmin="isAdmin"></nav-bar>
         
+        <div class="container">
         <div v-if="isLoading" class="text-center my-5">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border" role="status" style="color: #000000;">
             <span class="visually-hidden">Loading...</span>
             </div>
         </div>
 
         <router-view v-else></router-view> 
+        </div>
         <foot></foot>
         </div>
         `,
