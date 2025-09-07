@@ -28,86 +28,88 @@ export default {
           @mouseleave="resetButton($event)">Summary</button>
       </div>
 
-      <!-- Admin Summary Button (Admin Only) -->
+      <!-- Navigation Links -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    
-          <router-link to="/adminSummary" v-show="isAdminPage"
-            style="margin: 5px; padding: 8px 12px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; transition: all 0.3s;"
-            @mouseover="hoverButton($event)" 
-            @mouseleave="resetButton($event)">Admin Summary</router-link>
+        <router-link id="routerl" class="btn btn-outline-light me-2" to="/adminSummary" 
+          style="transition: all 0.3s ease-in-out;" 
+          @mouseover="hoverButton($event)" 
+          @mouseleave="resetButton($event)">SUMMARY</router-link>
 
-        <!-- Search Section (Admin Only) -->
-              <!-- Admin-only Search Bar -->
-        <form id="search" class="me-auto" @submit.prevent="performSearch" 
-              v-show="isAdminPage" style="display: flex; align-items: center;">
-              <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
-            style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
-          <select v-model="searchCategory" class="form-select me-2" 
-            style="border: 2px solid #000000; border-radius: 5px; color: #000000; background-color: #ffffff; padding: 0.5rem;">
+        <!-- Admin-only Search Bar -->
+        <form id="search" class=" me-auto" @submit.prevent="performSearch">
+          <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
+            style="border-radius: 5px; padding: 0.5rem;">
+          <select v-model="searchCategory" class="form-select me-2" style="border-radius: 5px; padding: 0.5rem;">
             <option value="users">Users</option>
             <option value="subjects">Subjects</option>
             <option value="quizzes">Quizzes</option>
             <option value="chapters">Chapters</option>
             <option value="options">Options</option>
           </select>
-          <button class="btn" type="submit" 
-            style="border: 2px solid #000000; background-color: #ffffff; color: #000000; padding: 0.5rem 1rem; cursor: pointer;">Search</button>
+          <button class="btn btn-outline-success" type="submit" 
+            style="border-radius: 5px; padding: 0.5rem;">Search</button>
         </form>
-        <!-- No Results Modal -->
-          <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">No Results Found</h5>
-                  <button type="button" class="btn-close" @click="searchPerformed = false;" 
-                    style="background-color: transparent; border: none;">&times;</button>
-                </div>
-                <div class="modal-body">
-                  <p>No results match your search query. Please try again.</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="searchPerformed = false;" 
-                    style="border-radius: 5px;">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Results Modal -->
-          <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Search Results</h5>
-                  <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
-                    style="background-color: transparent; border: none;">&times;</button>
-                </div>
-                <div class="modal-body">
-                  <ul>
-                    <li v-for="result in results" :key="result.id">
-                      {{ result.name || result.title || result.username || result.text || result.email }}
-                    </li>
-                  </ul>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="results = []; searchPerformed = false;" 
-                    style="border-radius: 5px;">Close</button>
-                </div>
+        <!-- No Results Modal -->
+        <div v-if="searchPerformed && !results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">No Results Found</h5>
+                <button type="button" class="btn-close" @click="searchPerformed = false;" 
+                  style="background-color: transparent; border: none;">&times;</button>
+              </div>
+              <div class="modal-body">
+                <p>No results match your search query. Please try again.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="searchPerformed = false;" 
+                  style="border-radius: 5px;">Close</button>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Results Modal -->
+        <div v-if="results.length" class="modal fade show d-block" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Search Results</h5>
+                <button type="button" class="btn-close" @click="results = []; searchPerformed = false;" 
+                  style="background-color: transparent; border: none;">&times;</button>
+              </div>
+              <div class="modal-body">
+                <ul>
+                  <li v-for="result in results" :key="result.id">
+                    {{ result.name || result.title || result.username || result.text || result.email }}
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="results = []; searchPerformed = false;" 
+                  style="border-radius: 5px;">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- User Authentication Links -->
-        <div style="margin-top: 10px;">
-          <router-link to="/login" 
-            style="margin-right: 5px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; text-decoration: none; transition: all 0.3s;"
-            @mouseover="hoverButton($event)" 
-            @mouseleave="resetButton($event)">Login</router-link>
-          <button @click="logout" 
-            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;"
-            @mouseover="hoverButton($event)" 
-            @mouseleave="resetButton($event)">Logout</button>
-        </div>
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item">
+            <router-link class="btn btn-outline-light me-2" to="/login" 
+              style="transition: all 0.3s ease-in-out;
+              " 
+              @mouseover="hoverButton($event)" 
+              @mouseleave="resetButton($event)">Login</router-link>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-danger" @click="logout" 
+              style="transition: all 0.3s ease-in-out;" 
+              @mouseover="hoverButton($event)" 
+              @mouseleave="resetButton($event)">Logout</button>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
