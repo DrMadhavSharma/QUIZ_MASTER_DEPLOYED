@@ -326,6 +326,7 @@ export default {
                 
                 if (userResponse.ok) {
                     const userData = await userResponse.json();
+                    console.log("Backend Response:", userData);
                     this.userInfo = {
                         name: userData.name,
                         email: userData.email,
