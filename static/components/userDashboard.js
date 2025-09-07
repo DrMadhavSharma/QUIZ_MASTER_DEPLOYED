@@ -18,7 +18,7 @@ export default {
                                     <div class="col-md-8">
                                         <h1 class="card-title mb-2">
                                             <i class="fas fa-user-circle me-2"></i>
-                                            Welcome back, {{ userInfo.name || localStorage.getItem('username') || 'User' }}! 👋
+                                             Welcome back, {{ displayName }}! 👋
                                         </h1>
                                         <p class="card-text mb-0">
                                             Ready to test your knowledge? Let's see how you're doing today!
@@ -301,7 +301,11 @@ export default {
             achievements: []
         };
     },
-    
+    computed: {
+        displayName() {
+            return this.userInfo.name || localStorage.getItem('username') || 'User';
+        }
+    },
     methods: {
         async fetchUserData() {
             try {
