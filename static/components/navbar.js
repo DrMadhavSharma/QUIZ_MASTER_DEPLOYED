@@ -11,7 +11,7 @@ export default {
          @mouseleave="changeColor('#2c2c2c')">
          QUIZ MASTER
       </a>
-
+    
       <!-- SCORES and Summary Buttons -->
       <div id="SCORES" style="margin-top: 10px; text-align: center;">
         <router-link to="/user-dashboard" 
@@ -29,7 +29,8 @@ export default {
       </div>
 
       <!-- Admin Summary Button (Admin Only) -->
-      
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+  
         <router-link to="/adminSummary" v-show="isAdminPage"
           style="margin: 5px; padding: 8px 12px; border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; text-decoration: none; transition: all 0.3s;"
           @mouseover="hoverButton($event)" 
@@ -107,6 +108,7 @@ export default {
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Logout</button>
       </div>
+    </div>
     </div>
   </nav>
 </div>
