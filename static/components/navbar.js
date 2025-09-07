@@ -28,12 +28,12 @@ export default {
           @mouseleave="resetButton($event)">Summary</button>
       </div>
 
-      <!-- Search Section -->
-      <form @submit.prevent="performSearch" style="display: flex; align-items: center; margin-top: 10px;">
+      <!-- Search Section (Admin Only) -->
+      <form id="search" @submit.prevent="performSearch" style="display: none; align-items: center; margin-top: 10px;">
         <input type="search" v-model="searchQuery" placeholder="Search quizzes" 
-          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
+          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
         <select v-model="searchCategory" 
-          style="border: 2px solid #000000; border-radius: 5px; padding: 5px; margin-right: 5px; color: #000000;">
+          style="border: 2px solid #2c2c2c; border-radius: 5px; padding: 5px; margin-right: 5px; color: #2c2c2c;">
           <option value="users">Users</option>
           <option value="subjects">Subjects</option>
           <option value="quizzes">Quizzes</option>
@@ -41,7 +41,7 @@ export default {
           <option value="options">Options</option>
         </select>
         <button type="submit" 
-          style="border: 2px solid #000000; background-color: white; color: #000000; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
+          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; padding: 5px 10px; cursor: pointer; transition: all 0.3s;">
           Search
         </button>
       </form>
@@ -76,21 +76,32 @@ export default {
         }
     },
     mounted() {
-        this.checkSearchVisibility();
-        this.CHECKSCORESVISIBILITY();
+        // Use nextTick to ensure DOM is fully rendered
+        this.$nextTick(() => {
+          this.checkSearchVisibility();
+          this.CHECKSCORESVISIBILITY();
+        });
+        
+        // Make refreshVisibility available globally for debugging
+        window.refreshNavbarVisibility = () => {
+          this.refreshVisibility();
+        };
       },
       watch: {
         $route(to) {
           console.log('URL changed:', to.fullPath);
           this.checkSearchVisibility();
           this.CHECKSCORESVISIBILITY();
-        },authToken(newToken, oldToken) {
+        },
+        authToken(newToken, oldToken) {
           this.checkSearchVisibility();
           this.CHECKSCORESVISIBILITY();
-          
+        },
+        isAdmin(newValue, oldValue) {
+          console.log('isAdmin prop changed:', oldValue, '->', newValue);
+          this.checkSearchVisibility();
+          this.CHECKSCORESVISIBILITY();
         }
-      
-        
       },
     props: {
         isAdmin: Boolean, // Receive isAdmin prop from parent
@@ -120,22 +131,45 @@ export default {
             const currentPath = this.$route.path;
             const search = document.getElementById('search');
             const token = localStorage.getItem('auth_token');
+            const userRole = localStorage.getItem('userRole');
+            
+            // Debug logging
+            console.log('=== Search Visibility Check ===');
+            console.log('Current path:', currentPath);
+            console.log('Token exists:', !!token);
+            console.log('User role:', userRole);
+            console.log('isAdmin prop:', this.isAdmin);
+            console.log('Search element found:', !!search);
             
             // Check if user is on admin page OR has admin role
             const isAdminPage = currentPath.includes('admin');
-            const hasAdminToken = token && this.isAdmin; // Use the isAdmin prop
+            const isAdminUser = userRole === 'admin';
             
-            if (isAdminPage || hasAdminToken) {
+            console.log('Is admin page:', isAdminPage);
+            console.log('Is admin user:', isAdminUser);
+            
+            if (isAdminPage || isAdminUser) {
               if (search) {
                 search.style.display = 'flex';
-                console.log("Admin detected - showing search");
+                console.log("✅ Admin detected - showing search");
+              } else {
+                console.log("❌ Search element not found!");
               }
             } else {
               if (search) {
                 search.style.display = 'none';
-                console.log("Not an admin - hiding search");
+                console.log("❌ Not an admin - hiding search");
+              } else {
+                console.log("❌ Search element not found!");
               }
             }
+            console.log('=== End Search Visibility Check ===');
+          },
+          refreshVisibility() {
+            // Method to manually refresh visibility - useful for debugging
+            console.log('Manually refreshing visibility...');
+            this.checkSearchVisibility();
+            this.CHECKSCORESVISIBILITY();
           },
           async performSearch() {
             if (!this.searchQuery) {
