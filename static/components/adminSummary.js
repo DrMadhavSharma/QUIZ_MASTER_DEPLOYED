@@ -1,52 +1,64 @@
 export default {
     template: `
-      <div class="container my-5">
-  <h1 class="text-primary mb-4">Admin Summary</h1>
-  <div class="row border">
-    <div class="text-end my-2">
-        <button @click="csvExport" class="btn btn-secondary">Download CSV</button>
+    <div class="container my-5">
+      <!-- Loading Spinner -->
+        <div v-if="isLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your dashboard...</p>
+        </div>
+        <!-- Welcome Header -->
+        <div v-else>
+          <h1 class="text-primary mb-4">Admin Summary</h1>
+          <div class="row border">
+            <div class="text-end my-2">
+                <button @click="csvExport" class="btn btn-secondary">Download CSV</button>
+            </div>
+          </div>
+        
+          <!-- Summary Details Section -->
+          <div v-if="summaryData" class="card mb-4">
+            <div class="card-header bg-info text-white">
+              <h2 class="mb-0">Summary Details</h2>
+            </div>
+            <div class="card-body">
+              <ul class="list-group">
+                <li v-for="(value, key) in summaryData" :key="key" class="list-group-item d-flex justify-content-between">
+                  <strong class="text-capitalize">{{ key }}</strong>
+                  <span>{{ value }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        
+          <!-- Top Scorer Section -->
+          <div v-if="topScorer" class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="bi bi-trophy me-2"></i>
+            <div>
+              <h2 class="mb-1">🏆 Top Scorer</h2>
+              <p class="mb-0">{{ topScorer.name }} with <strong>{{ topScorer.points }}</strong> points</p>
+            </div>
+          </div>
+        
+          <!-- Chart Section -->
+          <div v-if="chartSrc" class="card mb-4">
+            <div class="card-header bg-warning">
+              <h2 class="mb-0">📊 Graph</h2>
+            </div>
+            <div class="card-body text-center">
+              <img :src="chartSrc" alt="Admin Summary Chart" class="img-fluid rounded shadow-lg" />
+            </div>
+          </div>
+        
+          <!-- Error Section -->
+          <div v-if="error" class="alert alert-danger" role="alert">
+            ⚠️ {{ error }}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Summary Details Section -->
-  <div v-if="summaryData" class="card mb-4">
-    <div class="card-header bg-info text-white">
-      <h2 class="mb-0">Summary Details</h2>
-    </div>
-    <div class="card-body">
-      <ul class="list-group">
-        <li v-for="(value, key) in summaryData" :key="key" class="list-group-item d-flex justify-content-between">
-          <strong class="text-capitalize">{{ key }}</strong>
-          <span>{{ value }}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Top Scorer Section -->
-  <div v-if="topScorer" class="alert alert-success d-flex align-items-center" role="alert">
-    <i class="bi bi-trophy me-2"></i>
-    <div>
-      <h2 class="mb-1">🏆 Top Scorer</h2>
-      <p class="mb-0">{{ topScorer.name }} with <strong>{{ topScorer.points }}</strong> points</p>
-    </div>
-  </div>
-
-  <!-- Chart Section -->
-  <div v-if="chartSrc" class="card mb-4">
-    <div class="card-header bg-warning">
-      <h2 class="mb-0">📊 Graph</h2>
-    </div>
-    <div class="card-body text-center">
-      <img :src="chartSrc" alt="Admin Summary Chart" class="img-fluid rounded shadow-lg" />
-    </div>
-  </div>
-
-  <!-- Error Section -->
-  <div v-if="error" class="alert alert-danger" role="alert">
-    ⚠️ {{ error }}
-  </div>
-</div>
 
     `,
     data() {
