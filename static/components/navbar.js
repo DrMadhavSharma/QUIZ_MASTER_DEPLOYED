@@ -41,7 +41,7 @@ export default {
 
         <!-- Admin-only Search Bar -->
         <form id="search" class="me-auto" @submit.prevent="performSearch">
-          <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search quizzes" aria-label="Search"
+          <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search ..." aria-label="Search"
             style="border: 2px solid #2c2c2c; color: #2c2c2c; border-radius: 5px; padding: 0.5rem;">
           <select v-model="searchCategory" class="form-select me-2" 
                   style="border: 2px solid #2c2c2c; color: #2c2c2c; border-radius: 5px; padding: 0.5rem;">
@@ -62,7 +62,6 @@ export default {
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">No Results Found</h5>
-                  style="background-color: transparent; border: none;">&times;</button>
               </div>
               <div class="modal-body">
                 <p>No results match your search query. Please try again.</p>
@@ -81,7 +80,6 @@ export default {
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">Search Results</h5> 
-                  style="background-color: transparent; border: none;">&times;</button>
               </div>
               <div class="modal-body">
                 <ul>
