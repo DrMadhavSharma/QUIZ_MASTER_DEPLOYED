@@ -103,9 +103,9 @@ import requests
 from flask import request, jsonify, send_from_directory
 from .models import Quiz, User, Notification ,db
 from .utils import format_report
-@app.route('/tasks/csv_report', methods=['POST'])
+
 def task_csv_report():
-    from app import app
+
     quizzes = Quiz.query.all()  # admin
     csv_file_name = f"transaction_{datetime.datetime.now().strftime('%f')}.csv"  # transaction_123456.csv
     with open(f'static/{csv_file_name}', 'w', newline="") as csvfile:
@@ -120,9 +120,9 @@ def task_csv_report():
     return jsonify({"result": csv_file_name})
 
 
-@app.route('/tasks/monthly_report', methods=['POST'])
+
 def task_monthly_report():
-    from app import app
+
 
     users = User.query.all()
     for user in users[1:]:
@@ -154,9 +154,8 @@ def task_monthly_report():
     return jsonify({"result": "Monthly reports sent"})
 
 
-@app.route('/tasks/quiz_update', methods=['POST'])
+
 def task_quiz_update():
-    from app import app
 
     quiz_id = request.json.get("quiz_id")  # pass quiz_id in request
 
