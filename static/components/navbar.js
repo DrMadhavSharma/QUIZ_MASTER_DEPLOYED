@@ -40,10 +40,14 @@ export default {
 
       <!-- Navigation Links -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <router-link id="routerl" class="btn btn-outline-dark me-2" to="/adminSummary" 
+        <router-link id="routerl"  to="/adminSummary" >
+          <button 
+          class="btn btn-outline-dark me-2"
           style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
           @mouseover="hoverButton($event)" 
-          @mouseleave="resetButton($event)">Admin Summary</router-link>
+          @mouseleave="resetButton($event)">Admin Summary
+          </button>
+        </router-link>
 
         <!-- Admin-only Search Bar -->
         <form id="search" class="me-auto" @submit.prevent="performSearch">
@@ -105,10 +109,14 @@ export default {
         <!-- User Authentication Links -->
         <ul class="navbar-nav align-items-center">
           <li class="nav-item">
-            <router-link class="btn btn-outline-dark me-2" to="/login" 
+            <router-link  to="/login" class="me-2">
+              <button 
+              class="btn btn-outline-dark "
               style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;"
               @mouseover="hoverButton($event)" 
-              @mouseleave="resetButton($event)">Login</router-link>
+              @mouseleave="resetButton($event)">Login
+              </button>
+              </router-link>
           </li>
           <li class="nav-item">
             <button class="btn btn-outline-dark" @click="logout" 

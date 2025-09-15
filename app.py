@@ -75,6 +75,28 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(minute = '*/2'),
         monthly_report.s(),
     )
+# -------- QStash Schedule Setup --------
+QSTASH_URL = "https://qstash.upstash.io/v2/schedules"
+QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")  # add in your environment
+
+def setup_qstash_schedule():
+    headers = {
+        "Authorization": f"Bearer {QSTASH_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "destination": "/tasks/monthly_report",  # Flask task endpoint
+        "cron": "*/2 * * * *",  # every 2 minutes
+        "retries": 3,
+        "method": "POST"
+    }
+    r = requests.post(QSTASH_URL, json=data, headers=headers)
+    print("QStash schedule setup:", r.status_code, r.text)
+
+
+# Run once on startup
+setup_qstash_schedule()
+
 import os
 import redis
 

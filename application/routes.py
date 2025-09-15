@@ -467,35 +467,79 @@ with app.app_context():
         status = request.args.get('status')
         return jsonify({"payment_status": status})
         
-    #---------------csv&other async jobs---------------------#
-    @app.route('/api/export') # this manually triggers the job
-    def export_csv():
-        result = csv_report.delay() # async object
-        return jsonify({
-            "id": result.id,
-            "result": result.result,
+    # #---------------csv&other async jobs---------------------#
+    # @app.route('/api/export') # this manually triggers the job
+    # def export_csv():
+    #     result = csv_report.delay() # async object
+    #     return jsonify({
+    #         "id": result.id,
+    #         "result": result.result,
 
-        })
+    #     })
 
-    @app.route('/api/csv_result/<id>') # just create to test the status of result
-    def csv_result(id):
-        # res = AsyncResult(id)
-        # return send_from_directory('static', res.result)
-        res = csv_report.AsyncResult(id)
-        if res.ready():
-            if res.result:  # ensure it's not None
-                return send_from_directory('static', res.result)
-            else:
-                return {"error": "Task failed or returned no file"}, 500
-        else:
-            return {"status": "pending"}, 202
+    # @app.route('/api/csv_result/<id>') # just create to test the status of result
+    # def csv_result(id):
+    #     # res = AsyncResult(id)
+    #     # return send_from_directory('static', res.result)
+    #     res = csv_report.AsyncResult(id)
+    #     if res.ready():
+    #         if res.result:  # ensure it's not None
+    #             return send_from_directory('static', res.result)
+    #         else:
+    #             return {"error": "Task failed or returned no file"}, 500
+    #     else:
+    #         return {"status": "pending"}, 202
         
+
+    # @app.route('/api/mail')
+    # def send_reports():
+    #     res = monthly_report.delay()
+    #     return {
+    #         "result": res.result
+    #     }
+    import os
+    import requests
+    from flask import Flask, jsonify, request, send_from_directory
+
+
+    QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
+    QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
+
+
+    # ----------- ROUTES (trigger tasks via QStash) -----------
+
+    @app.route('/api/export')
+    def export_csv():
+        """Publish CSV report job to QStash"""
+        response = requests.post(
+            f"{QSTASH_URL}/tasks/csv_report",
+            headers={
+                "Authorization": f"Bearer {QSTASH_TOKEN}",
+                "Content-Type": "application/json"
+            },
+            json={}  # no payload needed
+        )
+        return jsonify(response.json())
+
+
+    @app.route('/api/csv_result/<id>')
+    def csv_result(id):
+        """Serve CSV file if generated, else pending"""
+        try:
+            return send_from_directory('static', f"{id}.csv")
+        except FileNotFoundError:
+            return {"status": "pending"}, 202
+
 
     @app.route('/api/mail')
     def send_reports():
-        res = monthly_report.delay()
-        return {
-            "result": res.result
-        }
-    
-
+        """Publish monthly report job to QStash"""
+        response = requests.post(
+            f"{QSTASH_URL}/tasks/monthly_report",
+            headers={
+                "Authorization": f"Bearer {QSTASH_TOKEN}",
+                "Content-Type": "application/json"
+            },
+            json={}  # no payload needed
+        )
+        return jsonify(response.json())
