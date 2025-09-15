@@ -85,7 +85,7 @@ def setup_qstash_schedule():
         "Content-Type": "application/json"
     }
     data = {
-        "destination": "/tasks/monthly_report",  # Flask task endpoint
+        "destination": "https://quiz-master-deployed.onrender.com/tasks/monthly_report",  # Flask task endpoint
         "cron": "*/2 * * * *",  # every 2 minutes
         "retries": 3,
         "method": "POST"
