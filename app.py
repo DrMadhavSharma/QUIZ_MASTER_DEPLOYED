@@ -90,7 +90,7 @@ def setup_qstash_schedule():
         "retries": 3,
         "method": "POST"
     }
-    r = requests.post(QSTASH_URL, json=data, headers=headers)
+    r = requests.post("https://qstash.upstash.io/v2/schedules", json=data, headers=headers)
     print("QStash schedule setup:", r.status_code, r.text)
 
 

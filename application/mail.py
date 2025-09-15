@@ -5,10 +5,11 @@ from email.mime.base import MIMEBase
 from email import encoders
 from jinja2 import Template
 
-SMTP_SERVER_HOST = "localhost"
-SMTP_SERVER_PORT = 1025
-SENDER_ADDRESS = "quizmaster@donotreply.in"
-SENDER_PASSWORD = ""
+SMTP_SERVER_HOST = "smtp.gmail.com"
+SMTP_SERVER_PORT = 587
+SENDER_ADDRESS = "23f3004142@ds.study.iitm.ac.in"
+SENDER_PASSWORD = "rgvxheme dfqksmqm"  # your app password (without spaces is also fine)
+
 
 def send_email(to_address, subject, message, content = "html", attachment_file = None):   #default content -> html
     msg = MIMEMultipart()
@@ -30,10 +31,12 @@ def send_email(to_address, subject, message, content = "html", attachment_file =
         part.add_header("Content-Disposition", f"attachment; filename = {attachment_file}") # refer https://www.ietf.org/rtc/rtc2183.txt
         msg.attach(part) #add attachment to message
 
-    s = smtplib.SMTP(host = SMTP_SERVER_HOST, port = SMTP_SERVER_PORT)
+    s = smtplib.SMTP(host=SMTP_SERVER_HOST, port=SMTP_SERVER_PORT)
+    s.starttls()  # secure the connection
     s.login(SENDER_ADDRESS, SENDER_PASSWORD)
     s.send_message(msg)
     s.quit()
+
 
     return True
 
