@@ -60,3 +60,4 @@ WTForms==3.2.1
 gunicorn
 honcho
 psycopg2-binary
+qstash=2.8.2
