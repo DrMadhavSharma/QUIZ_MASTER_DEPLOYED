@@ -77,11 +77,13 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
                 "destination": "https://quiz-master-deployed.onrender.com/tasks/quiz_update"
                 }
             )
+            print(qstash_response.status_code, qstash_response.text)
             print("QStash trigger response:", qstash_response.status_code, qstash_response.text)
             return {'message': 'Quiz created successfully', 'quiz_id': new_quiz.id}, 201
         except Exception as e:
             print(f"Error: {e}")
             return {'message': str(e)}, 400
+        
     @auth_required('token')
     @roles_required('admin')
     def put(self, quiz_id):
