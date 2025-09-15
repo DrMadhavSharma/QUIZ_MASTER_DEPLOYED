@@ -519,7 +519,11 @@ with app.app_context():
             },
             json={}  # no payload needed
         )
-        return jsonify(response.json())
+        try:
+          return jsonify(response.json())  # if QStash gives JSON
+        except ValueError:
+          return {"status": "ok", "raw": response.text}
+        print("QStash response:", response.text)
 
 
     @app.route('/api/csv_result/<id>')
