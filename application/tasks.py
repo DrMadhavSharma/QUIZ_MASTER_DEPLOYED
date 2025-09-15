@@ -101,7 +101,7 @@ import datetime
 import csv
 import requests
 from flask import request, jsonify, send_from_directory
-import app
+from app import app
 from .models import Quiz, User, Notification ,db
 from .utils import format_report
 @app.route('/tasks/csv_report', methods=['POST'])
