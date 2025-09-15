@@ -16,8 +16,8 @@ from io import BytesIO
 import base64
 from celery.result import AsyncResult
 from .tasks import csv_report, monthly_report
-
-
+from .utils import task_results
+import uuid
 
 with app.app_context():
     @app.route("/health")
@@ -510,29 +510,37 @@ with app.app_context():
 
     @app.route('/api/export')
     def export_csv():
-        """Publish CSV report job to QStash"""
+        task_id = str(uuid.uuid4())  # generate unique ID
+        task_results[task_id] = "pending"
+
+        # Ask QStash to call our worker route
         response = requests.post(
-            f"{QSTASH_URL}/tasks/csv_report",
+            "https://qstash.upstash.io/v2/publish/https://quiz-master-deployed.onrender.com/tasks/csv_report",
             headers={
                 "Authorization": f"Bearer {QSTASH_TOKEN}",
                 "Content-Type": "application/json"
             },
-            json={}  # no payload needed
+            json={"task_id": task_id}
         )
-        try:
-          return jsonify(response.json())  # if QStash gives JSON
-        except ValueError:
-          return {"status": "ok", "raw": response.text}
-        print("QStash response:", response.text)
+
+        return jsonify({
+            "id": task_id,
+            "status": "queued"
+        })
 
 
-    @app.route('/api/csv_result/<id>')
-    def csv_result(id):
-        """Serve CSV file if generated, else pending"""
-        try:
-            return send_from_directory('static', f"{id}.csv")
-        except FileNotFoundError:
-            return {"status": "pending"}, 202
+    @app.route('/api/csv_result/<task_id>')
+    def csv_result(task_id):
+        result = task_results.get(task_id)
+
+        if not result:
+            return jsonify({"status": "pending"}), 202
+
+        if result == "failed":
+            return jsonify({"error": "Task failed"}), 500
+
+        # If we have a filename, return the actual CSV file
+        return send_from_directory("static", result, as_attachment=True)
 
 
     @app.route('/api/mail')

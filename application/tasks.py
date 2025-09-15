@@ -6,7 +6,7 @@ from celery import Celery, shared_task
 from .models import Quiz, User, Notification, db
 from .utils import format_report
 from .mail import send_email
-
+from .utils import task_results
 
 @shared_task(ignore_results = False, name = "download_csv_report")
 def csv_report():
@@ -106,18 +106,29 @@ from .utils import format_report
 
 def task_csv_report():
 
-    quizzes = Quiz.query.all()  # admin
-    csv_file_name = f"transaction_{datetime.datetime.now().strftime('%f')}.csv"  # transaction_123456.csv
-    with open(f'static/{csv_file_name}', 'w', newline="") as csvfile:
-        sr_no = 1
-        Quiz_csv = csv.writer(csvfile, delimiter=',')
-        Quiz_csv.writerow(['Sr No.', 'title', 'chapter_id', 'date', 'Duration'])
-        for q in quizzes:
-            this_quiz = [sr_no, q.title, q.chapter_id, q.date, q.duration]
-            Quiz_csv.writerow(this_quiz)
-            sr_no += 1
+    data = request.get_json()
+    task_id = data.get("task_id")
 
-    return jsonify({"result": csv_file_name})
+    try:
+        quizzes = Quiz.query.all()  # fetch all quizzes
+        csv_file_name = f"transaction_{datetime.datetime.now().strftime('%f')}.csv"
+
+        with open(f'static/{csv_file_name}', 'w', newline="") as csvfile:
+            sr_no = 1
+            Quiz_csv = csv.writer(csvfile, delimiter=',')
+            Quiz_csv.writerow(['Sr No.', 'title', 'chapter_id', 'date', 'Duration'])
+            for q in quizzes:
+                this_quiz = [sr_no, q.title, q.chapter_id, q.date, q.duration]
+                Quiz_csv.writerow(this_quiz)
+                sr_no += 1
+
+        # mark result done
+        task_results[task_id] = csv_file_name
+        return jsonify({"status": "done", "task_id": task_id, "file": csv_file_name}), 200
+
+    except Exception as e:
+        task_results[task_id] = "failed"
+        return jsonify({"error": str(e)}), 500
 
 
 

@@ -1,5 +1,5 @@
 from jinja2 import Template
-
+task_results = {}  # {task_id: file_path or "pending" or "failed"}
 def roles_list(roles): # [<Role 1>, <Role 2>,..]
     role_list = []
     for role in roles:
