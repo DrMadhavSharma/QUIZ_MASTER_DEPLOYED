@@ -18,10 +18,16 @@ export default {
 
       <!-- SCORES and Summary Buttons -->
       <div id="SCORES" class="text-center mt-4">
-        <router-link to="/user-dashboard" class="btn btn-outline-dark mx-2 btn-lg" 
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
-          @mouseover="hoverButton($event)" 
-          @mouseleave="resetButton($event)">Dashboard</router-link>
+        <router-link to="/user-dashboard" class="mx-2">
+          <button 
+            class="btn btn-outline-dark btn-lg"
+            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
+            @mouseover="hoverButton($event)" 
+            @mouseleave="resetButton($event)">
+            Dashboard
+          </button>
+        </router-link>
+
         <button @click="MOVETOSCORES()" class="btn btn-outline-dark mx-2 btn-lg" 
           style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
           @mouseover="hoverButton($event)" 
