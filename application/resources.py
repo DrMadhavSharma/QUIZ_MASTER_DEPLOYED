@@ -66,7 +66,7 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             db.session.commit()
             quiz_update_result=quiz_update.delay(new_quiz.id)  # Asynchronous task to update quiz statistics
             # 🔔 Trigger quiz_update asynchronously via QStash
-            requests.post(
+            qstash_response=requests.post(
                 "https://qstash.upstash.io/v2/publish",
                 headers={
                     "Authorization": f"Bearer {QSTASH_TOKEN}",
