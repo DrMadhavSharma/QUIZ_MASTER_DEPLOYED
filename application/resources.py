@@ -45,8 +45,8 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
         else:
             quizzes = Quiz.query.all()
             return [{'id': q.id, 'title': q.title, 'chapter_id': q.chapter_id, 'date': q.date.strftime('%Y-%m-%d'), 'duration': q.duration, 'chapter': {'name': q.chapter.name if q.chapter else 'Unknown'}} for q in quizzes], 200
-    # @auth_required('token')
-    # @roles_required('admin')
+    @auth_required('token')
+    @roles_required('admin')
     def post(self):
         data = request.get_json()
 
