@@ -184,33 +184,32 @@ def task_monthly_report():
 
 def task_quiz_update():
 
-    quiz_id = request.json.get("quiz_id")  # pass quiz_id in request
+    data = request.json
+    quiz_id = data.get("quiz_id")  # Pass quiz_id from QStash
+    if not quiz_id:
+        return {"error": "quiz_id missing"}, 400
 
     # Get all users from the database
     users = User.query.all()
 
-    # Message Template
     text_template = (
-        f"Hi {{username}}, we have crafted some new questions based on current trends in our new quiz! "
-        f"Please check the app at https://quiz-master-deployed.onrender.com/"
+        "Hi {username}, we have crafted some new questions based on current trends in our new quiz! "
+        "Please check the app at https://quiz-master-deployed.onrender.com/"
     )
 
-    # Iterate through users and send notifications
     for user in users[1:]:
         message = text_template.format(username=user.username)
         response = requests.post(
             "https://chat.googleapis.com/v1/spaces/AAAAGc1HvB0/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=tum8EkYGU3DBQ41TVS27E8DFsmL1mfSCAVyjtNisjrY",
-            headers={"Content-Type": "application/json"}, json={"text": message}
+            headers={"Content-Type": "application/json"},
+            json={"text": message}
         )
 
-        # Log the notification to the database
         if response.status_code == 200:
             notification = Notification(user_id=user.id, message=message)
             db.session.add(notification)
         else:
             print(f"Failed to send to {user.username}: {response.status_code}")
 
-    # Commit notifications
     db.session.commit()
-
     return jsonify({"result": "Notifications sent to all users"})
