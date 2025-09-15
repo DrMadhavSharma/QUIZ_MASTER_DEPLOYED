@@ -182,10 +182,10 @@ def task_monthly_report():
 
 
 
-def task_quiz_update():
+def task_quiz_update(quiz_id):
 
-    data = request.json
-    quiz_id = data.get("quiz_id")  # Pass quiz_id from QStash
+    # data = request.json
+    # quiz_id = data.get("quiz_id")  # Pass quiz_id from QStash
     if not quiz_id:
         return {"error": "quiz_id missing"}, 400
 
