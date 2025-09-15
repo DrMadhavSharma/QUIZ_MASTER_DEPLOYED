@@ -136,14 +136,21 @@ def task_monthly_report():
 
 
     users = User.query.all()
-    for user in users[1:]:
+    for user in users[1:]:  # skip first admin user?
+        # ✅ Validate email
+        if not user.email or "@" not in user.email:
+            print(f"[SKIP] Invalid or missing email for user id={user.id}, email={user.email}")
+            continue
+
+        # ✅ Prepare user data
         user_data = {
             'username': user.username,
             'email': user.email,
+            'quizzes': [],
+            'total': 0
         }
-        user_quizzes = []
-        total_score = 0
 
+        total_score = 0
         for quiz_attempt in user.quizzes_attempted:
             this_quiz = {
                 "id": quiz_attempt.id,
@@ -152,15 +159,24 @@ def task_monthly_report():
                 "score": quiz_attempt.score,
                 "date_attempted": quiz_attempt.date_attempted,
             }
-            user_quizzes.append(this_quiz)
-            total_score += quiz_attempt.score  # Calculate total score
+            user_data['quizzes'].append(this_quiz)
+            total_score += quiz_attempt.score
 
-        user_data['quizzes'] = user_quizzes
         user_data['total'] = total_score
 
-        # Render email content
+        # ✅ Render email content
         message = format_report('templates/mail_details.html', user_data)
-        send_email(user.email, subject="Monthly Transaction Report - Quiz Master", message=message)
+
+        # ✅ Try sending
+        try:
+            send_email(
+                to_address=user.email.strip(),
+                subject="Monthly Transaction Report - Quiz Master",
+                message=message
+            )
+            print(f"[OK] Report sent to {user.email}")
+        except Exception as e:
+            print(f"[FAIL] Could not send to {user.email}: {e}")
 
     return jsonify({"result": "Monthly reports sent"})
 
