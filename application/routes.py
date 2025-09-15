@@ -568,4 +568,5 @@ with app.app_context():
     @app.route('/tasks/quiz_update', methods=['POST'])
     def quiz_update():
         data = request.json
-        return task_quiz_update(data['quiz_id'])
+        quiz_id = data.get("quiz_id")
+        return task_quiz_update(quiz_id)
