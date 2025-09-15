@@ -555,7 +555,7 @@ with app.app_context():
             json={}  # no payload needed
         )
         return jsonify(response.json())
-    from application.tasks import task_csv_report, task_monthly_report, task_quiz_update
+    from application.tasks import task_csv_report, task_monthly_report
 
     @app.route('/tasks/csv_report', methods=['POST'])
     def csv_report():
