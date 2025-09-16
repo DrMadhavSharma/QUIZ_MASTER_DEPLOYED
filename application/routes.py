@@ -25,7 +25,11 @@ with app.app_context():
     @app.route("/health")
     def health_check():
         return "OK", 200
-
+    @app.route("/test-cache")
+    @cache.cached(timeout=60)
+    def test_cache():
+        import time
+        return f"Time: {time.time()}"
     @app.route('/', methods = ['GET'])
     def home():
         return render_template('index.html')
