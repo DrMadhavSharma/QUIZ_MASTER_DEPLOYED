@@ -18,6 +18,8 @@ from celery.result import AsyncResult
 from .tasks import csv_report, monthly_report
 from .utils import task_results
 import uuid
+from app import cache_route
+from app import cache
 
 with app.app_context():
     @app.route("/health")
@@ -36,6 +38,7 @@ with app.app_context():
         return response
         print(response)
     @app.route('/user/<int:user_id>/graph', methods=['GET'])
+    @cache_route(timeout=300, key_prefix="user_score_graph")
     def generate_graph(user_id):
         # Validate user existence
         user = User.query.get(user_id)
@@ -72,9 +75,10 @@ with app.app_context():
         plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
-
+        cache.delete("quizes")           # For route cache
         return send_file(img, mimetype='image/png')
     @app.route('/user/<int:user_id>/total_subject_chart')
+    @cache_route(timeout=300, key_prefix="subject_chart")
     def generate_total_subject_chart(user_id):
         # Get the total number of quizzes
         # Get the total number of quizzes
@@ -110,11 +114,12 @@ with app.app_context():
         plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
-
+        cache.delete("quizes")           # For route cache
         return send_file(img, mimetype='image/png')
 
 
     @app.route('/admin/summary', methods=['GET'])
+    @cache_route(timeout=300, key_prefix="admin_summary")
     def admin_summary():
         # Fetching counts
         num_questions = Question.query.count()
@@ -153,7 +158,7 @@ with app.app_context():
 
         # Convert image to base64
         image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-
+        cache.delete("quizes")           # For route cache
         # Return JSON Response
         return jsonify({
             "summary_data": {
@@ -277,6 +282,7 @@ with app.app_context():
     #SUBJECT
     #GETTING SUBJECT
     @app.route('/api/adminhome/getsubject', methods =['GET'])
+    @cache_route(timeout=300, key_prefix="all_subjects")
     @auth_required('token')
     @roles_required('admin')
     def get(): #either admin or general user ,if we had written @roles_required then only that particular will be allowed
@@ -302,7 +308,7 @@ with app.app_context():
         new_subject = Subject(name=subject_name)
         db.session.add(new_subject)
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Subject created successfully!"}), 201
    
 
@@ -327,7 +333,7 @@ with app.app_context():
 
         subject.name = subject_name
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Subject updated successfully!"}), 200
 
     # Delete Subject
@@ -341,13 +347,14 @@ with app.app_context():
 
         db.session.delete(subject)
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Subject deleted successfully!"}), 200
 
 
     #CHAPTERS
     #GETTING chapters
     @app.route('/api/adminhome/getchapters/<int:subject_id>', methods=['GET'])
+    @cache_route(timeout=300, key_prefix="all_chapters")
     @auth_required('token')
     @roles_required('admin')
     def get_chapters(subject_id):
@@ -379,7 +386,7 @@ with app.app_context():
         new_chapter = Chapter(name=name, subject_id=subject_id)
         db.session.add(new_chapter)
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Chapter created successfully!", "chapter_id": new_chapter.id}), 201
 
 
@@ -412,7 +419,7 @@ with app.app_context():
         chapter.name = name
         chapter.subject_id = subject_id
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Chapter updated successfully!"}), 200
 
 
@@ -431,7 +438,7 @@ with app.app_context():
 
         db.session.delete(chapter)
         db.session.commit()
-
+        cache.delete("quizes")           # For route cache
         return jsonify({"message": "Chapter deleted successfully!"}), 200
 
 
@@ -509,6 +516,7 @@ with app.app_context():
     # ----------- ROUTES (trigger tasks via QStash) -----------
 
     @app.route('/api/export')
+    @cache_route(timeout=300, key_prefix="all_csv")
     def export_csv():
         task_id = str(uuid.uuid4())  # generate unique ID
         task_results[task_id] = "pending"

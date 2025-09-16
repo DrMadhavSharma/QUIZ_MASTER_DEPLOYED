@@ -10,6 +10,8 @@ api = Api()
 import requests
 from .tasks import quiz_update
 import os
+from app import cache_route
+from app import cache
 QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
 QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
 
@@ -18,6 +20,7 @@ QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
 class QuizResource(Resource): #creating a route using flask restful api ,rather than  directly from flask
     # @auth_required('token')
     # @roles_required('admin')
+    @cache_route(timeout=300, key_prefix="quizes")
     def get(self, quiz_id=None):  #either admin or general user ,if we had written @roles_required then only that particular will be allowed
         chapter_id = request.args.get('chapter_id')
         if quiz_id:
@@ -64,6 +67,8 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             )
             db.session.add(new_quiz)
             db.session.commit()
+            cache.delete("quizes")           # For route cache
+
             quiz_update_result=quiz_update.delay(new_quiz.id)  # Asynchronous task to update quiz statistics
             # 🔔 Trigger quiz_update asynchronously via QStash
             qstash_response = requests.post(
@@ -76,10 +81,12 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             )
             print("QStash trigger response:", qstash_response.status_code, qstash_response.text)
             return {'message': 'Quiz created successfully', 'quiz_id': new_quiz.id}, 201
+
         except Exception as e:
             print(f"Error: {e}")
+            cache.delete("quizes")           # For route cache
             return {'message': str(e)}, 400
-        
+
     @auth_required('token')
     @roles_required('admin')
     def put(self, quiz_id):
@@ -95,9 +102,13 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             quiz.duration = data.get('duration', quiz.duration)
 
             db.session.commit()
+            cache.delete("quizes")           # For route cache
+
             return {'message': 'Quiz updated successfully'}, 200
         except Exception as e:
+            cache.delete("quizes")           # For route cache
             return {'message': str(e)}, 400
+
     
     @auth_required('token')
     @roles_required('admin')
@@ -110,15 +121,21 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
         try:
             db.session.delete(quiz)
             db.session.commit()
+            cache.delete("quizes")           # For route cache
+
             return {'message': 'Quiz deleted successfully'}, 200
+            
         except Exception as e:
             db.session.rollback()  # rollback the session to avoid PendingRollbackError
+            cache.delete("quizes")           # For route cache
+
             return {'message': f'Failed to delete quiz: {str(e)}'}, 400
 
 api.add_resource(QuizResource, '/api/getquiz','/api/createquiz','/api/updatequiz/<int:quiz_id>','/api/deletequiz/<int:quiz_id>') #adding the route name here
 
 # QUESTIONS RESPONSIBLE FOR CREATION ,GETTING,UPDATION,DELETION 
 class QuestionResource(Resource):
+    @cache_route(timeout=300, key_prefix="all_questions")
     def get(self, quiz_id=None, question_id=None):
         if question_id:
             question = Question.query.get(question_id)
@@ -183,13 +200,14 @@ class QuestionResource(Resource):
         )
         db.session.add(new_question)
         db.session.flush()
-
+        cache.delete("quizes")           # For route cache
         # Create options
         for i, option_text in enumerate(options):
             option = Option(text=option_text, question_id=new_question.id)
             db.session.add(option)
 
         db.session.commit()
+        cache.delete("quizes")           # For route cache
         return {'message': 'Question created successfully', 'question_id': new_question.id}, 201
     
     def put(self, question_id):
@@ -225,9 +243,11 @@ class QuestionResource(Resource):
                 option.text = option_text
 
             db.session.commit()
+            cache.delete("quizes")           # For route cache
             return {'message': 'Options updated successfully'}, 200
         except Exception as e:
             db.session.rollback()
+            cache.delete("quizes")           # For route cache
             return {'message': str(e)}, 500
             print("Received Data:", data)
     
@@ -242,6 +262,7 @@ class QuestionResource(Resource):
         Option.query.filter_by(question_id=question_id).delete()
         db.session.delete(question)
         db.session.commit()
+        cache.delete("quizes")           # For route cache
         print("Question deleted successfully")
         return {'message': 'Question deleted successfully'}, 200
 
@@ -336,6 +357,8 @@ api.add_resource(OptionSearchResource, '/search/options')
 class UserDashboardResource(Resource):
     # @auth_required('token')
     # @roles_required('admin')
+    @cache_route(timeout=300, key_prefix="user_resource")
+
     def get(self, user_id):
     # Validate user existence
         user = User.query.get(user_id)
@@ -391,11 +414,14 @@ class AttemptQuizResource(Resource):
         attempt = QuizAttempt(user_id=user_id, quiz_id=quiz_id, score=score)
         db.session.add(attempt)
         db.session.commit()
+        cache.delete("quizes")           # For route cache
         
         return {'message': 'Quiz attempt recorded successfully'}, 201
 # User Profile Resource
 class UserProfileResource(Resource):
     @auth_required('token')
+    @cache_route(timeout=300, key_prefix="ProfileResource")
+
     def get(self, user_id):
         # Validate user existence
         user = User.query.get(user_id)
@@ -413,6 +439,7 @@ class UserProfileResource(Resource):
 # User Statistics Resource
 class UserStatsResource(Resource):
     @auth_required('token')
+    @cache_route(timeout=300, key_prefix="StatsResource")
     def get(self, user_id):
         # Validate user existence
         user = User.query.get(user_id)
@@ -485,6 +512,8 @@ class UserStatsResource(Resource):
 # User Quiz History Resource
 class UserQuizHistoryResource(Resource):
     @auth_required('token')
+    @cache_route(timeout=300, key_prefix="UserQuizHistoryResource")
+
     def get(self, user_id):
         # Validate user existence
         user = User.query.get(user_id)
@@ -517,7 +546,7 @@ class UserQuizHistoryResource(Resource):
                 })
         
         return quiz_history, 200
-
+        
 # User Achievements Resource
 class UserAchievementsResource(Resource):
     @auth_required('token')

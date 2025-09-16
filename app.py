@@ -10,8 +10,20 @@ from celery.schedules import crontab
 from flask_caching import Cache
 from flask import Flask, send_from_directory
 import os
+from flask_cach import init_cache
 
 app = Flask(__name__)
+cache = init_cache(app)  # cache object ready to use anywhere
+
+# Decorator for routes or resource methods
+def cache_route(timeout=300, key_prefix=None):
+    def decorator(func):
+        return cache.cached(timeout=timeout, key_prefix=key_prefix)(func)
+    return decorator
+
+# For arbitrary functions (DB calls, logic functions)
+def cache_function(timeout=300):
+    return cache.memoize(timeout)
 # Serve your built frontend
 @app.route("/")
 def index():

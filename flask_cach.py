@@ -1,14 +1,22 @@
 from flask import Flask, jsonify
 from flask_caching import Cache 
 import sqlite3
+import os
 
 app = Flask(__name__)
 
-# Flask-Caching configuration with Redis
-app.config['CACHE_TYPE'] = 'RedisCache' 
-app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # Cache timeout in seconds <-- this
+# # Flask-Caching configuration with Redis
+# app.config['CACHE_TYPE'] = 'RedisCache' 
+# app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # Cache timeout in seconds <-- this
 
 cache = Cache(app) 
+def init_cache(app):
+    UPSTASH_REDIS_URL = os.getenv("UPSTASH_REDIS_URL")
+    app.config["CACHE_TYPE"] = "RedisCache"
+    app.config["CACHE_REDIS_URL"] = UPSTASH_REDIS_URL
+    app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+    cache.init_app(app)
+    return cache
 
 def get_db_connection():
     conn = sqlite3.connect('quizmaster.sqlite3')  # Update with your actual database
@@ -24,7 +32,7 @@ def get_transactions():
     rows = cursor.fetchall()
     conn.close()
     
-    quizzess = [dict(row) for row in rows]
+    quizzes = [dict(row) for row in rows]
     return jsonify(quizzes)
 
 if __name__ == '__main__':
