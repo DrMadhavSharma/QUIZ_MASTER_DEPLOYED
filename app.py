@@ -9,28 +9,21 @@ from celery.schedules import crontab
 from flask_caching import Cache
 from flask import Flask, send_from_directory
 import os
-from flask_cach import init_cache
+# from flask_cach import init_cache
 
-app = Flask(__name__)
-# 1️⃣ Initialize cache first
-cache = init_cache(app)
+# app = Flask(__name__)
 
-# 2️⃣ Now import your normal routes
-import application.routes  # contains @app.route decorators
-
-# 3️⃣ Import resources (Flask-Restful)
-from application.resources import api
 
 # Serve your built frontend
-@app.route("/")
-def index():
-    return send_from_directory("static/dist", "index.html")
 
-@app.route("/assets/<path:filename>")
-def assets(filename):
-    return send_from_directory("static/dist/assets", filename)
-
-
+cache = Cache() 
+def init_cache(app):
+    UPSTASH_REDIS_URL = os.getenv("UPSTASH_REDIS_URL")
+    app.config["CACHE_TYPE"] = "RedisCache"
+    app.config["CACHE_REDIS_URL"] = UPSTASH_REDIS_URL
+    app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+    cache.init_app(app)
+    return cache
 #creating app object and initializing with configuration settings
 def create_app():
     app = Flask(__name__) #creation of flask object
@@ -44,7 +37,6 @@ def create_app():
     # app.config.from_object(LocalDevelopmentConfig) #rather than apllying every singleconfiguration present in 
                        # config.py, we are applying the configuration in a single line here using this class 
     db.init_app(app) #connecting app to database object
-    api.init_app(app) #connecting app to api object (flask_restful_object)
     # configuring security in the application
     datastore = SQLAlchemyUserDatastore(db, User, Role) #configuring security in the application by prefilling the fs_uniquefier,active .
     app.security = Security(app, datastore)
@@ -56,6 +48,14 @@ app = create_app()
 #configured celery_app is returned
 celery = celery_init_app(app)
 celery.autodiscover_tasks()
+def cache_route(timeout=300, key_prefix=None):
+    def decorator(func):
+        return cache.cached(timeout=timeout, key_prefix=key_prefix)(func)
+    return decorator
+
+# For arbitrary functions (DB calls, logic functions)
+def cache_function(timeout=300):
+    return cache.memoize(timeout)
 
 
 with app.app_context(): #creating context for app creation process 
@@ -76,8 +76,25 @@ with app.app_context(): #creating context for app creation process
                                            roles = ['user'])
     db.session.commit()
 
+# 1️⃣ Initialize cache first
+cache = init_cache(app)
 
+# 2️⃣ Now import your normal routes
 from application.routes import *
+
+# 3️⃣ Import resources (Flask-Restful)
+from application.resources import api
+api.init_app(app) #connecting app to api object (flask_restful_object)
+
+
+@app.route("/")
+def index():
+    return send_from_directory("static/dist", "index.html")
+
+@app.route("/assets/<path:filename>")
+def assets(filename):
+    return send_from_directory("static/dist/assets", filename)
+
 @celery.on_after_finalize.connect 
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
