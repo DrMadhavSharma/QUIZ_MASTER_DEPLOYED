@@ -41,6 +41,7 @@ export default {
       <!-- Navigation Links -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <button 
+          id="routerl"
           @click="$router.push('/adminSummary')"
           class="btn btn-outline-dark me-2"
           style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
