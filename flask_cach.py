@@ -9,7 +9,7 @@ import os
 # app.config['CACHE_TYPE'] = 'RedisCache' 
 # app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # Cache timeout in seconds <-- this
 
-cache = Cache(app) 
+cache = Cache() 
 def init_cache(app):
     UPSTASH_REDIS_URL = os.getenv("UPSTASH_REDIS_URL")
     app.config["CACHE_TYPE"] = "RedisCache"
