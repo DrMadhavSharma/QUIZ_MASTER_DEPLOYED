@@ -1,7 +1,6 @@
 from flask import Flask 
 from application.database import db 
 from application.models import User, Role 
-from application.resources import api
 from application.config import LocalDevelopmentConfig,ProductionConfig
 from flask_security import Security, SQLAlchemyUserDatastore
 from werkzeug.security import generate_password_hash
@@ -13,8 +12,14 @@ import os
 from flask_cach import init_cache
 
 app = Flask(__name__)
-cache = init_cache(app)  # cache object ready to use anywhere
+# 1️⃣ Initialize cache first
+cache = init_cache(app)
 
+# 2️⃣ Now import your normal routes
+import application.routes  # contains @app.route decorators
+
+# 3️⃣ Import resources (Flask-Restful)
+from application.resources import api
 
 # Serve your built frontend
 @app.route("/")
