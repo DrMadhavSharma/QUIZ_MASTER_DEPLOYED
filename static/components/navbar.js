@@ -40,14 +40,15 @@ export default {
 
       <!-- Navigation Links -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <router-link id="routerl"  to="/adminSummary" >
-          <button 
+        <button 
+          @click="$router.push('/adminSummary')"
           class="btn btn-outline-dark me-2"
           style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
-          @mouseover="hoverButton($event)" 
-          @mouseleave="resetButton($event)">Admin Summary
-          </button>
-        </router-link>
+          @mouseover="hoverButton" 
+          @mouseleave="resetButton">
+          Admin Summary
+        </button>
+
 
         <!-- Admin-only Search Bar -->
         <form id="search" class="me-auto" @submit.prevent="performSearch">
