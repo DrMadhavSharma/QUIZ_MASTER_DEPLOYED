@@ -15,13 +15,17 @@ import os
 
 
 # Serve your built frontend
-
+import ssl
 cache = Cache() 
 def init_cache(app):
     
     app.config["CACHE_TYPE"] = "RedisCache"
-    app.config["CACHE_REDIS_URL"] = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379?ssl_cert_reqs=CERT_NONE"
+    app.config["CACHE_REDIS_URL"] = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
     app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+    # Proper SSL config
+    app.config["CACHE_OPTIONS"] = {
+        "ssl_cert_reqs": ssl.CERT_NONE
+    }
     cache.init_app(app)
     return cache
 #creating app object and initializing with configuration settings
