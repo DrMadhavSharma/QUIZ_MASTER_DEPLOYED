@@ -2,17 +2,17 @@ export default {
   template: `
 <div>
   <nav class="navbar navbar-expand-lg navbar-light shadow-lg navbar-full-width" 
-       style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); border-bottom: 2px solid #2c2c2c; width: 100vw; margin-left: calc(-50vw + 50%);">
+       style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); border-bottom: 2px solid #000000; width: 100vw; margin-left: calc(-50vw + 50%);">
     <div class="container-fluid">
       <!-- Brand with Hover Animation -->
       <a class="navbar-brand fs-2 fw-bold" href="#"
-         style="color: #2c2c2c; transition: color 0.3s ease;" 
+         style="color: #000000; transition: color 0.3s ease;" 
          @mouseover="$event.target.style.color = '#4a4a4a'" 
-         @mouseleave="$event.target.style.color = '#2c2c2c'">QUIZ MASTER</a>
+         @mouseleave="$event.target.style.color = '#000000'">QUIZ MASTER</a>
 
       <!-- Mobile Menu Toggle -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" 
-        style="border: 2px solid #2c2c2c; background-color: transparent;">
+        style="border: 2px solid #000000; background-color: transparent;">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -21,7 +21,7 @@ export default {
         <router-link to="/user-dashboard" class="mx-2">
           <button 
             class="btn btn-outline-dark btn-lg"
-            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
+            style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;" 
             @mouseover="hoverButton($event)" 
             @mouseleave="resetButton($event)">
             Dashboard
@@ -29,11 +29,11 @@ export default {
         </router-link>
 
         <button @click="MOVETOSCORES()" class="btn btn-outline-dark mx-2 btn-lg" 
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
+          style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;" 
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">SCORES</button>
         <button @click="MOVETOSUMMARY()" class="btn btn-outline-dark mx-2 btn-lg" 
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
+          style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;" 
           @mouseover="hoverButton($event)" 
           @mouseleave="resetButton($event)">Summary</button>
       </div>
@@ -44,7 +44,7 @@ export default {
           id="routerl"
           @click="$router.push('/adminSummary')"
           class="btn btn-outline-dark me-2"
-          style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;" 
+          style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;" 
           @mouseover="hoverButton" 
           @mouseleave="resetButton">
           Admin Summary
@@ -54,9 +54,9 @@ export default {
         <!-- Admin-only Search Bar -->
         <form id="search" class="me-auto" @submit.prevent="performSearch">
           <input class="form-control me-2" type="search" v-model="searchQuery" placeholder="Search ..." aria-label="Search"
-            style="border: 2px solid #2c2c2c; color: #2c2c2c; border-radius: 5px; padding: 0.5rem;">
+            style="border: 2px solid #000000; color: #000000; border-radius: 5px; padding: 0.5rem;">
           <select v-model="searchCategory" class="form-select me-2" 
-                  style="border: 2px solid #2c2c2c; color: #2c2c2c; border-radius: 5px; padding: 0.5rem;">
+                  style="border: 2px solid #000000; color: #000000; border-radius: 5px; padding: 0.5rem;">
             <option value="users">Users</option>
             <option value="subjects">Subjects</option>
             <option value="quizzes">Quizzes</option>
@@ -64,7 +64,7 @@ export default {
             <option value="options">Options</option>
           </select>
           <button class="btn btn-outline-dark" type="submit" 
-            style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; border-radius: 5px; padding: 0.5rem; transition: all 0.3s ease;"
+            style="border: 2px solid #000000; background-color: white; color: #000000; border-radius: 5px; padding: 0.5rem; transition: all 0.3s ease;"
             @mouseover="hoverButton($event)" 
             @mouseleave="resetButton($event)">Search</button>
         </form>
@@ -114,7 +114,7 @@ export default {
             <router-link  to="/login" class="me-2">
               <button 
               class="btn btn-outline-dark "
-              style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;"
+              style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;"
               @mouseover="hoverButton($event)" 
               @mouseleave="resetButton($event)">Login
               </button>
@@ -122,7 +122,7 @@ export default {
           </li>
           <li class="nav-item">
             <button class="btn btn-outline-dark" @click="logout" 
-              style="border: 2px solid #2c2c2c; background-color: white; color: #2c2c2c; transition: all 0.3s ease;"
+              style="border: 2px solid #000000; background-color: white; color: #000000; transition: all 0.3s ease;"
               @mouseover="hoverButton($event)" 
               @mouseleave="resetButton($event)">Logout</button>
           </li>
@@ -255,14 +255,14 @@ export default {
       }
     },
     hoverButton(event) {
-      event.target.style.backgroundColor = '#2c2c2c';
+      event.target.style.backgroundColor = '#000000';
       event.target.style.color = '#ffffff';
       event.target.style.transform = 'scale(1.05)';
       event.target.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
     },
     resetButton(event) {
       event.target.style.backgroundColor = '#ffffff';
-      event.target.style.color = '#2c2c2c';
+      event.target.style.color = '#000000';
       event.target.style.transform = 'scale(1)';
       event.target.style.boxShadow = 'none';
     }

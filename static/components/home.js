@@ -4,7 +4,7 @@ export default {
   <div class="container-fluid">
     <!-- Hero Section -->
     <div class="row vh-100 bg-dark text-white d-flex align-items-center justify-content-center text-center" 
-      style="background: linear-gradient(135deg, #000000 0%, #333333 100%);">
+      style="background: linear-gradient(135deg, #000000 0%, #000000 100%);">
       <div class="col">
         <h1 class="display-4 fw-bold" 
           style="animation: bounceIn 1.5s both; color: #ffffff;">
@@ -28,7 +28,7 @@ export default {
             <div class="card border-2 border-dark shadow-lg bg-white rounded">
               <div class="card-body">
                 <h3 class="card-title" style="color: #000000;">Interactive Quizzes</h3>
-                <p class="card-text" style="color: #333333;">Enjoy interactive quizzes with multiple difficulty levels.</p>
+                <p class="card-text" style="color: #000000;">Enjoy interactive quizzes with multiple difficulty levels.</p>
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@ export default {
             <div class="card border-2 border-dark shadow-lg bg-white rounded">
               <div class="card-body">
                 <h3 class="card-title" style="color: #000000;">Real-time Scores</h3>
-                <p class="card-text" style="color: #333333;">Track your performance and compete with others in real-time!</p>
+                <p class="card-text" style="color: #000000;">Track your performance and compete with others in real-time!</p>
               </div>
             </div>
           </div>
@@ -44,7 +44,7 @@ export default {
             <div class="card border-2 border-dark shadow-lg bg-white rounded">
               <div class="card-body">
                 <h3 class="card-title" style="color: #000000;">Detailed Analytics</h3>
-                <p class="card-text" style="color: #333333;">Gain insights into your strengths and areas to improve.</p>
+                <p class="card-text" style="color: #000000;">Gain insights into your strengths and areas to improve.</p>
               </div>
             </div>
           </div>

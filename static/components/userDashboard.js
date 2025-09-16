@@ -6,7 +6,7 @@ export default {
             <div class="spinner-border" role="status" style="color: #000000;">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2" style="color: #333333;">Loading your dashboard...</p>
+            <p class="mt-2" style="color: #000000;">Loading your dashboard...</p>
         </div>
         <!-- Welcome Header -->
         <div v-else>
@@ -47,44 +47,44 @@ export default {
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="mb-2" style="color: #2c2c2c;">
+                                <div class="mb-2" style="color: #000000;">
                                     <i class="fas fa-trophy fa-2x"></i>
                                 </div>
-                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.highestScore }}%</h4>
-                                <p class="card-text" style="color: #4a4a4a;">Highest Score</p>
+                                <h4 class="card-title" style="color: #000000;">{{ userStats.highestScore }}%</h4>
+                                <p class="card-text" style="color: #000000;">Highest Score</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="mb-2" style="color: #2c2c2c;">
+                                <div class="mb-2" style="color: #000000;">
                                     <i class="fas fa-chart-line fa-2x"></i>
                                 </div>
-                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.totalPoints }}</h4>
-                                <p class="card-text" style="color: #4a4a4a;">Total Points</p>
+                                <h4 class="card-title" style="color: #000000;">{{ userStats.totalPoints }}</h4>
+                                <p class="card-text" style="color: #000000;">Total Points</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="mb-2" style="color: #2c2c2c;">
+                                <div class="mb-2" style="color: #000000;">
                                     <i class="fas fa-medal fa-2x"></i>
                                 </div>
-                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.rank }}</h4>
-                                <p class="card-text" style="color: #4a4a4a;">Current Rank</p>
+                                <h4 class="card-title" style="color: #000000;">{{ userStats.rank }}</h4>
+                                <p class="card-text" style="color: #000000;">Current Rank</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body text-center">
-                                <div class="mb-2" style="color: #2c2c2c;">
+                                <div class="mb-2" style="color: #000000;">
                                     <i class="fas fa-calendar-check fa-2x"></i>
                                 </div>
-                                <h4 class="card-title" style="color: #2c2c2c;">{{ userStats.streak }}</h4>
-                                <p class="card-text" style="color: #4a4a4a;">Day Streak</p>
+                                <h4 class="card-title" style="color: #000000;">{{ userStats.streak }}</h4>
+                                <p class="card-text" style="color: #000000;">Day Streak</p>
                             </div>
                         </div>
                     </div>

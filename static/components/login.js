@@ -23,7 +23,7 @@ export default {
             <button class="btn btn-lg" @click="loginUser" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">Login</button>
           </div>
         </form>
-        <p class="text-center mt-3" style="color: #333333;">Don't have an account? <router-link class="btn me-2" to="/register" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Register</router-link></p>
+        <p class="text-center mt-3" style="color: #000000;">Don't have an account? <router-link class="btn me-2" to="/register" style="background-color: #000000; color: #ffffff; border: 2px solid #000000;">Register</router-link></p>
       </div> 
     </div>
   </div>

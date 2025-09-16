@@ -47,7 +47,7 @@ export default {
               <div class="spinner-border" role="status" style="color: #000000;">
                   <span class="visually-hidden">Loading...</span>
               </div>
-              <p class="mt-2" style="color: #333333;">Loading your graphs...</p>
+              <p class="mt-2" style="color: #000000;">Loading your graphs...</p>
           </div>
     <div v-else>
         <div class="row g-4">
@@ -58,10 +58,10 @@ export default {
                 <h3 class="mb-0">📊 User Score Summary</h3>
               </div>
               <div class="card-body">
-                <h4 class="card-title text-center" style="color: #333333;">Quiz Score Overview</h4>
+                <h4 class="card-title text-center" style="color: #000000;">Quiz Score Overview</h4>
                 <div class="d-flex justify-content-center">
                   <img :src="graphUrl" alt="Graph" class="img-fluid rounded-3 shadow" v-if="graphUrl" />
-                  <p v-else style="color: #333333;">⏳ Loading graph...</p>
+                  <p v-else style="color: #000000;">⏳ Loading graph...</p>
                 </div>
               </div>
             </div>
@@ -71,14 +71,14 @@ export default {
           <!-- Quiz Distribution Summary Section -->
           <div class="col-lg-6">
             <div class="card shadow-lg border-2 border-dark">
-              <div class="card-header text-center" style="background-color: #333333; color: #ffffff;">
+              <div class="card-header text-center" style="background-color: #000000; color: #ffffff;">
                 <h3 class="mb-0">📚 Quiz Distribution Summary</h3>
               </div>
               <div class="card-body">
-                <h4 class="text-center" style="color: #333333;">Total Quizzes by Subject (User ID: {{ userId }})</h4>
+                <h4 class="text-center" style="color: #000000;">Total Quizzes by Subject (User ID: {{ userId }})</h4>
                 <div class="d-flex justify-content-center">
                   <img :src="subjectChartUrl" alt="Subject Chart" class="img-fluid rounded-3 shadow" v-if="subjectChartUrl" />
-                  <p v-else style="color: #333333;">⏳ Loading subject chart...</p>
+                  <p v-else style="color: #000000;">⏳ Loading subject chart...</p>
                 </div>
               </div>
             </div>

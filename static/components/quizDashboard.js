@@ -4,7 +4,7 @@ export default {
   <!-- Header Section -->
   <div class="text-center mb-4">
     <h1 class="fw-bold" style="color: #000000;">🧑‍🏫 QUIZ_DASHBOARD </h1>
-    <h2 style="color: #333333;">All Available Quizzes</h2>
+    <h2 style="color: #000000;">All Available Quizzes</h2>
     <div>
       <router-link  class="btn mx-2 btn-lg" to="/payment" 
         style="transition: all 0.3s ease-in-out; background-color: #000000; color: #ffffff; border: 2px solid #000000;" 
@@ -18,7 +18,7 @@ export default {
   <div class="spinner-border" role="status" style="color: #000000;">
     <span class="visually-hidden">Loading...</span>
   </div>
-  <p class="mt-2" style="color: #333333;">Loading quizzes...</p>
+  <p class="mt-2" style="color: #000000;">Loading quizzes...</p>
 </div>
 
 <!-- Quizzes Table Section -->
