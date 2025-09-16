@@ -11,9 +11,9 @@ export default {
 <div class="col-12 text-end">
   <button 
     @click="showAddSubjectForm = !showAddSubjectForm"
-    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);"
     @mouseover="hoverButton"
-    @mouseleave="resetButton"
+    @mouseleave="resetButton">
     {{ showAddSubjectForm ? 'Cancel' : 'Add Subject' }}
   </button>
 </div>
@@ -27,9 +27,9 @@ export default {
   />
   <button 
     @click="addSubject"
-    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+    style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.3);"
     @mouseover="hoverButton"
-    @mouseleave="resetButton"
+    @mouseleave="resetButton">
     Add
   </button>
 </div>
@@ -44,15 +44,15 @@ export default {
         <h5 class="mb-0" style="font-size:16px;">{{ subject.name }}</h5>
         <div>
           <button @click="editSubject(subject)" 
-                  style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 10px; font-size:13px; border-radius:4px; margin-right:5px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
+                  style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 10px; font-size:13px; border-radius:4px; margin-right:5px; box-shadow:0 1px 3px rgba(0,0,0,0.3);"
                   @mouseover="hoverButton"
-                  @mouseleave="resetButton"
+                  @mouseleave="resetButton">
             Edit
           </button>
           <button @click="deleteSubject(subject.id)" 
-                  style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 10px; font-size:13px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
+                  style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 10px; font-size:13px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.3);"
                   @mouseover="hoverButton"
-                  @mouseleave="resetButton"
+                  @mouseleave="resetButton">
             Delete
           </button>
         </div>
@@ -63,9 +63,9 @@ export default {
         <input v-model="newChapter.name" type="text" placeholder="Enter Chapter Name" 
                style="background-color:#ffffff; border:2px solid #000000; padding:6px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; box-shadow:0 1px 2px rgba(0,0,0,0.3); color:#000000;" />
         <button @click="addChapter(subject.id)" 
-                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:6px 12px; font-size:13px; border-radius:4px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
+                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:6px 12px; font-size:13px; border-radius:4px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.3);"
                 @mouseover="hoverButton"
-                @mouseleave="resetButton"
+                @mouseleave="resetButton">
           Add Chapter
         </button>
 
@@ -85,21 +85,21 @@ export default {
               <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ chapter.name }}</td>
               <td style="padding:6px; border:2px solid #000000;">
                 <button @click="editChapter(chapter)" 
-                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                   Edit
                 </button>
                 <button @click="deleteChapter(chapter.id, subject.id)" 
-                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                   Delete
                 </button>
                 <button @click="openQuizModal(chapter)" 
-                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                         
                   Manage Quizzes
                 </button>
@@ -133,9 +133,9 @@ export default {
         <input v-model="newQuiz.duration" type="number" placeholder="Duration (minutes)" 
                style="background-color:#ffffff; border:2px solid #000000; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:8px; color:#000000;" />
         <button @click="addQuiz" 
-                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+                style="background-color:#000000; color:#ffffff; border:2px solid #000000; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.3);"
                 @mouseover="hoverButton"
-                @mouseleave="resetButton"
+                @mouseleave="resetButton">
           Add Quiz
         </button>
 
@@ -156,21 +156,21 @@ export default {
               <td style="padding:6px; border:2px solid #000000; color:#000000;">{{ quiz.duration }}</td>
               <td style="padding:6px; border:2px solid #000000;">
                 <button @click="editQuiz(quiz)" 
-                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#333333; color:#ffffff; border:1px solid #333333; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                   Edit
                 </button>
                 <button @click="deleteQuiz(quiz.id)" 
-                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                   Delete
                 </button>
                 <button @click="openQuestionModal(quiz)" 
-                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);">
+                        style="background-color:#000000; color:#ffffff; border:1px solid #000000; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.3);"
                         @mouseover="hoverButton"
-                        @mouseleave="resetButton"
+                        @mouseleave="resetButton">
                   Manage Questions
                 </button>
               </td>
@@ -211,9 +211,9 @@ export default {
                style="background-color:whitesmoke; border:1px solid #ccc; padding:8px; font-size:14px; border-radius:4px; width:100%; margin-bottom:12px;" />
         
         <button @click="addQuestion" 
-                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);"
                 @mouseover="hoverButton"
-                @mouseleave="resetButton"
+                @mouseleave="resetButton">
           Add Question
         </button>
 
@@ -234,15 +234,15 @@ export default {
               <td style="padding:6px; border:1px solid #ddd;">{{ question.correct_option }}</td>
               <td style="padding:6px; border:1px solid #ddd;">
                 <button @click="toggleEdit(index)" 
-                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#333; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; margin-right:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);"
                   @mouseover="hoverButton"
-                  @mouseleave="resetButton"
+                  @mouseleave="resetButton">
                   Edit
                 </button>
                 <button v-if="currentQuiz && currentQuiz.id" @click="deleteQuestion(index)" 
-                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);">
+                        style="background-color:#b33; color:white; border:none; padding:4px 8px; font-size:12px; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,0.2);"
                   @mouseover="hoverButton"
-                  @mouseleave="resetButton"
+                  @mouseleave="resetButton">
                   Delete
                 </button>
               </td>
@@ -282,9 +282,9 @@ export default {
 
         <!-- Save Changes Button -->
         <button @click="editQuestion(questions[editingIndex])"
-                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-top:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                style="background-color:#333; color:white; border:none; padding:8px 16px; font-size:14px; border-radius:4px; width:100%; margin-top:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);"
                 @mouseover="hoverButton"
-                @mouseleave="resetButton"
+                @mouseleave="resetButton">
           Save Changes
         </button>
       </div>
