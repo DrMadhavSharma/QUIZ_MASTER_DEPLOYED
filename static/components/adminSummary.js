@@ -1,12 +1,12 @@
 export default {
     template: `
     <div class="container my-5">
-      <!-- Loading Spinner -->
+      <!-- isLoading Spinner -->
         <div v-if="isLoading" class="text-center py-5">
             <div class="spinner-border" role="status" style="color: #000000;">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">isLoading...</span>
             </div>
-            <p class="mt-2" style="color: #090909ff;">Loading your dashboard...</p>
+            <p class="mt-2" style="color: #090909ff;">isLoading your dashboard...</p>
         </div>
         <!-- Welcome Header -->
         <div v-else>
@@ -15,13 +15,13 @@ export default {
               <div class="text-end my-2">
                     <button
                       @click="csvExport"
-                      :disabled="loading"
+                      :disabled="isLoading"
                       class="btn btn-outline-dark btn-lg"
                       style="border: 2px solid rgba(0, 0, 0, 0); background-color: white; color: #2c2c2c; transition: all 0.3s ease;"
                       @mouseover="hoverButton"
                       @mouseleave="resetButton"
                     >
-                      <span v-if="loading">Preparing CSV...</span>
+                      <span v-if="isLoading">Preparing CSV...</span>
                       <span v-else>Download CSV</span>
                     </button>
 
@@ -74,6 +74,7 @@ export default {
     `,
     data() {
       return {
+        isLoading: false,
         summaryData: null,
         topScorer: null,
         chartSrc: null,
@@ -96,7 +97,7 @@ export default {
           console.error('Error in fetchAdminSummary:', error);
         }  },
         csvExport() {
-        this.loading = true;
+        this.isLoading = true;
         fetch('/api/export', {
           method: 'GET'
         })
@@ -107,7 +108,7 @@ export default {
           })
           .catch(() => {
             alert("Failed to start export.");
-            this.loading = false;
+            this.isLoading = false;
           });
       },
 
@@ -119,7 +120,7 @@ export default {
                 // ✅ Artificially delay the download to see the spinner longer
                 setTimeout(() => {
                   window.location.href = `/api/csv_result/${taskId}`;
-                  this.loading = false;
+                  this.isLoading = false;
                 }, 6000);  // delay by 3 seconds
               }else if (res.status === 202 && retries > 0) {
                 // Still processing → wait and retry
@@ -128,12 +129,12 @@ export default {
                 }, delay);
               } else {
                 alert("Report not ready or failed.");
-                this.loading = false;
+                this.isLoading = false;
               }
             })
             .catch(() => {
               alert("Error checking CSV status.");
-              this.loading = false;
+              this.isLoading = false;
             });
         };
 
