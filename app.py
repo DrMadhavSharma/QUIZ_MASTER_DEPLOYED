@@ -18,9 +18,9 @@ import os
 
 cache = Cache() 
 def init_cache(app):
-    UPSTASH_REDIS_URL = os.getenv("UPSTASH_REDIS_URL")
+    
     app.config["CACHE_TYPE"] = "RedisCache"
-    app.config["CACHE_REDIS_URL"] = UPSTASH_REDIS_URL
+    app.config["CACHE_REDIS_URL"] = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379?ssl_cert_reqs=CERT_NONE"
     app.config["CACHE_DEFAULT_TIMEOUT"] = 300
     cache.init_app(app)
     return cache
