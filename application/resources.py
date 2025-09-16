@@ -10,7 +10,7 @@ api = Api()
 import requests
 from .tasks import quiz_update
 import os
-from app import cache_route
+from app import cache_route,cache_delete_pattern
 from app import cache
 QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
 QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
@@ -67,7 +67,7 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             )
             db.session.add(new_quiz)
             db.session.commit()
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
 
             quiz_update_result=quiz_update.delay(new_quiz.id)  # Asynchronous task to update quiz statistics
             # 🔔 Trigger quiz_update asynchronously via QStash
@@ -84,7 +84,7 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
 
         except Exception as e:
             print(f"Error: {e}")
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
             return {'message': str(e)}, 400
 
     @auth_required('token')
@@ -102,11 +102,11 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
             quiz.duration = data.get('duration', quiz.duration)
 
             db.session.commit()
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
 
             return {'message': 'Quiz updated successfully'}, 200
         except Exception as e:
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
             return {'message': str(e)}, 400
 
     
@@ -121,13 +121,13 @@ class QuizResource(Resource): #creating a route using flask restful api ,rather 
         try:
             db.session.delete(quiz)
             db.session.commit()
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
 
             return {'message': 'Quiz deleted successfully'}, 200
             
         except Exception as e:
             db.session.rollback()  # rollback the session to avoid PendingRollbackError
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("quizes")           # For route cache
 
             return {'message': f'Failed to delete quiz: {str(e)}'}, 400
 
@@ -200,14 +200,14 @@ class QuestionResource(Resource):
         )
         db.session.add(new_question)
         db.session.flush()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("")           # For route cache
         # Create options
         for i, option_text in enumerate(options):
             option = Option(text=option_text, question_id=new_question.id)
             db.session.add(option)
 
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("all_questions")           # For route cache
         return {'message': 'Question created successfully', 'question_id': new_question.id}, 201
     
     def put(self, question_id):
@@ -243,11 +243,11 @@ class QuestionResource(Resource):
                 option.text = option_text
 
             db.session.commit()
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("all_questions")           # For route cache
             return {'message': 'Options updated successfully'}, 200
         except Exception as e:
             db.session.rollback()
-            cache.delete("quizes")           # For route cache
+            cache_delete_pattern("all_questions")           # For route cache
             return {'message': str(e)}, 500
             print("Received Data:", data)
     
@@ -262,7 +262,7 @@ class QuestionResource(Resource):
         Option.query.filter_by(question_id=question_id).delete()
         db.session.delete(question)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("all_questions")           # For route cache
         print("Question deleted successfully")
         return {'message': 'Question deleted successfully'}, 200
 
@@ -414,7 +414,7 @@ class AttemptQuizResource(Resource):
         attempt = QuizAttempt(user_id=user_id, quiz_id=quiz_id, score=score)
         db.session.add(attempt)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("user_resource")           # For route cache
         
         return {'message': 'Quiz attempt recorded successfully'}, 201
 # User Profile Resource

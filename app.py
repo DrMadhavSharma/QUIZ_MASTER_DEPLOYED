@@ -9,6 +9,8 @@ from celery.schedules import crontab
 from flask_caching import Cache
 from flask import Flask, send_from_directory
 import os
+from functools import wraps
+
 # from flask_cach import init_cache
 
 # app = Flask(__name__)
@@ -52,14 +54,49 @@ app = create_app()
 #configured celery_app is returned
 celery = celery_init_app(app)
 celery.autodiscover_tasks()
-def cache_route(timeout=300, key_prefix=None):
-    def decorator(func):
-        return cache.cached(timeout=timeout, key_prefix=key_prefix)(func)
+def cache_route(timeout=300, key_prefix="view"):
+    """
+    Decorator to cache GET requests with unique keys based on request path and query.
+    """
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            # Use full path (includes query params) for uniqueness
+            cache_key = f"{key_prefix}:{request.full_path}"
+
+            cached = cache.get(cache_key)
+            if cached:
+                print(f"CACHE HIT: {cache_key}")
+                return cached
+
+            print(f"CACHE MISS: {cache_key}")
+            response = f(*args, **kwargs)
+
+            # Only cache successful responses
+            if hasattr(response, "status_code"):
+                if response.status_code == 200:
+                    cache.set(cache_key, response, timeout=timeout)
+            else:
+                # Some of your routes return raw Flask responses (send_file/jsonify dict)
+                cache.set(cache_key, response, timeout=timeout)
+
+            return response
+        return wrapped
     return decorator
 
 # For arbitrary functions (DB calls, logic functions)
-def cache_function(timeout=300):
-    return cache.memoize(timeout)
+def cache_delete_pattern(prefix: str):
+    """
+    Delete all cache keys starting with prefix.
+    Example: cache_delete_pattern("quizes")
+    """
+    try:
+        keys = cache.cache._read_clients[0].keys(f"{prefix}:*")
+        if keys:
+            cache.delete_many(*keys)
+            print(f"Deleted cache keys for prefix: {prefix}")
+    except Exception as e:
+        print(f"Cache deletion failed for {prefix}: {e}")
 
 
 with app.app_context(): #creating context for app creation process 

@@ -18,7 +18,7 @@ from celery.result import AsyncResult
 from .tasks import csv_report, monthly_report
 from .utils import task_results
 import uuid
-from app import cache_route
+from app import cache_route,cache_delete_pattern
 from app import cache
 import json
 
@@ -89,7 +89,7 @@ with app.app_context():
         plt.close()
         # Save raw bytes in Redis
         cache.set(cache_key, img.getvalue(), timeout=300)
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return send_file(img, mimetype='image/png')
     @app.route('/user/<int:user_id>/total_subject_chart', methods=['GET'])
     def generate_total_subject_chart(user_id):
@@ -145,7 +145,7 @@ with app.app_context():
         # Save raw bytes in Redis
         cache.set(cache_key, img.getvalue(), timeout=300)
 
-        cache.delete("quizes")  # only if you need to invalidate another cache
+        cache_delete_pattern("quizes")  # only if you need to invalidate another cache
         return send_file(io.BytesIO(img.getvalue()), mimetype='image/png')
 
 
@@ -223,7 +223,7 @@ with app.app_context():
         # Save JSON response in Redis
         cache.set(cache_key, json.dumps(response), timeout=300)
 
-        cache.delete("quizes")  # if you still want to invalidate that
+        cache_delete_pattern("quizes")  # if you still want to invalidate that
         return jsonify(response)
 
 
@@ -359,7 +359,7 @@ with app.app_context():
         new_subject = Subject(name=subject_name)
         db.session.add(new_subject)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Subject created successfully!"}), 201
    
 
@@ -384,7 +384,7 @@ with app.app_context():
 
         subject.name = subject_name
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Subject updated successfully!"}), 200
 
     # Delete Subject
@@ -398,7 +398,7 @@ with app.app_context():
 
         db.session.delete(subject)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Subject deleted successfully!"}), 200
 
 
@@ -437,7 +437,7 @@ with app.app_context():
         new_chapter = Chapter(name=name, subject_id=subject_id)
         db.session.add(new_chapter)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Chapter created successfully!", "chapter_id": new_chapter.id}), 201
 
 
@@ -470,7 +470,7 @@ with app.app_context():
         chapter.name = name
         chapter.subject_id = subject_id
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Chapter updated successfully!"}), 200
 
 
@@ -489,7 +489,7 @@ with app.app_context():
 
         db.session.delete(chapter)
         db.session.commit()
-        cache.delete("quizes")           # For route cache
+        cache_delete_pattern("quizes")           # For route cache
         return jsonify({"message": "Chapter deleted successfully!"}), 200
 
 
