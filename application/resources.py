@@ -10,8 +10,8 @@ api = Api()
 import requests
 from .tasks import quiz_update
 import os
-from app import cache_route
-from app import cache
+from flask_cach import cache_route
+from flask_cach import cache
 QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
 QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
 

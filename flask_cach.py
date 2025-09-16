@@ -34,6 +34,14 @@ def get_transactions():
     
     quizzes = [dict(row) for row in rows]
     return jsonify(quizzes)
+# Decorator for routes or resource methods
+def cache_route(timeout=300, key_prefix=None):
+    def decorator(func):
+        return cache.cached(timeout=timeout, key_prefix=key_prefix)(func)
+    return decorator
 
+# For arbitrary functions (DB calls, logic functions)
+def cache_function(timeout=300):
+    return cache.memoize(timeout)
 if __name__ == '__main__':
     app.run(debug=True)
