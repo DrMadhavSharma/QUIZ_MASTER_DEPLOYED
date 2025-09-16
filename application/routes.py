@@ -42,8 +42,15 @@ with app.app_context():
         return response
         print(response)
     @app.route('/user/<int:user_id>/graph', methods=['GET'])
-    @cache_route(timeout=300, key_prefix="user_score_graph")
     def generate_graph(user_id):
+        cache_key = f"user_score_graph:{user_id}"
+        cached_img = cache.get(cache_key)
+
+        if cached_img:
+            print("CACHE HIT")
+            return send_file(io.BytesIO(cached_img), mimetype='image/png')
+
+        print("CACHE MISS")
         # Validate user existence
         user = User.query.get(user_id)
         if not user:
@@ -51,7 +58,7 @@ with app.app_context():
 
         # Fetch quiz attempts
         attempts = QuizAttempt.query.filter_by(user_id=user_id).all()
-
+ 
         if not attempts:
             return jsonify({'message': 'No quiz attempts found for this user.'}), 200
 
@@ -79,6 +86,8 @@ with app.app_context():
         plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
+        # Save raw bytes in Redis
+        cache.set(cache_key, img.getvalue(), timeout=300)
         cache.delete("quizes")           # For route cache
         return send_file(img, mimetype='image/png')
     @app.route('/user/<int:user_id>/total_subject_chart')
