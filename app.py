@@ -85,13 +85,22 @@ def cache_route(timeout=300, key_prefix="view"):
     return decorator
 
 # For arbitrary functions (DB calls, logic functions)
+def get_redis_client():
+    if hasattr(cache.cache, "_client"):
+        return cache.cache._client
+    elif hasattr(cache.cache, "_clients"):
+        return cache.cache._clients[0]
+    else:
+        raise RuntimeError("No Redis client found in cache backend")
+
 def cache_delete_pattern(prefix: str):
-    """
-    Delete all cache keys starting with prefix.
-    Example: cache_delete_pattern("quizes")
-    """
     try:
-        keys = cache.cache._read_clients[0].keys(f"{prefix}:*")
+        client = get_redis_client()
+        keys = client.keys(f"{prefix}:*")
+        """
+        Delete all cache keys starting with prefix.
+        Example: cache_delete_pattern("quizes")
+        """
         if keys:
             cache.delete_many(*keys)
             print(f"Deleted cache keys for prefix: {prefix}")
