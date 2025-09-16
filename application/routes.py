@@ -149,9 +149,16 @@ with app.app_context():
 
 
     @app.route('/admin/summary', methods=['GET'])
-    @cache_route(timeout=300, key_prefix="admin_summary")
     def admin_summary():
-        # Fetching counts
+        cache_key = "admin_summary"
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            print("CACHE HIT")
+            return jsonify(json.loads(cached_data))
+
+        print("CACHE MISS")
+        # Fetch counts
         num_questions = Question.query.count()
         num_quizzes = Quiz.query.count()
         num_options = Option.query.count()
@@ -159,28 +166,34 @@ with app.app_context():
         num_chapters = Chapter.query.count()
         num_users = User.query.count()
 
-        # Finding top scorer
-        top_scorer = db.session.query(User.username, db.func.max(QuizAttempt.score)) \
-            .join(QuizAttempt) \
-            .group_by(User.username) \
-            .order_by(db.func.max(QuizAttempt.score).desc()) \
+        # Find top scorer
+        top_scorer = (
+            db.session.query(User.username, db.func.max(QuizAttempt.score))
+            .join(QuizAttempt)
+            .group_by(User.username)
+            .order_by(db.func.max(QuizAttempt.score).desc())
             .first()
+        )
 
-        # Plotting summary
+        # Plot summary chart
         labels = ['Questions', 'Quizzes', 'Options', 'Subjects', 'Chapters', 'Users']
         values = [num_questions, num_quizzes, num_options, num_subjects, num_chapters, num_users]
-        
+
         plt.figure(figsize=(10, 6))
         plt.bar(labels, values, color='skyblue')
         plt.title('Admin Summary Statistics')
         plt.xlabel('Category')
         plt.ylabel('Count')
 
-        # Display top scorer
+        # Add top scorer text
         if top_scorer:
-            plt.figtext(0.15, 0.85, f'Top Scorer: {top_scorer[0]} with {top_scorer[1]} points', fontsize=10, color='darkred')
+            plt.figtext(
+                0.15, 0.85,
+                f'Top Scorer: {top_scorer[0]} with {top_scorer[1]} points',
+                fontsize=10, color='darkred'
+            )
 
-        # Save plot to memory
+        # Save chart to memory
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
@@ -188,9 +201,9 @@ with app.app_context():
 
         # Convert image to base64
         image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-        cache.delete("quizes")           # For route cache
-        # Return JSON Response
-        return jsonify({
+
+        # Prepare response
+        response = {
             "summary_data": {
                 "Questions": num_questions,
                 "Quizzes": num_quizzes,
@@ -204,7 +217,14 @@ with app.app_context():
                 "points": top_scorer[1]
             } if top_scorer else None,
             "chart": image_base64
-        })
+        }
+
+        # Save JSON response in Redis
+        cache.set(cache_key, json.dumps(response), timeout=300)
+
+        cache.delete("quizes")  # if you still want to invalidate that
+        return jsonify(response)
+
 
     
     @app.route('/api/register', methods=['POST']) #or @app.post('/api/register')

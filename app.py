@@ -106,26 +106,26 @@ def setup_periodic_tasks(sender, **kwargs):
         monthly_report.s(),
     )
 # -------- QStash Schedule Setup --------
-QSTASH_URL = "https://qstash.upstash.io/v2/schedules"
-QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")  # add in your environment
+# QSTASH_URL = "https://qstash.upstash.io/v2/schedules"
+# QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")  # add in your environment
 
-def setup_qstash_schedule():
-    headers = {
-        "Authorization": f"Bearer {QSTASH_TOKEN}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "destination": "https://quiz-master-deployed.onrender.com/tasks/monthly_report",  # Flask task endpoint
-        "cron": "*/2 * * * *",  # every 2 minutes
-        "retries": 3,
-        "method": "POST"
-    }
-    r = requests.post("https://qstash.upstash.io/v2/schedules", json=data, headers=headers)
-    print("QStash schedule setup:", r.status_code, r.text)
+# def setup_qstash_schedule():
+#     headers = {
+#         "Authorization": f"Bearer {QSTASH_TOKEN}",
+#         "Content-Type": "application/json"
+#     }
+#     data = {
+#         "destination": "https://quiz-master-deployed.onrender.com/tasks/monthly_report",  # Flask task endpoint
+#         "cron": "*/2 * * * *",  # every 2 minutes
+#         "retries": 3,
+#         "method": "POST"
+#     }
+#     r = requests.post("https://qstash.upstash.io/v2/schedules", json=data, headers=headers)
+#     print("QStash schedule setup:", r.status_code, r.text)
 
 
-# Run once on startup
-setup_qstash_schedule()
+# # Run once on startup
+# setup_qstash_schedule()
 
 import os
 import redis
