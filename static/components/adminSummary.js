@@ -6,20 +6,21 @@ export default {
             <div class="spinner-border" role="status" style="color: #000000;">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2" style="color: #333333;">Loading your dashboard...</p>
+            <p class="mt-2" style="color: #090909ff;">Loading your dashboard...</p>
         </div>
         <!-- Welcome Header -->
         <div v-else>
           <h1 class="mb-4" style="color: #000000;">Admin Summary</h1>
           <div class="row border-2 border-dark">
               <div class="text-end my-2">
-                  <button
-                    @click="csvExport"
-                    :disabled="loading"
-                    class="btn"
-                    style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">
-                    {{ loading ? 'Preparing CSV...' : 'Download CSV' }}
-                  </button>
+                    <button
+                      @click="csvExport"
+                      :disabled="loading"
+                      class="btn"
+                      style="background-color: #040404ff; color: #ffffff; border: 2px solid #040404ff;">
+                      <span v-if="loading">Preparing CSV...</span>
+                      <span v-else>Download CSV</span>
+                    </button>
               </div>
           </div>
         
@@ -49,7 +50,7 @@ export default {
         
           <!-- Chart Section -->
           <div v-if="chartSrc" class="card mb-4 border-2 border-dark">
-            <div class="card-header" style="background-color: #333333; color: #ffffff;">
+            <div class="card-header" style="background-color: #070606ff; color: #ffffff;">
               <h2 class="mb-0">📊 Graph</h2>
             </div>
             <div class="card-body text-center">
@@ -111,10 +112,12 @@ export default {
           fetch(`/api/csv_result/${taskId}`, { method: 'HEAD' })
             .then(res => {
               if (res.status === 200) {
-                // File is ready → download it
-                window.location.href = `/api/csv_result/${taskId}`;
-                this.loading = false;
-              } else if (res.status === 202 && retries > 0) {
+                // ✅ Artificially delay the download to see the spinner longer
+                setTimeout(() => {
+                  window.location.href = `/api/csv_result/${taskId}`;
+                  this.loading = false;
+                }, 6000);  // delay by 3 seconds
+              }else if (res.status === 202 && retries > 0) {
                 // Still processing → wait and retry
                 setTimeout(() => {
                   this.pollForCSV(taskId, retries - 1, delay);
