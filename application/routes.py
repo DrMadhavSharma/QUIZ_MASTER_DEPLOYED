@@ -18,8 +18,8 @@ from celery.result import AsyncResult
 from .tasks import csv_report, monthly_report
 from .utils import task_results
 import uuid
-from flask_cach import cache_route
-from flask_cach import cache
+from app import cache_route
+from app import cache
 
 with app.app_context():
     @app.route("/health")
