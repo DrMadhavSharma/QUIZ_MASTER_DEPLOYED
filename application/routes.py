@@ -532,6 +532,9 @@ with app.app_context():
     @app.route('/api/csv_result/<task_id>')
     def csv_result(task_id):
         result = task_results.get(task_id)
+        
+        if result == "pending":
+            return jsonify({"status": "pending"}), 202
 
         if not result:
             return jsonify({"status": "pending"}), 202

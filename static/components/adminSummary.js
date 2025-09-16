@@ -12,9 +12,15 @@ export default {
         <div v-else>
           <h1 class="mb-4" style="color: #000000;">Admin Summary</h1>
           <div class="row border-2 border-dark">
-            <div class="text-end my-2">
-                <button @click="csvExport" class="btn" style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">Download CSV</button>
-            </div>
+              <div class="text-end my-2">
+                  <button
+                    @click="csvExport"
+                    :disabled="loading"
+                    class="btn"
+                    style="background-color: #333333; color: #ffffff; border: 2px solid #333333;">
+                    {{ loading ? 'Preparing CSV...' : 'Download CSV' }}
+                  </button>
+              </div>
           </div>
         
           <!-- Summary Details Section -->
@@ -83,14 +89,57 @@ export default {
         } catch (error) {
           this.error = error.message;
           console.error('Error in fetchAdminSummary:', error);
-        }
-      }, csvExport(){
-        fetch('/api/export')
-        .then(response => response.json())
-        .then(data => {
-            window.location.href = `/api/csv_result/${data.id}`
+        }  },
+        csvExport() {
+        this.loading = true;
+        fetch('/api/export', {
+          method: 'GET'
         })
-    }
+          .then(response => response.json())
+          .then(data => {
+            const taskId = data.id;
+            this.pollForCSV(taskId);
+          })
+          .catch(() => {
+            alert("Failed to start export.");
+            this.loading = false;
+          });
+      },
+
+      pollForCSV(taskId, retries = 10, delay = 3000) {
+        const tryFetch = () => {
+          fetch(`/api/csv_result/${taskId}`, { method: 'HEAD' })
+            .then(res => {
+              if (res.status === 200) {
+                // File is ready → download it
+                window.location.href = `/api/csv_result/${taskId}`;
+                this.loading = false;
+              } else if (res.status === 202 && retries > 0) {
+                // Still processing → wait and retry
+                setTimeout(() => {
+                  this.pollForCSV(taskId, retries - 1, delay);
+                }, delay);
+              } else {
+                alert("Report not ready or failed.");
+                this.loading = false;
+              }
+            })
+            .catch(() => {
+              alert("Error checking CSV status.");
+              this.loading = false;
+            });
+        };
+
+        tryFetch();
+      }
+
+        // , csvExport(){
+    //     fetch('/api/export')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         window.location.href = `/api/csv_result/${data.id}`
+    //     })
+    // }
     },
     mounted() {
       this.fetchAdminSummary();
