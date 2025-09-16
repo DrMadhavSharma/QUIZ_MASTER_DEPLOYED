@@ -90,26 +90,33 @@ with app.app_context():
         cache.set(cache_key, img.getvalue(), timeout=300)
         cache.delete("quizes")           # For route cache
         return send_file(img, mimetype='image/png')
-    @app.route('/user/<int:user_id>/total_subject_chart')
-    @cache_route(timeout=300, key_prefix="subject_chart")
+    @app.route('/user/<int:user_id>/total_subject_chart', methods=['GET'])
     def generate_total_subject_chart(user_id):
-        # Get the total number of quizzes
+        cache_key = f"subject_chart:{user_id}"
+        cached_img = cache.get(cache_key)
+
+        if cached_img:
+            print("CACHE HIT")
+            return send_file(io.BytesIO(cached_img), mimetype='image/png')
+
+        print("CACHE MISS")
         # Get the total number of quizzes
         total_quizzes = Quiz.query.count()
-
         if total_quizzes == 0:
             return jsonify({'message': 'No quizzes found in the database.'}), 200
 
         # Get the number of quizzes per subject using joins
-        subject_counts = db.session.query(Subject.name, db.func.count(Quiz.id)) \
-                                    .join(Chapter, Chapter.subject_id == Subject.id) \
-                                    .join(Quiz, Quiz.chapter_id == Chapter.id) \
-                                    .group_by(Subject.name) \
-                                    .all()
+        subject_counts = (
+            db.session.query(Subject.name, db.func.count(Quiz.id))
+            .join(Chapter, Chapter.subject_id == Subject.id)
+            .join(Quiz, Quiz.chapter_id == Chapter.id)
+            .group_by(Subject.name)
+            .all()
+        )
 
         # Extract subject names and their counts
         subjects, quiz_counts = zip(*subject_counts) if subject_counts else ([], [])
-        
+
         # Calculate "Others" if necessary
         subject_quiz_total = sum(quiz_counts)
         if subject_quiz_total < total_quizzes:
@@ -118,17 +125,27 @@ with app.app_context():
 
         # Plotting using Matplotlib
         plt.figure(figsize=(4, 4))
-        plt.pie(quiz_counts, labels=subjects, autopct='%1.1f%%', startangle=140, colors=plt.cm.Set3.colors)
+        plt.pie(
+            quiz_counts,
+            labels=subjects,
+            autopct='%1.1f%%',
+            startangle=140,
+            colors=plt.cm.Set3.colors
+        )
         plt.axis('equal')
         plt.title('Distribution of Quizzes by Subject')
 
-        # Save to a BytesIO object
-        img = BytesIO()
+        # Save to BytesIO
+        img = io.BytesIO()
         plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
-        cache.delete("quizes")           # For route cache
-        return send_file(img, mimetype='image/png')
+
+        # Save raw bytes in Redis
+        cache.set(cache_key, img.getvalue(), timeout=300)
+
+        cache.delete("quizes")  # only if you need to invalidate another cache
+        return send_file(io.BytesIO(img.getvalue()), mimetype='image/png')
 
 
     @app.route('/admin/summary', methods=['GET'])
