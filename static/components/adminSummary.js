@@ -16,11 +16,15 @@ export default {
                     <button
                       @click="csvExport"
                       :disabled="loading"
-                      class="btn"
-                      style="background-color: #040404ff; color: #ffffff; border: 2px solid #040404ff;">
+                      class="btn btn-outline-dark btn-lg"
+                      style="border: 2px solid rgba(0, 0, 0, 0); background-color: white; color: #2c2c2c; transition: all 0.3s ease;"
+                      @mouseover="hoverButton"
+                      @mouseleave="resetButton"
+                    >
                       <span v-if="loading">Preparing CSV...</span>
                       <span v-else>Download CSV</span>
                     </button>
+
               </div>
           </div>
         
@@ -143,6 +147,18 @@ export default {
     //         window.location.href = `/api/csv_result/${data.id}`
     //     })
     // }
+    , hoverButton(event) {
+      event.target.style.backgroundColor = '#2c2c2c';
+      event.target.style.color = '#ffffff';
+      event.target.style.transform = 'scale(1.05)';
+      event.target.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+    },
+    resetButton(event) {
+      event.target.style.backgroundColor = '#ffffff';
+      event.target.style.color = '#2c2c2c';
+      event.target.style.transform = 'scale(1)';
+      event.target.style.boxShadow = 'none';
+    }
     },
     mounted() {
       this.fetchAdminSummary();
