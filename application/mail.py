@@ -80,7 +80,7 @@ import requests
 import base64
 import os
 
-RESEND_API_KEY = os.getenv("RESEND_API_KEY")  # Store in environment variables
+RESEND_API_KEY = "re_KgEwEHQb_QKZ4L5NcpVaGUNkWGKzVjuiQ"  # Store in environment variables
 
 def send_email(to_address, subject, message, content="html", attachment_file=None):
     url = "https://api.resend.com/emails"
