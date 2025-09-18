@@ -195,7 +195,7 @@ def task_monthly_report():
 
         # Publish one job to QStash for this user
         requests.post(
-            f"{QSTASH_URL}/tasks/send_user_report",
+            f"{QSTASH_URL}/https://quiz-master-deployed.onrender.com/tasks/send_user_report",
             headers={
                 "Authorization": f"Bearer {QSTASH_TOKEN}",
                 "Content-Type": "application/json"
