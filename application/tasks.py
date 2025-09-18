@@ -181,6 +181,7 @@ def task_csv_report():
 #     return jsonify({"result": "Monthly reports sent"})
 # 🚀 Step 1: Publish one job per user
 import os
+import time
 QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
 QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
 
@@ -201,7 +202,7 @@ def task_monthly_report():
             },
             json={"user_id": user.id}
         )
-
+        time.sleep(1)
     return jsonify({"result": "Queued all user reports"})
 
 
