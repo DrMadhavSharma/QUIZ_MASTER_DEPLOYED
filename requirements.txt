@@ -134,3 +134,4 @@ cachelib==0.13.0
 blinker==1.9.0
 greenlet==3.1.1
 setuptools==76.0.0
+gunicorn
