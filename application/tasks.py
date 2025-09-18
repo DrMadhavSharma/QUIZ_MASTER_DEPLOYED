@@ -194,14 +194,17 @@ def task_monthly_report():
             continue
 
         # Publish one job to QStash for this user
-        requests.post(
-            f"{QSTASH_URL}/https://quiz-master-deployed.onrender.com/tasks/send_user_report",
+        resp=requests.post(
+            "https://qstash.upstash.io/v2/publish/https://quiz-master-deployed.onrender.com/tasks/send_user_report",
+
             headers={
                 "Authorization": f"Bearer {QSTASH_TOKEN}",
                 "Content-Type": "application/json"
             },
             json={"user_id": user.id}
         )
+        print(f"[QUEUE] {user.email} → {resp.status_code} {resp.text}")
+
         # 🔹 wait between jobs so Resend never bursts too fast
         time.sleep(0.6)   # ~1.6 requests/sec (safe under 2/sec)
     return jsonify({"result": "Queued all user reports"})

@@ -632,6 +632,8 @@ with app.app_context():
     # 🚀 Step 2: Handle one user’s report (called by QStash)
     @app.route('/tasks/send_user_report', methods=['POST'])
     def send_user_report():
+        print("[EXEC] Got QStash job:", request.get_json())
+
         data = request.get_json()
         user = User.query.get(data.get("user_id"))
         if not user or not user.email:
