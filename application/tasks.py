@@ -132,53 +132,76 @@ def task_csv_report():
 
 
 
+# def task_monthly_report():
+
+
+#     users = User.query.all()
+#     for user in users[1:]:  # skip first admin user?
+#         # ✅ Validate email
+#         if not user.email or "@" not in user.email:
+#             print(f"[SKIP] Invalid or missing email for user id={user.id}, email={user.email}")
+#             continue
+
+#         # ✅ Prepare user data
+#         user_data = {
+#             'username': user.username,
+#             'email': user.email,
+#             'quizzes': [],
+#             'total': 0
+#         }
+
+#         total_score = 0
+#         for quiz_attempt in user.quizzes_attempted:
+#             this_quiz = {
+#                 "id": quiz_attempt.id,
+#                 "user_id": quiz_attempt.user_id,
+#                 "quiz_id": quiz_attempt.quiz_id,
+#                 "score": quiz_attempt.score,
+#                 "date_attempted": quiz_attempt.date_attempted,
+#             }
+#             user_data['quizzes'].append(this_quiz)
+#             total_score += quiz_attempt.score
+
+#         user_data['total'] = total_score
+
+#         # ✅ Render email content
+#         message = format_report('templates/mail_details.html', user_data)
+
+#         # ✅ Try sending
+#         try:
+#             send_email(
+#                 to_address=user.email.strip(),
+#                 subject="Monthly Transaction Report - Quiz Master",
+#                 message=message
+#             )
+#             print(f"[OK] Report sent to {user.email}")
+#         except Exception as e:
+#             print(f"[FAIL] Could not send to {user.email}: {e}")
+
+#     return jsonify({"result": "Monthly reports sent"})
+# 🚀 Step 1: Publish one job per user
+import os
+QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
+QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")
+
 def task_monthly_report():
-
-
     users = User.query.all()
-    for user in users[1:]:  # skip first admin user?
-        # ✅ Validate email
+
+    for user in users[1:]:  # skip admin
         if not user.email or "@" not in user.email:
-            print(f"[SKIP] Invalid or missing email for user id={user.id}, email={user.email}")
+            print(f"[SKIP] Invalid email for user {user.id}")
             continue
 
-        # ✅ Prepare user data
-        user_data = {
-            'username': user.username,
-            'email': user.email,
-            'quizzes': [],
-            'total': 0
-        }
+        # Publish one job to QStash for this user
+        requests.post(
+            f"{QSTASH_URL}/tasks/send_user_report",
+            headers={
+                "Authorization": f"Bearer {QSTASH_TOKEN}",
+                "Content-Type": "application/json"
+            },
+            json={"user_id": user.id}
+        )
 
-        total_score = 0
-        for quiz_attempt in user.quizzes_attempted:
-            this_quiz = {
-                "id": quiz_attempt.id,
-                "user_id": quiz_attempt.user_id,
-                "quiz_id": quiz_attempt.quiz_id,
-                "score": quiz_attempt.score,
-                "date_attempted": quiz_attempt.date_attempted,
-            }
-            user_data['quizzes'].append(this_quiz)
-            total_score += quiz_attempt.score
-
-        user_data['total'] = total_score
-
-        # ✅ Render email content
-        message = format_report('templates/mail_details.html', user_data)
-
-        # ✅ Try sending
-        try:
-            send_email(
-                to_address=user.email.strip(),
-                subject="Monthly Transaction Report - Quiz Master",
-                message=message
-            )
-            print(f"[OK] Report sent to {user.email}")
-        except Exception as e:
-            print(f"[FAIL] Could not send to {user.email}: {e}")
-
-    return jsonify({"result": "Monthly reports sent"})
-
+    return jsonify({"result": "Queued all user reports"})
 
 

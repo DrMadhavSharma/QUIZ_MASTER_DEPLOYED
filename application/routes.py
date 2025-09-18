@@ -604,6 +604,7 @@ with app.app_context():
         # If we have a filename, return the actual CSV file
         return send_from_directory("static", result, as_attachment=True)
 
+# 🚀 Step 3: Trigger batch job (entrypoint from dashboard or cron)
 
     @app.route('/api/mail')
     def send_reports():
@@ -626,6 +627,55 @@ with app.app_context():
     @app.route('/tasks/monthly_report', methods=['POST'])
     def monthly_report():
         return task_monthly_report()
+    from .utils import format_report
+    from .mail import send_email
+    # 🚀 Step 2: Handle one user’s report (called by QStash)
+    @app.route('/tasks/send_user_report', methods=['POST'])
+    def send_user_report():
+        data = request.get_json()
+        user = User.query.get(data.get("user_id"))
+        if not user or not user.email:
+            return jsonify({"error": "Invalid user"}), 400
+
+        # Build report data
+        user_data = {
+            "username": user.username,
+            "email": user.email,
+            "quizzes": [],
+            "total": 0
+        }
+
+        total_score = 0
+        for quiz_attempt in user.quizzes_attempted:
+            user_data["quizzes"].append({
+                "id": quiz_attempt.id,
+                "user_id": quiz_attempt.user_id,
+                "quiz_id": quiz_attempt.quiz_id,
+                "score": quiz_attempt.score,
+                "date_attempted": quiz_attempt.date_attempted,
+            })
+            total_score += quiz_attempt.score
+
+        user_data["total"] = total_score
+
+        # Render HTML template
+        message = format_report("templates/mail_details.html", user_data)
+
+        # Try sending
+        try:
+            success = send_email(
+                to_address=user.email.strip(),
+                subject="Monthly Transaction Report - Quiz Master",
+                message=message
+            )
+            if success:
+                print(f"[OK] Report sent to {user.email}")
+                return jsonify({"ok": True})
+            else:
+                return jsonify({"ok": False, "error": "Resend API error"}), 500
+        except Exception as e:
+            print(f"[FAIL] Could not send to {user.email}: {e}")
+            return jsonify({"ok": False, "error": str(e)}), 500
 
     @app.route('/tasks/quiz_update', methods=['POST'])
     def quiz_update():
