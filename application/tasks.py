@@ -202,7 +202,8 @@ def task_monthly_report():
             },
             json={"user_id": user.id}
         )
-        time.sleep(1)
+        # 🔹 wait between jobs so Resend never bursts too fast
+        time.sleep(0.6)   # ~1.6 requests/sec (safe under 2/sec)
     return jsonify({"result": "Queued all user reports"})
 
 
