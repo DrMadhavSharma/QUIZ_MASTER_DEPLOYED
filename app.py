@@ -145,12 +145,12 @@ def index():
 def assets(filename):
     return send_from_directory("static/dist/assets", filename)
 
-@celery.on_after_finalize.connect 
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(
-        crontab(minute = '*/2'),
-        monthly_report.s(),
-    )
+# @celery.on_after_finalize.connect 
+# def setup_periodic_tasks(sender, **kwargs):
+#     sender.add_periodic_task(
+#         crontab(minute = '*/2'),
+#         monthly_report.s(),
+#     )
 # -------- QStash Schedule Setup --------
 # QSTASH_URL = "https://qstash.upstash.io/v2/schedules"
 # QSTASH_TOKEN = os.getenv("QSTASH_TOKEN")  # add in your environment
