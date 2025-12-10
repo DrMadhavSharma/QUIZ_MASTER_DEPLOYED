@@ -22,7 +22,7 @@ cache = Cache()
 def init_cache(app):
     
     app.config["CACHE_TYPE"] = "RedisCache"
-    app.config["CACHE_REDIS_URL"] = "rediss://default:AdeRAAIncDExM2FjOGQ2M2JkZmY0NDMwOGUzZTJiMWRlMjg1ZGNlM3AxNTUxODU@rapid-stinkbug-55185.upstash.io:6379"
+    app.config["CACHE_REDIS_URL"] = "redis://default:ARuJAAImcDEzNTMyMjA0N2M2ZTg0YmUwOWRmOTdlZDExNWE0NTYzNXAxNzA0OQ@heroic-tick-7049.upstash.io:6379"
     app.config["CACHE_DEFAULT_TIMEOUT"] = 300
     # Proper SSL config
     app.config["CACHE_OPTIONS"] = {
