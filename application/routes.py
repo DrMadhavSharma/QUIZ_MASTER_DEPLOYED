@@ -21,6 +21,7 @@ import uuid
 from app import cache_route,cache_delete_pattern
 from app import cache
 import json
+from sqlalchemy.exc import SQLAlchemyError, PendingRollbackError
 
 with app.app_context():
     @app.route("/health")
