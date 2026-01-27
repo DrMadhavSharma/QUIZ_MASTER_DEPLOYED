@@ -129,7 +129,7 @@ def send_email(to_address, subject, message, content="html", attachment_file=Non
 
     email_data = {
         "to": [{"email": to_address}],
-        "sender": {"email": "23f3004142@ds.study.iitm.ac.in"},  # MUST be verified in Brevo
+        "sender": {"email": "madhavsharma8194@gmail.com"},  # MUST be verified in Brevo
         "subject": subject,
     }
 
