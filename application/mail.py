@@ -114,47 +114,45 @@
 #         print(f"[FAIL] Email to {to_address} failed: {response.text}")
 #         return False
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
 import base64
-
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "").strip()
-  # Store securely in env
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
 
 def send_email(to_address, subject, message, content="html", attachment_file=None):
-    # Build email
-    email = Mail(
-        from_email="23f3004142@ds.study.iitm.ac.in",   # must be verified in SendGrid
-        to_emails=to_address,
-        subject=subject,
-        html_content=message if content == "html" else None,
-        plain_text_content=message if content != "html" else None
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = BREVO_API_KEY
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(configuration)
     )
 
-    # Add attachment if provided
+    email_data = {
+        "to": [{"email": to_address}],
+        "sender": {"email": "23f3004142@ds.study.iitm.ac.in"},  # MUST be verified in Brevo
+        "subject": subject,
+    }
+
+    # Content handling
+    if content == "html":
+        email_data["htmlContent"] = message
+    else:
+        email_data["textContent"] = message
+
+    # Attachment handling
     if attachment_file:
         with open(attachment_file, "rb") as f:
-            file_data = f.read()
-            encoded_file = base64.b64encode(file_data).decode()
+            encoded_file = base64.b64encode(f.read()).decode()
 
-        attached_file = Attachment(
-            FileContent(encoded_file),
-            FileName(os.path.basename(attachment_file)),
-            FileType("application/octet-stream"),
-            Disposition("attachment")
-        )
-        email.attachment = attached_file
+        email_data["attachment"] = [{
+            "content": encoded_file,
+            "name": os.path.basename(attachment_file)
+        }]
 
     try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(email)
-
-        if response.status_code in (200, 202):
-            print(f"[OK] Email sent to {to_address}")
-            return True
-        else:
-            print(f"[FAIL] Email to {to_address} failed: {response.status_code} {response.body}")
-            return False
-    except Exception as e:
+        api_instance.send_transac_email(email_data)
+        print(f"[OK] Email sent to {to_address}")
+        return True
+    except ApiException as e:
         print(f"[FAIL] Email to {to_address} failed: {e}")
         return False
