@@ -40,17 +40,17 @@
     Here’s a snapshot of your quiz activity for this month.
 </td>
 </tr>
-
+{% set avg = data.get('average', 0) %}
 <!-- Performance -->
 <tr>
 <td style="padding-bottom:15px; font-size:15px;">
     <strong>Overall Performance:</strong>
-    {% if data['average'] >= 8 %}
-        <span style="color:#198754;">Excellent 🌟</span>
-    {% elif data['average'] >= 5 %}
-        <span style="color:#fd7e14;">Good 👍</span>
+    {% if avg >= 8 %}
+    <span style="color:#198754;">Excellent 🌟</span>
+    {% elif avg >= 5 %}
+    <span style="color:#fd7e14;">Good 👍</span>
     {% else %}
-        <span style="color:#dc3545;">Needs Improvement ⚠️</span>
+    <span style="color:#dc3545;">Needs Improvement ⚠️</span>
     {% endif %}
 </td>
 </tr>
@@ -99,7 +99,7 @@
     <a href="{{ data['dashboard_url'] }}"
        style="background-color:#0d6efd; color:#ffffff; text-decoration:none;
               padding:10px 18px; border-radius:4px; font-size:14px;">
-        View Full Dashboard
+        Open Dashboard
     </a>
 </td>
 </tr>
@@ -115,15 +115,17 @@
 <!-- Stamp -->
 <tr>
 <td align="right" style="padding-top:20px;">
-    <img src="" alt="Company Stamp" width="130">
+    <img src="https://quiz-master-deployed.onrender.com/static/stamp.png"
+     alt="Company Stamp"
+     width="130"
+     style="display:block;">
 </td>
 </tr>
 
 <!-- Footer -->
 <tr>
 <td align="center" style="font-size:11px; color:#777; padding-top:15px;">
-    Quiz Master | ©{{ data['year'] }} <br>
-    Created by 23f3004142
+    Quiz Master | ©Automated report · Generated on {{ data['month'] }} {{ data['year'] }} <br>
 </td>
 </tr>
 
