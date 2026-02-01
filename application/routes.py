@@ -566,7 +566,7 @@ with app.app_context():
 
 
     # ----------- ROUTES (trigger tasks via QStash) -----------
-
+    # ------------CSV-EXPORT(ADMIN)----------------------------#
     @app.route('/api/export')
     @cache_route(timeout=300, key_prefix="all_csv")
     def export_csv():
@@ -588,7 +588,12 @@ with app.app_context():
             "status": "queued"
         })
 
+    from application.tasks import task_csv_report, task_monthly_report
 
+    @app.route('/tasks/csv_report', methods=['POST'])
+    def csv_report():
+        return task_csv_report()
+        
     @app.route('/api/csv_result/<task_id>')
     def csv_result(task_id):
         result = task_results.get(task_id)
@@ -619,17 +624,16 @@ with app.app_context():
             json={}  # no payload needed
         )
         return jsonify(response.json())
-    from application.tasks import task_csv_report, task_monthly_report
-
-    @app.route('/tasks/csv_report', methods=['POST'])
-    def csv_report():
-        return task_csv_report()
+    
 
     @app.route('/tasks/monthly_report', methods=['POST'])
     def monthly_report():
         return task_monthly_report()
+
+    
     from .utils import format_report
     from .mail import send_email
+    
     # 🚀 Step 2: Handle one user’s report (called by QStash)
     @app.route('/tasks/send_user_report', methods=['POST'])
     def send_user_report():
@@ -679,7 +683,7 @@ with app.app_context():
         except Exception as e:
             print(f"[FAIL] Could not send to {user.email}: {e}")
             return jsonify({"ok": False, "error": str(e)}), 500
-
+########################Google chat Quiz Update################################################################
     @app.route('/tasks/quiz_update', methods=['POST'])
     def quiz_update():
         data = request.json
