@@ -610,22 +610,7 @@ with app.app_context():
         # If we have a filename, return the actual CSV file
         return send_from_directory("static", result, as_attachment=True)
 
-# 🚀 Step 3: Trigger batch job (entrypoint from dashboard or cron)
-
-    @app.route('/api/mail')
-    def send_reports():
-        """Publish monthly report job to QStash"""
-        response = requests.post(
-            f"{QSTASH_URL}/tasks/monthly_report",
-            headers={
-                "Authorization": f"Bearer {QSTASH_TOKEN}",
-                "Content-Type": "application/json"
-            },
-            json={}  # no payload needed
-        )
-        return jsonify(response.json())
-    
-
+# 🚀 Step 1: Trigger batch job (entrypoint from dashboard or cron)
     @app.route('/tasks/monthly_report', methods=['POST'])
     def monthly_report():
         return task_monthly_report()
@@ -634,7 +619,7 @@ with app.app_context():
     from .utils import format_report
     from .mail import send_email
     
-    # 🚀 Step 2: Handle one user’s report (called by QStash)
+    # 🚀 Step 3: Handle one user’s report (called by QStash)
     @app.route('/tasks/send_user_report', methods=['POST'])
     def send_user_report():
         print("[EXEC] Got QStash job:", request.get_json())
@@ -672,7 +657,7 @@ with app.app_context():
         try:
             success = send_email(
                 to_address=user.email.strip(),
-                subject="Monthly Transaction Report - Quiz Master",
+                subject="Monthly Quiz Practice Report- Quiz Master",
                 message=message
             )
             if success:
