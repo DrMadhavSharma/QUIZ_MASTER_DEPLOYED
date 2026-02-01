@@ -620,7 +620,7 @@ with app.app_context():
     from .mail import send_email
     
     # 🚀 Step 3: Handle one user’s report (called by QStash)
-        from datetime import datetime
+    from datetime import datetime
 
     @app.route('/tasks/send_user_report', methods=['POST'])
     def send_user_report():
