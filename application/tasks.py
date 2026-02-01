@@ -179,7 +179,7 @@ def task_csv_report():
 #             print(f"[FAIL] Could not send to {user.email}: {e}")
 
 #     return jsonify({"result": "Monthly reports sent"})
-# 🚀 Step 1: Publish one job per user
+# 🚀 Step 2: Publish one job per user
 import os
 import time
 QSTASH_URL = os.getenv("QSTASH_URL", "https://qstash.upstash.io/v2/publish")
