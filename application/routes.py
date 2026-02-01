@@ -620,54 +620,68 @@ with app.app_context():
     from .mail import send_email
     
     # 🚀 Step 3: Handle one user’s report (called by QStash)
+        from datetime import datetime
+
     @app.route('/tasks/send_user_report', methods=['POST'])
     def send_user_report():
-        print("[EXEC] Got QStash job:", request.get_json())
+       print("[EXEC] Got QStash job:", request.get_json())
 
-        data = request.get_json()
-        user = User.query.get(data.get("user_id"))
-        if not user or not user.email:
-            return jsonify({"error": "Invalid user"}), 400
+       data = request.get_json()
+       user = User.query.get(data.get("user_id"))
 
-        # Build report data
-        user_data = {
-            "username": user.username,
-            "email": user.email,
-            "quizzes": [],
-            "total": 0
+       if not user or not user.email:
+           return jsonify({"error": "Invalid user"}), 400
+
+       # Build report data
+       user_data = {
+        "username": user.username,
+        "email": user.email,
+        "quizzes": [],
+        "total": 0,
+        "average": 0,
+        "month": datetime.utcnow().strftime("%B"),
+        "year": datetime.utcnow().year,
+        "dashboard_url": "https://quiz-master-deployed.onrender.com"
         }
 
-        total_score = 0
-        for quiz_attempt in user.quizzes_attempted:
-            user_data["quizzes"].append({
-                "id": quiz_attempt.id,
-                "user_id": quiz_attempt.user_id,
-                "quiz_id": quiz_attempt.quiz_id,
-                "score": quiz_attempt.score,
-                "date_attempted": quiz_attempt.date_attempted,
-            })
-            total_score += quiz_attempt.score
+       total_score = 0
+       attempts_count = 0
 
-        user_data["total"] = total_score
+       for quiz_attempt in user.quizzes_attempted:
+           user_data["quizzes"].append({
+            "quiz_id": quiz_attempt.quiz_id,   # ✅ matches template
+            "user_id": quiz_attempt.user_id,
+            "score": quiz_attempt.score,
+            "date_attempted": quiz_attempt.date_attempted,
+           })
+           total_score += quiz_attempt.score
+           attempts_count += 1
 
-        # Render HTML template
-        message = format_report("templates/mail_details.html", user_data)
+       user_data["total"] = total_score
+       user_data["average"] = round(
+        total_score / attempts_count, 2
+        ) if attempts_count > 0 else 0
 
-        # Try sending
-        try:
-            success = send_email(
-                to_address=user.email.strip(),
-                subject="Monthly Quiz Practice Report- Quiz Master",
-                message=message
-            )
-            if success:
-                print(f"[OK] Report sent to {user.email}")
-                return jsonify({"ok": True})
-            else:
-                return jsonify({"ok": False, "error": "Resend API error"}), 500
-        except Exception as e:
-            print(f"[FAIL] Could not send to {user.email}: {e}")
-            return jsonify({"ok": False, "error": str(e)}), 500
+    # Render HTML template
+       message = format_report("templates/mail_details.html", user_data)
+
+    # Send email
+       try:
+          success = send_email(
+            to_address=user.email.strip(),
+            subject="Monthly Quiz Practice Summary | Quiz Master",
+            message=message
+        )
+
+          if success:
+              print(f"[OK] Report sent to {user.email}")
+              return jsonify({"ok": True})
+
+          return jsonify({"ok": False, "error": "Email service error"}), 500
+
+       except Exception as e:
+          print(f"[FAIL] Could not send to {user.email}: {e}")
+          return jsonify({"ok": False, "error": str(e)}), 500
 ########################Google chat Quiz Update################################################################
     @app.route('/tasks/quiz_update', methods=['POST'])
     def quiz_update():
