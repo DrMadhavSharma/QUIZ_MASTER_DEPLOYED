@@ -1,3 +1,5 @@
+![Async](https://img.shields.io/badge/Async-Upstash%20QStash-blue)
+
 # Running Vue2JS + Flask Application with Celery on WSL
 This guide provides step-by-step instructions to set up and run a Vue2JS and Flask-based application with Celery, Redis, and a virtual environment in WSL.
 
@@ -60,4 +62,15 @@ pkill -f "celery"  # Stop Celery worker and beat
 ```
 Conclusion
 Following these steps ensures that your Vue2JS + Flask application with Celery is running smoothly within WSL. Ensure all services are started before using the application for proper functionality.
+## Asynchronous Task Flow (QStash + Redis)
+
+<p align="center">
+  <img src="assets/async-flow.jpg" width="750"/>
+</p>
+
+This diagram illustrates how background tasks such as monthly jobs and CSV exports
+are handled using Upstash QStash for reliable asynchronous processing. Tasks are
+queued and executed independently of the main Flask request cycle, ensuring better
+scalability and responsiveness of the application.
+
 
